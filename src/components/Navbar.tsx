@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import logoImg from "@/assets/amarea-logo.png";
+import logoImg from "@/assets/amarea-logo-dark.png";
 
 const navLinks = [
   { label: "Home", href: "/#hero" },
