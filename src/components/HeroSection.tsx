@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
-import logo from "@/assets/amarea-logo.png";
+import logo from "@/assets/amarea-logo-dark.png";
 
 const HeroSection = () => {
   return (
