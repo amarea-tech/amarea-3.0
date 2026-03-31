@@ -20,7 +20,7 @@ const HeroSection = () => {
           transition={{ duration: 0.6 }}
           className="flex flex-col items-center mb-8"
         >
-          <div className="mb-4">
+          <div className="bg-[#1a1a1a] rounded-2xl px-10 py-6 mb-4 shadow-lg">
             <img src={logo} alt="Amarea Cosmetics" className="w-48 md:w-60" />
           </div>
           <div className="inline-flex items-center gap-2 bg-primary/20 border border-primary/30 text-primary-foreground px-5 py-2 rounded-full font-body text-sm font-medium">
