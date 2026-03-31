@@ -12,7 +12,7 @@ import alessandraMarmore from "@/assets/team/alessandra-marmore.png";
 
 const team = [
   { name: "Dott.ssa Anna Manzella", role: "Dottoranda in Scienze Biomolecolari", desc: "Specializzata in biologia della pelle e rigenerazione tissutale.", image: annaManzella },
-  { name: "Dott.ssa Alessia Luccarini", role: "Dottoranda in Scienze Biomolecolari", desc: "Studio di agenti fotoprotettivi naturali.", image: alessiaLuccarini },
+  { name: "Dott.ssa Alessia Luccarini", role: "PHD in Biologia Molecolare", desc: "Studio di agenti fotoprotettivi naturali.", image: alessiaLuccarini },
   { name: "Dott. Francesco Mengarelli", role: "Dottorando in Scienze Biomolecolari", desc: "Biologo molecolare esperto in tecniche analitiche avanzate.", image: francescoMengarelli },
   { name: "Dott.ssa Loredana Rao", role: "PhD", desc: "Specializzata in analisi di dinamica e funzionalità mitocondriale.", image: loredanaRao },
   { name: "Dott.ssa Alida Likey", role: "Dottoranda in Biomedical Sciences", desc: "Specializzata in skin biology e anti-aging cosmetology.", image: alidaLikey },
