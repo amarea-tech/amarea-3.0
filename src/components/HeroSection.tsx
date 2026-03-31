@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
-import logo from "@/assets/amarea-logo-dark.png";
+import logo from "@/assets/amarea-logo-transparent.png";
 
 const HeroSection = () => {
   return (
@@ -20,8 +20,8 @@ const HeroSection = () => {
           transition={{ duration: 0.6 }}
           className="flex flex-col items-center mb-8"
         >
-          <div className="bg-[#171717] rounded-2xl px-10 py-6 mb-4 shadow-lg">
-            <img src={logo} alt="Amarea Cosmetics" className="w-48 md:w-60" />
+          <div className="mb-4">
+            <img src={logo} alt="Amarea Cosmetics" className="w-64 md:w-80" />
           </div>
           <div className="inline-flex items-center gap-2 bg-primary/20 border border-primary/30 text-primary-foreground px-5 py-2 rounded-full font-body text-sm font-medium">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
