@@ -21,7 +21,7 @@ const HeroSection = () => {
           className="flex flex-col items-center mb-8"
         >
           <div className="mb-4">
-            <img src={logo} alt="Amarea Cosmetics" className="w-64 md:w-80" />
+            <img src={logo} alt="Amarea Cosmetics" className="w-80 md:w-[28rem]" />
           </div>
           <div className="inline-flex items-center gap-2 bg-primary/20 border border-primary/30 text-primary-foreground px-5 py-2 rounded-full font-body text-sm font-medium">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
