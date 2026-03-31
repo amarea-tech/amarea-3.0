@@ -15,7 +15,7 @@ const team = [
   { name: "Dott.ssa Alessia Luccarini", role: "PHD in Biologia Molecolare", desc: "Studio di agenti fotoprotettivi naturali.", image: alessiaLuccarini },
   { name: "Dott. Francesco Mengarelli", role: "Dottorando in Scienze Biomolecolari", desc: "Biologo molecolare esperto in tecniche analitiche avanzate.", image: francescoMengarelli },
   { name: "Dott.ssa Loredana Rao", role: "PHD in Biologia Molecolare", desc: "Specializzata in analisi di dinamica e funzionalità mitocondriale.", image: loredanaRao },
-  { name: "Dott.ssa Alida Likey", role: "Dottoranda in Biomedical Sciences", desc: "Specializzata in skin biology e anti-aging cosmetology.", image: alidaLikey },
+  { name: "Dott.ssa Alida Likey", role: "Dottoranda in Biomedical Sciences", desc: "Specialized in skin biology and anti-aging cosmetology.", image: alidaLikey },
   { name: "Dott.ssa Camilla Morresi", role: "Post-doc e Docente", desc: "Esperienza in biochimica della nutrizione e stress ossidativo.", image: camillaMorresi },
   { name: "Prof.ssa Elisabetta Damiani", role: "Professoressa Associata di Biochimica", desc: "Esperta in biochimica e formulazioni cosmetiche innovative.", image: elisabettaDamiani },
   { name: "Prof.ssa Tiziana Bacchetti", role: "Professoressa Associata di Biochimica", desc: "Esperta in stress ossidativo e basi molecolari dell'invecchiamento.", image: tizianaBacchetti },
