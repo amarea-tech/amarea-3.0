@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import logoImg from "@/assets/amarea-logo.png";
+import logoImg from "@/assets/amarea-logo-dark.png";
 
 const navLinks = [
   { label: "Home", href: "/#hero" },
@@ -31,8 +31,8 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50">
       <div className="mx-4 mt-4">
         <div className="bg-foreground/90 backdrop-blur-xl rounded-full px-6 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center bg-white rounded-xl px-3 py-1.5">
-            <img src={logoImg} alt="Amarea Cosmetics" className="h-7 w-auto" />
+          <Link to="/" className="flex items-center">
+            <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
           </Link>
 
           <ul className="hidden md:flex items-center gap-1">
