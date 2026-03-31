@@ -17,7 +17,7 @@ const FooterSection = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-extrabold text-primary-foreground mb-6 leading-tight">
-              Collabora con noi ✨
+              Collabora con noi 🌸
             </h2>
             <p className="font-body text-primary-foreground/70 max-w-xl mx-auto mb-10 leading-relaxed text-lg">
               Sei un ricercatore, un'università o un'azienda interessata a progetti di ricerca nel campo della cosmesi naturale e sostenibile?

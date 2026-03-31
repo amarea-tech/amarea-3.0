@@ -52,7 +52,7 @@ const Navbar = () => {
             onClick={() => handleNav("/#contatti")}
             className="hidden md:block bg-primary text-primary-foreground font-body font-semibold text-sm px-6 py-2 rounded-full hover:scale-105 transition-transform duration-300"
           >
-            Contattaci ✨
+            Contattaci 🌸
           </button>
 
           <button className="md:hidden text-primary-foreground" onClick={() => setOpen(!open)}>
