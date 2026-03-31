@@ -30,7 +30,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
       <div className="mx-4 mt-4">
-        <div className="bg-[#1a1a1a] backdrop-blur-xl rounded-full px-6 py-3 flex items-center justify-between">
+        <div className="bg-[#171717] backdrop-blur-xl rounded-full px-6 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
           </Link>
