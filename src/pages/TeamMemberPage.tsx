@@ -87,8 +87,7 @@ const TeamMemberPage = () => {
           >
             <h2 className="font-display text-2xl font-bold text-foreground mb-6">Profilo completo</h2>
             <div className="space-y-5">
-              {bioGraphs(bioParas(bioParas))}
-              {bioParag raphs.map((p, i) => (
+              {bioparagraphs.map((p, i) => (
                 <p key={i} className="font-body text-muted-foreground text-base leading-relaxed">
                   {p}
                 </p>
