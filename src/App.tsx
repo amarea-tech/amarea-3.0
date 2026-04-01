@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import Index from "./pages/Index";
 import ProductPage from "./pages/ProductPage";
+import TeamMemberPage from "./pages/TeamMemberPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
