@@ -16,9 +16,15 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     if (hash) {
-      setTimeout(() => {
-        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
+      const scrollToHash = () => {
+        const el = document.querySelector(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        } else {
+          setTimeout(scrollToHash, 50);
+        }
+      };
+      setTimeout(scrollToHash, 50);
     } else {
       window.scrollTo(0, 0);
     }
