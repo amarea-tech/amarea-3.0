@@ -7,6 +7,7 @@ import FooterSection from "@/components/FooterSection";
 
 const TeamMemberPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const member = teamMembers.find((m) => m.slug === slug);
 
   if (!member) {
