@@ -1,0 +1,143 @@
+import annaManzella from "@/assets/team/anna-manzella.png";
+import alessiaLuccarini from "@/assets/team/alessia-luccarini.png";
+import francescoMengarelli from "@/assets/team/francesco-mengarelli.png";
+import loredanaRao from "@/assets/team/loredana-rao.png";
+import alidaLikey from "@/assets/team/alida-likey.jpeg";
+import camillaMorresi from "@/assets/team/camilla-morresi.jpeg";
+import elisabettaDamiani from "@/assets/team/elisabetta-damiani.png";
+import tizianaBacchetti from "@/assets/team/tiziana-bacchetti.png";
+import alessandraMarmore from "@/assets/team/alessandra-marmore.png";
+
+export interface TeamMember {
+  name: string;
+  slug: string;
+  role: string;
+  title: string;
+  desc: string;
+  shortBio: string;
+  fullBio: string;
+  image: string;
+}
+
+export const teamMembers: TeamMember[] = [
+  {
+    name: "Dott.ssa Anna Manzella",
+    slug: "anna-manzella",
+    role: "Founder & CEO",
+    title: "Dottoranda in Scienze della Vita e dell'Ambiente",
+    desc: "Fondatrice e formulatrice di Amarea Cosmetics, si occupa dello sviluppo dei prodotti del brand, integrando ricerca scientifica e formulazione cosmetica.",
+    shortBio: "Specializzata in biologia della pelle e rigenerazione tissutale.",
+    fullBio: `Dottoranda in Scienze della Vita e dell'Ambiente presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata. Il suo percorso di ricerca si concentra sulla biologia della pelle e sui processi di rigenerazione tissutale, con attività svolte in ambito accademico e industriale, anche in contesti internazionali, approfondendo i meccanismi cellulari coinvolti nel rinnovamento cutaneo e nella funzione di barriera della pelle.
+
+All'interno di Amarea è Founder & CEO e responsabile della formulazione cosmetica. Coordina il lavoro del team e segue lo sviluppo scientifico dei prodotti, con particolare attenzione a sicurezza, sostenibilità ed efficacia.`,
+    image: annaManzella,
+  },
+  {
+    name: "Dott.ssa Alessia Luccarini",
+    slug: "alessia-luccarini",
+    role: "Laboratory Research & Development",
+    title: "Dottoranda in Scienze della Vita e dell'Ambiente",
+    desc: "Specializzata nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini con applicazioni cosmetiche.",
+    shortBio: "Studio di agenti fotoprotettivi naturali.",
+    fullBio: `Dottoranda in Scienze della Vita e dell'Ambiente presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata e una specializzazione nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini, con applicazioni in ambito cosmetico. Il suo percorso di ricerca si concentra sulla caratterizzazione del potenziale fotoprotettivo di nuovi composti naturali come filtri UV eco-friendly, attraverso l'utilizzo di colture cellulari cutanee, analisi molecolari, saggi di fotobiologia e tecniche di microscopia.
+
+Ha maturato esperienza di ricerca anche in ambito internazionale, presso il Dipartimento di Dermatologia della Medical University of Vienna, ed è autrice e coautrice di numerose pubblicazioni scientifiche su riviste internazionali peer-reviewed.
+
+All'interno di Amarea fa parte del team di Laboratory Research & Development e si occupa del coordinamento dei progetti di ricerca, contribuendo alla validazione scientifica degli attivi e allo sviluppo di formulazioni cosmetiche innovative, efficaci e sostenibili. Il suo lavoro è centrale per garantire che i prodotti siano supportati da solide evidenze scientifiche e progettati per rispondere alle esigenze di protezione e benessere della pelle.`,
+    image: alessiaLuccarini,
+  },
+  {
+    name: "Dott. Francesco Mengarelli",
+    slug: "francesco-mengarelli",
+    role: "Laboratory Research & Development",
+    title: "Dottorando in Scienze della Vita e dell'Ambiente",
+    desc: "Esperienza nello studio del ruolo dello stress ossidativo in condizioni fisiopatologiche.",
+    shortBio: "Biologo molecolare esperto in tecniche analitiche avanzate.",
+    fullBio: `Dottorando in Scienze della Vita e dell'Ambiente presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata. Il suo percorso di ricerca è focalizzato sullo studio del ruolo dello stress ossidativo in condizioni fisiopatologiche. Ha maturato esperienza nel lavoro con colture cellulari primarie, utilizzando tecniche avanzate di citofluorimetria, spettrofotometria e spettrofluorimetria, oltre a saggi di biologia molecolare e analisi HPLC.
+
+È autore e coautore di pubblicazioni scientifiche su riviste internazionali, a testimonianza di un approccio rigoroso e orientato alla qualità della ricerca.
+
+All'interno di Amarea fa parte del team di Laboratory Research & Development, contribuendo allo studio sperimentale degli attivi e alla validazione scientifica delle formulazioni. Il suo lavoro è essenziale per garantire che i prodotti siano supportati da dati affidabili e sviluppati secondo un approccio scientifico solido, con particolare attenzione alla sicurezza e all'efficacia.`,
+    image: francescoMengarelli,
+  },
+  {
+    name: "Dott.ssa Loredana Rao",
+    slug: "loredana-rao",
+    role: "Packaging & Production Development",
+    title: "PhD in Biomolecular Sciences",
+    desc: "Specializzata in analisi di dinamica, funzionalità e metabolismo mitocondriale su modelli cellulari tumorali.",
+    shortBio: "Specializzata in analisi di dinamica e funzionalità mitocondriale.",
+    fullBio: `PhD in Biomolecular Sciences presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata e un solido background di ricerca nel campo della biologia cellulare, della morfologia funzionale e dei processi mitocondriali. La sua attività scientifica si è sviluppata in ambito accademico attraverso l'utilizzo di modelli cellulari, tecniche avanzate di microscopia, analisi strutturali e metodologie sperimentali applicate allo studio dello stress ossidativo e della funzionalità cellulare.
+
+In Amarea ricopre il ruolo di Packaging & Production Development, dove mette le sue competenze scientifiche al servizio dello sviluppo di soluzioni produttive e di confezionamento affidabili, sicure e coerenti con i valori di sostenibilità del brand. Il suo contributo è fondamentale per garantire che ogni prodotto non sia solo efficace dal punto di vista formulativo, ma anche progettato con attenzione alla qualità, alla stabilità e all'impatto ambientale.`,
+    image: loredanaRao,
+  },
+  {
+    name: "Dott.ssa Alida Likey",
+    slug: "alida-likey",
+    role: "Digital & Social Media",
+    title: "Dottoranda in Biomolecular Sciences",
+    desc: "Cura la comunicazione digitale di Amarea, trasformando la ricerca scientifica e i valori del brand in contenuti chiari, coerenti e informativi.",
+    shortBio: "Specializzata in biologia della pelle e cosmetologia anti-aging.",
+    fullBio: `Possiede una formazione scientifica avanzata in Biologia Molecolare ed è attualmente dottoranda presso l'Università Politecnica delle Marche. Il suo percorso di ricerca si è concentrato su stress ossidativo, tossicologia cellulare, rigenerazione dei tessuti e biologia della pelle, con esperienza maturata sia in ambito accademico che industriale, anche a livello internazionale.
+
+Accanto alla ricerca, ha sviluppato competenze nel mondo della cosmesi applicata e del contatto diretto con il consumatore, lavorando come promoter per brand cosmetici e profumieri e approfondendo le dinamiche di comunicazione e percezione del prodotto.
+
+All'interno di Amarea ricopre il ruolo di Digital & Social Media Manager, dove unisce competenze scientifiche e comunicative per tradurre la ricerca cosmetica in contenuti chiari, affidabili e comprensibili. Il suo lavoro è volto a rendere accessibili i meccanismi biologici alla base delle formulazioni, promuovendo una comunicazione trasparente, consapevole e coerente con i valori di efficacia e sostenibilità del brand.`,
+    image: alidaLikey,
+  },
+  {
+    name: "Avv. Alessandra Marmorè",
+    slug: "alessandra-marmore",
+    role: "Legal Consultant",
+    title: "Avvocato specializzato in diritto societario",
+    desc: "Supporta Amarea nella gestione degli aspetti legali e di compliance, garantendo trasparenza e conformità.",
+    shortBio: "Specializzata in diritto societario e compliance.",
+    fullBio: `Laureata in Giurisprudenza, con una formazione focalizzata sul diritto penale, civile e sulla responsabilità degli enti, con particolare attenzione ai temi della compliance aziendale e della prevenzione del rischio legale. Ha maturato esperienza in studi legali occupandosi di diritto societario, contrattualistica, privacy, gestione del debito e consulenza legale alle imprese.
+
+All'interno di Amarea ricopre il ruolo di Legal Consultant, affiancando il team nella gestione degli aspetti giuridici e regolatori legati allo sviluppo del brand. Il suo contributo è fondamentale per garantire solidità, correttezza e trasparenza nelle scelte aziendali, supportando una crescita strutturata e conforme ai requisiti normativi.`,
+    image: alessandraMarmore,
+  },
+  {
+    name: "Dott.ssa Camilla Morresi",
+    slug: "camilla-morresi",
+    role: "Event & Promotions",
+    title: "Professoressa in Biochimica presso Link Campus University",
+    desc: "Comprovata esperienza pluriennale nel campo della Biochimica, con focus sulla biochimica della nutrizione e stress ossidativo.",
+    shortBio: "Esperienza in biochimica della nutrizione e stress ossidativo.",
+    fullBio: `Professoressa presso Link Campus University con formazione scientifica in ambito biochimico e nutrizionale e un'esperienza maturata in contesti di ricerca e formazione. Accanto al percorso accademico, ha sviluppato competenze organizzative e relazionali, con particolare attenzione alla progettazione di eventi e iniziative rivolte al pubblico.
+
+Titolare di plurimi assegni di ricerca, ha sviluppato significative competenze nella gestione di progetti di ricerca. L'attività di ricerca si è concretizzata in 23 pubblicazioni su riviste internazionali ad alto impatto.
+
+All'interno di Amarea ricopre il ruolo di Events & Promotions, occupandosi della pianificazione e gestione di eventi, fiere, attività sul territorio e iniziative di promozione del brand. Il suo lavoro è orientato a creare occasioni di incontro tra Amarea e le persone, favorendo un'esperienza diretta del prodotto e dei valori del marchio.`,
+    image: camillaMorresi,
+  },
+  {
+    name: "Prof.ssa Elisabetta Damiani",
+    slug: "elisabetta-damiani",
+    role: "Scientific Advisor",
+    title: "Professoressa Associata di Biochimica",
+    desc: "Oltre trent'anni di esperienza nella ricerca su radicali liberi, antiossidanti e fotobiologia. Autrice di oltre 110 pubblicazioni scientifiche e 4 brevetti.",
+    shortBio: "Esperta in biochimica e formulazioni cosmetiche innovative.",
+    fullBio: `Professoressa Associata di Biochimica presso l'Università Politecnica delle Marche, con oltre trent'anni di esperienza nella ricerca su radicali liberi, antiossidanti, fotobiologia e filtri solari. Autrice di oltre 110 pubblicazioni scientifiche e 4 brevetti.
+
+La sua ricerca attuale si focalizza sui meccanismi di fotoprotezione e sullo sviluppo di molecole naturali e sintetiche ad applicazione cosmetica e biomedica.
+
+All'interno di Amarea, ricopre il ruolo di Scientific Advisor, supportando lo sviluppo e la validazione scientifica delle formulazioni. Il suo contributo garantisce un approccio rigoroso allo studio dei meccanismi di fotoprotezione e all'impiego di molecole naturali e sintetiche ad applicazione cosmetica, assicurando l'efficacia e la solidità scientifica dei prodotti.`,
+    image: elisabettaDamiani,
+  },
+  {
+    name: "Prof.ssa Tiziana Bacchetti",
+    slug: "tiziana-bacchetti",
+    role: "Scientific Advisor",
+    title: "Professoressa Associata di Biochimica",
+    desc: "Presidente del CdLM in Scienze dell'Alimentazione, esperta in stress ossidativo e basi molecolari dell'invecchiamento, con oltre 115 pubblicazioni scientifiche.",
+    shortBio: "Esperta in stress ossidativo e basi molecolari dell'invecchiamento.",
+    fullBio: `Professoressa Associata di Biochimica presso il DiSVA dell'Università Politecnica delle Marche e Presidente del Corso di Laurea Magistrale in Scienze dell'Alimentazione e Nutrizione. La sua attività di ricerca è incentrata sullo studio della relazione tra alimentazione e salute, con particolare attenzione ai meccanismi biochimici dello stress ossidativo.
+
+Autrice di oltre 115 articoli su riviste scientifiche internazionali peer-reviewed.
+
+In Amarea opera come Scientific Advisor, contribuendo alla definizione del razionale scientifico dei prodotti e all'inquadramento dei processi biologici alla base dell'invecchiamento cutaneo. La sua esperienza assicura che l'innovazione cosmetica di Amarea sia fondata su evidenze scientifiche solide e aggiornate.`,
+    image: tizianaBacchetti,
+  },
+];
