@@ -36,13 +36,13 @@ const TeamMemberPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <Link
-              to="/#team"
+            <button
+              onClick={() => navigate("/#team")}
               className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary font-body text-sm font-medium transition-colors mb-10"
             >
               <ArrowLeft className="w-4 h-4" />
               Torna al team
-            </Link>
+            </button>
           </motion.div>
 
           <div className="flex flex-col md:flex-row gap-10 md:gap-14 items-start">
