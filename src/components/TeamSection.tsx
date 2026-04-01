@@ -37,10 +37,10 @@ const TeamSection = () => {
             >
               <Link
                 to={`/team/${member.slug}`}
-                className="group block bg-background rounded-3xl p-6 card-hover border border-border hover:border-primary/30 transition-all"
+                className="group flex flex-col bg-background rounded-3xl p-6 card-hover border border-border hover:border-primary/30 transition-all h-full"
               >
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="relative">
+                  <div className="relative shrink-0">
                     <img
                       src={member.image}
                       alt={member.name}
@@ -53,7 +53,7 @@ const TeamSection = () => {
                     <p className="font-body text-xs text-violet font-semibold tracking-wide">{member.role}</p>
                   </div>
                 </div>
-                <p className="font-body text-sm text-muted-foreground leading-relaxed">{member.shortBio}</p>
+                <p className="font-body text-sm text-muted-foreground leading-relaxed flex-1">{member.shortBio}</p>
               </Link>
             </motion.div>
           ))}
