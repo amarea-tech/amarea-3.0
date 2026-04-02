@@ -98,7 +98,8 @@ const ProductPage = () => {
               </span>
               <h1 className="font-display text-5xl md:text-7xl font-extrabold text-foreground mb-2">{product.name}</h1>
               <p className="font-body text-lg text-violet font-semibold mb-6">{product.subtitle}</p>
-              <p className="font-body text-xl text-muted-foreground leading-relaxed mb-8">{product.desc}</p>
+              <p className="font-body text-xl text-muted-foreground leading-relaxed mb-4">{product.desc}</p>
+              <p className="font-body text-lg text-muted-foreground/80 leading-relaxed mb-8">{product.details}</p>
               <div className="w-20 h-1 bg-primary rounded-full mb-8" />
               <p className="font-body text-muted-foreground italic mb-8">
                 Maggiori informazioni saranno disponibili prossimamente.
