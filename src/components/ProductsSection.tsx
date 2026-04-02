@@ -183,29 +183,25 @@ const ProductsSection = () => {
                     </div>
                   </motion.div>
 
-                  {/* Floating "open" arrow indicator */}
+                  {/* Subtle arrow integrated into label */}
                   <motion.div
-                    className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-none"
+                    className="absolute bottom-1 left-0 right-0 flex justify-center pointer-events-none"
                     animate={isHovered ? {
                       opacity: 1,
-                      scale: 1,
-                      rotate: 0,
+                      y: -4,
                     } : {
                       opacity: 0,
-                      scale: 0.5,
-                      rotate: -45,
+                      y: 6,
                     }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, delay: 0.05 }}
                   >
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm"
-                      style={{ backgroundColor: `${product.color}80` }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-foreground">
+                    <span className="text-primary-foreground/60 text-xs font-body tracking-wider uppercase flex items-center gap-1.5">
+                      Scopri
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="7" y1="17" x2="17" y2="7" />
                         <polyline points="7 7 17 7 17 17" />
                       </svg>
-                    </div>
+                    </span>
                   </motion.div>
                 </Link>
               );
