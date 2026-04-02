@@ -72,7 +72,8 @@ const PhilosophySection = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 onClick={() => setExpandedIndex(isExpanded ? null : i)}
-                className="group relative p-8 rounded-3xl border border-border bg-card hover:border-primary/30 card-hover cursor-pointer transition-all"
+                whileHover={{ scale: 1.03 }}
+                className="group relative p-8 rounded-3xl border border-border bg-card hover:border-primary/30 hover:shadow-lg cursor-pointer transition-all"
               >
                 <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${v.lightBg} transition-all duration-500 mb-6`}>
                   <v.icon size={26} strokeWidth={1.5} className="text-foreground transition-colors duration-500" />
