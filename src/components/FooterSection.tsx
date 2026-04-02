@@ -47,8 +47,8 @@ const FooterSection = () => {
       <footer className="py-16 bg-foreground">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="bg-background rounded-xl px-3 py-1.5">
-              <img src={logoImg} alt="Amarea Cosmetics" className="h-7 w-auto" />
+            <div>
+              <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
             </div>
             <p className="font-body text-sm text-primary-foreground/40">
               © {new Date().getFullYear()} Amarea Cosmetics — Spin-off Università Politecnica delle Marche

@@ -80,7 +80,7 @@ const ProductsSection = () => {
             Prodotti che <span className="text-violet">amerai</span>
           </h2>
           <p className="font-body text-primary-foreground/50 mt-4 text-lg">
-            Passa sopra una crema per scoprirla
+            Passa sopra una crema per scoprirla 👆
           </p>
         </motion.div>
 
