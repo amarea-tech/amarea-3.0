@@ -21,11 +21,11 @@ interface ProductZone {
 const products: ProductZone[] = [
   {
     name: "Conero",
-    subtitle: "hydrating face cream",
+    subtitle: "crema viso idratante",
     slug: "conero",
-    left: "5%",
+    left: "7%",
     top: "8%",
-    width: "33%",
+    width: "30%",
     height: "88%",
     lidTop: "0%",
     lidHeight: "35%",
@@ -33,7 +33,7 @@ const products: ProductZone[] = [
   },
   {
     name: "Sibilla",
-    subtitle: "anti-age cream",
+    subtitle: "crema viso anti-age",
     slug: "sibilla",
     left: "33%",
     top: "5%",
@@ -45,7 +45,7 @@ const products: ProductZone[] = [
   },
   {
     name: "Catria",
-    subtitle: "nourishing face cream",
+    subtitle: "crema viso nutriente",
     slug: "catria",
     left: "62%",
     top: "8%",
