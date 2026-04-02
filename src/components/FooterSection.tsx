@@ -50,7 +50,7 @@ const FooterSection = () => {
             <div>
               <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
             </div>
-            <p className="font-body text-sm text-primary-foreground/40">
+            <p className="font-body text-sm text-primary-foreground">
               © {new Date().getFullYear()} Amarea Cosmetics — Spin-off Università Politecnica delle Marche
             </p>
             <a
