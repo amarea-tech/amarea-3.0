@@ -7,7 +7,7 @@ import productConero from "@/assets/product-conero.jpg";
 import productSibilla from "@/assets/product-sibilla.jpg";
 import productCatria from "@/assets/product-catria.jpg";
 
-const productData: Record<string, { name: string; desc: string; gradient: string; subtitle: string; image: string }> = {
+const productData: Record<string, { name: string; desc: string; details: string; gradient: string; subtitle: string; image: string }> = {
   conero: {
     name: "Conero",
     subtitle: "Purifying Face Cream",
