@@ -21,11 +21,11 @@ interface ProductZone {
 const products: ProductZone[] = [
   {
     name: "Conero",
-    subtitle: "hydrating face cream",
+    subtitle: "crema viso idratante",
     slug: "conero",
-    left: "5%",
+    left: "7%",
     top: "8%",
-    width: "33%",
+    width: "30%",
     height: "88%",
     lidTop: "0%",
     lidHeight: "35%",
@@ -33,7 +33,7 @@ const products: ProductZone[] = [
   },
   {
     name: "Sibilla",
-    subtitle: "anti-age cream",
+    subtitle: "crema viso anti-age",
     slug: "sibilla",
     left: "33%",
     top: "5%",
@@ -45,7 +45,7 @@ const products: ProductZone[] = [
   },
   {
     name: "Catria",
-    subtitle: "nourishing face cream",
+    subtitle: "crema viso nutriente",
     slug: "catria",
     left: "62%",
     top: "8%",
@@ -80,7 +80,7 @@ const ProductsSection = () => {
             Prodotti che <span className="text-violet">amerai</span>
           </h2>
           <p className="font-body text-primary-foreground/50 mt-4 text-lg">
-            Passa sopra una crema per scoprirla
+            Passa sopra una crema per scoprirla 👆
           </p>
         </motion.div>
 
@@ -185,7 +185,7 @@ const ProductsSection = () => {
 
                   {/* Floating "open" arrow indicator */}
                   <motion.div
-                    className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none"
+                    className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-none"
                     animate={isHovered ? {
                       opacity: 1,
                       scale: 1,
