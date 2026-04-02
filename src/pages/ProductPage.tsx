@@ -7,25 +7,28 @@ import productConero from "@/assets/product-conero.jpg";
 import productSibilla from "@/assets/product-sibilla.jpg";
 import productCatria from "@/assets/product-catria.jpg";
 
-const productData: Record<string, { name: string; desc: string; gradient: string; subtitle: string; image: string }> = {
+const productData: Record<string, { name: string; desc: string; details: string; gradient: string; subtitle: string; image: string }> = {
   conero: {
     name: "Conero",
     subtitle: "Purifying Face Cream",
-    desc: "I protagonisti di questa crema purificante sono le foglie d'ulivo, derivanti dall'industria olearia e la niacinamide. Ideale per pelli miste e grasse.",
+    desc: "La nostra crema idratante che nutre e mantiene la pelle morbida e protetta, ispirata alla natura del Monte Conero.",
+    details: "I protagonisti di questa crema purificante sono le foglie d'ulivo, derivanti dall'industria olearia e la niacinamide. Ideale per pelli miste e grasse.",
     gradient: "from-primary/20 to-lime/20",
     image: productConero,
   },
   sibilla: {
     name: "Sibilla",
     subtitle: "Anti-Age Cream",
-    desc: "La nostra crema di punta, anti-age. L'ingrediente che impreziosisce la formula sono i tepali di zafferano, raccolti rigorosamente a mano durante la stagione di fioritura.",
+    desc: "La nostra crema antiage che aiuta a contrastare i segni del tempo, formulata con estratti botanici dei Monti Sibillini.",
+    details: "La nostra crema di punta, anti-age. L'ingrediente che impreziosisce la formula sono i tepali di zafferano, raccolti rigorosamente a mano durante la stagione di fioritura.",
     gradient: "from-violet/20 to-primary/20",
     image: productSibilla,
   },
   catria: {
     name: "Catria",
     subtitle: "Nourishing Face Cream",
-    desc: "Una crema idratante e nutriente che associa i benefici dei residui del caffè, con quelli dell'olio di girasole. Per chi vuole una pelle morbida e setosa.",
+    desc: "Una crema nutriente che rigenera e protegge la pelle in profondità, con ingredienti naturali del Monte Catria.",
+    details: "Una crema idratante e nutriente che associa i benefici dei residui del caffè, con quelli dell'olio di girasole. Per chi vuole una pelle morbida e setosa.",
     gradient: "from-secondary/20 to-coral/20",
     image: productCatria,
   },
@@ -95,7 +98,8 @@ const ProductPage = () => {
               </span>
               <h1 className="font-display text-5xl md:text-7xl font-extrabold text-foreground mb-2">{product.name}</h1>
               <p className="font-body text-lg text-violet font-semibold mb-6">{product.subtitle}</p>
-              <p className="font-body text-xl text-muted-foreground leading-relaxed mb-8">{product.desc}</p>
+              <p className="font-body text-xl text-muted-foreground leading-relaxed mb-4">{product.desc}</p>
+              <p className="font-body text-lg text-muted-foreground/80 leading-relaxed mb-8">{product.details}</p>
               <div className="w-20 h-1 bg-primary rounded-full mb-8" />
               <p className="font-body text-muted-foreground italic mb-8">
                 Maggiori informazioni saranno disponibili prossimamente.
