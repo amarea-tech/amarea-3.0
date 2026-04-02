@@ -50,12 +50,12 @@ const FooterSection = () => {
             <div>
               <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
             </div>
-            <p className="font-body text-sm text-primary-foreground/40">
+            <p className="font-body text-sm text-primary-foreground">
               © {new Date().getFullYear()} Amarea Cosmetics — Spin-off Università Politecnica delle Marche
             </p>
             <a
               href="mailto:info@amareacosmetics.it"
-              className="font-body text-sm text-primary-foreground/60 hover:text-primary transition-colors px-4 py-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
+              className="font-body text-sm text-primary-foreground hover:text-primary transition-colors px-4 py-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
             >
               info@amareacosmetics.it
             </a>
