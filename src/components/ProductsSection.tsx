@@ -185,7 +185,7 @@ const ProductsSection = () => {
 
                   {/* Floating "open" arrow indicator */}
                   <motion.div
-                    className="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none"
+                    className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-none"
                     animate={isHovered ? {
                       opacity: 1,
                       scale: 1,
