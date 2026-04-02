@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, ArrowUpRight } from "lucide-react";
-import logoImg from "@/assets/amarea-logo.png";
+import logoImg from "@/assets/amarea-footer-logo.png";
 
 const FooterSection = () => {
   return (
