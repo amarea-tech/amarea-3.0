@@ -180,28 +180,14 @@ const ProductsSection = () => {
                     <div className="bg-foreground/90 backdrop-blur-sm text-primary-foreground px-6 py-3 rounded-full text-center whitespace-nowrap">
                       <p className="font-display text-lg font-bold">{product.name}</p>
                       <p className="font-body text-xs text-primary-foreground/70">{product.subtitle}</p>
+                      <span className="font-body text-[10px] text-primary-foreground/50 tracking-wider uppercase flex items-center justify-center gap-1 mt-1">
+                        Scopri
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="7" y1="17" x2="17" y2="7" />
+                          <polyline points="7 7 17 7 17 17" />
+                        </svg>
+                      </span>
                     </div>
-                  </motion.div>
-
-                  {/* Subtle arrow integrated into label */}
-                  <motion.div
-                    className="absolute bottom-1 left-0 right-0 flex justify-center pointer-events-none"
-                    animate={isHovered ? {
-                      opacity: 1,
-                      y: -4,
-                    } : {
-                      opacity: 0,
-                      y: 6,
-                    }}
-                    transition={{ duration: 0.3, delay: 0.05 }}
-                  >
-                    <span className="text-primary-foreground/60 text-xs font-body tracking-wider uppercase flex items-center gap-1.5">
-                      Scopri
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="7" y1="17" x2="17" y2="7" />
-                        <polyline points="7 7 17 7 17 17" />
-                      </svg>
-                    </span>
                   </motion.div>
                 </Link>
               );
