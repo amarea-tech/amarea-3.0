@@ -153,19 +153,13 @@ const ProductsSection = () => {
                       }
                       transition={{ duration: 0.5, ease: "easeOut" }}
                     >
-                      <div className="text-center">
-                        <p className="font-display text-xl md:text-2xl font-semibold text-foreground tracking-wide drop-shadow-sm">
+                      <div className="text-center bg-foreground/80 backdrop-blur-sm rounded-xl px-5 py-3">
+                        <p className="font-display text-xl md:text-2xl font-semibold text-primary-foreground tracking-wide">
                           {product.name}
                         </p>
-                        <p className="font-body text-xs md:text-sm text-foreground/70 mt-1 tracking-wider uppercase drop-shadow-sm">
+                        <p className="font-body text-xs md:text-sm text-primary-foreground/60 mt-1 tracking-wider uppercase">
                           {product.subtitle}
                         </p>
-                        <motion.div
-                          className="w-8 h-[1px] mx-auto mt-3"
-                          style={{ backgroundColor: `hsla(${product.glowColor}, 0.5)` }}
-                          animate={isHovered ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
-                          transition={{ duration: 0.4, delay: 0.1 }}
-                        />
                       </div>
                     </motion.div>
                   </Link>
