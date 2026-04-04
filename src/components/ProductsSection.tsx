@@ -153,11 +153,11 @@ const ProductsSection = () => {
                       }
                       transition={{ duration: 0.5, ease: "easeOut" }}
                     >
-                      <div className="text-center bg-foreground/80 backdrop-blur-sm rounded-xl px-5 py-3">
-                        <p className="font-display text-xl md:text-2xl font-semibold text-primary-foreground tracking-wide">
+                      <div className="text-center bg-foreground/80 backdrop-blur-sm rounded-lg px-4 py-2">
+                        <p className="font-display text-base md:text-lg font-semibold text-primary-foreground tracking-wide">
                           {product.name}
                         </p>
-                        <p className="font-body text-xs md:text-sm text-primary-foreground/60 mt-1 tracking-wider uppercase">
+                        <p className="font-body text-[10px] md:text-xs text-primary-foreground/60 mt-0.5 tracking-wider uppercase">
                           {product.subtitle}
                         </p>
                       </div>
