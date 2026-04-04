@@ -154,10 +154,10 @@ const ProductsSection = () => {
                       transition={{ duration: 0.5, ease: "easeOut" }}
                     >
                       <div className="text-center">
-                        <p className="font-display text-xl md:text-2xl font-semibold text-primary-foreground/90 tracking-wide">
+                        <p className="font-display text-xl md:text-2xl font-semibold text-foreground tracking-wide drop-shadow-sm">
                           {product.name}
                         </p>
-                        <p className="font-body text-xs md:text-sm text-primary-foreground/50 mt-1 tracking-wider uppercase">
+                        <p className="font-body text-xs md:text-sm text-foreground/70 mt-1 tracking-wider uppercase drop-shadow-sm">
                           {product.subtitle}
                         </p>
                         <motion.div
