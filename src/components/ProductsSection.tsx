@@ -221,7 +221,7 @@ const ProductsSection = () => {
                             : "none",
                       }}
                     />
-                    <p className="font-display text-sm font-medium" style={{ color: `hsl(${product.glowColor})` }}>
+                    <p className="font-display text-base font-semibold" style={{ color: `hsl(${product.glowColor})` }}>
                       {product.name}
                     </p>
                   </Link>
