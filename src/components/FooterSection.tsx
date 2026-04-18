@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, ArrowUpRight } from "lucide-react";
+import { Mail, ArrowUpRight, Instagram, Linkedin } from "lucide-react";
 import logoImg from "@/assets/amarea-footer-logo.png";
 
 const FooterSection = () => {
@@ -53,12 +53,32 @@ const FooterSection = () => {
             <p className="font-body text-sm text-primary-foreground">
               © {new Date().getFullYear()} Amarea Cosmetics — Spin-off Università Politecnica delle Marche
             </p>
-            <a
-              href="mailto:info@amareacosmetics.it"
-              className="font-body text-sm text-primary-foreground hover:text-primary transition-colors px-4 py-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
-            >
-              info@amareacosmetics.it
-            </a>
+            <div className="flex items-center gap-4">
+              <a
+                href="mailto:info@amareacosmetics.it"
+                className="font-body text-sm text-primary-foreground hover:text-primary transition-colors px-4 py-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
+              >
+                info@amareacosmetics.it
+              </a>
+              <a
+                href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-primary-foreground hover:text-primary transition-colors p-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
+              >
+                <Instagram size={18} />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/amareacosmetics/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-primary-foreground hover:text-primary transition-colors p-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
+              >
+                <Linkedin size={18} />
+              </a>
+            </div>
           </div>
         </div>
       </footer>
