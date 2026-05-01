@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { teamMembers } from "@/data/teamData";
 
 const TeamSection = () => {
+  const flowers = ["🌸", "🌼", "🌺", "🌷", "🌻", "💮", "🪷", "🏵️", "🌹"];
   return (
     <section id="team" className="py-24 md:py-32 bg-card relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
@@ -46,7 +47,9 @@ const TeamSection = () => {
                       alt={member.name}
                       className="w-16 h-16 rounded-2xl object-cover group-hover:rounded-full transition-all duration-500"
                     />
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-primary rounded-full border-2 border-background opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 flex items-center justify-center text-[14px] leading-none opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                      <span aria-hidden="true">{flowers[i % flowers.length]}</span>
+                    </div>
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-bold text-foreground">{member.name}</h3>
