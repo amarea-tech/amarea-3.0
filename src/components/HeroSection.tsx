@@ -4,7 +4,7 @@ import logo from "@/assets/amarea-logo-transparent.png";
 
 const HeroSection = () => {
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-foreground">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-foreground pt-28 md:pt-0">
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-blob" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-blob" style={{ animationDelay: "2s" }} />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/10 rounded-full blur-3xl animate-blob" style={{ animationDelay: "4s" }} />
