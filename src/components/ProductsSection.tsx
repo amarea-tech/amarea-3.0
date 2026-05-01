@@ -43,6 +43,31 @@ const products: ProductZone[] = [
 const ProductsSection = () => {
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
   const isMobile = useIsMobile();
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [answers, setAnswers] = useState<{ skin?: string; age?: string; goal?: string }>({});
+  const [result, setResult] = useState<string | null>(null);
+
+  const computeResult = (a: { skin?: string; age?: string; goal?: string }) => {
+    // Mapping: Sibilla = anti-aging, Conero = purificante, Catria = idratante
+    if (a.goal === "anti-age" || a.age === "45+") return "sibilla";
+    if (a.goal === "purificare" || a.skin === "grassa" || a.skin === "mista") return "conero";
+    return "catria";
+  };
+
+  const handleAnswer = (key: "skin" | "age" | "goal", value: string) => {
+    const next = { ...answers, [key]: value };
+    setAnswers(next);
+    if (next.skin && next.age && next.goal) {
+      setResult(computeResult(next));
+    }
+  };
+
+  const resetQuiz = () => {
+    setAnswers({});
+    setResult(null);
+  };
+
+  const recommended = result ? products.find((p) => p.slug === result) : null;
 
   return (
     <section id="prodotti" className="py-24 md:py-36 bg-foreground relative overflow-hidden">
