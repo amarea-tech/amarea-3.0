@@ -143,7 +143,7 @@ const PlantGrowthApp = () => {
   };
 
   const choose = (id: string) => {
-    setState({ ...defaultState, plantId: id, lastTick: Date.now() });
+    setState((s) => ({ ...s, plantId: id, lastTick: Date.now() }));
   };
 
   const mood =
