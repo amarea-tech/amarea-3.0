@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Droplets, Sun, CloudRain, Sprout } from "lucide-react";
+import { Droplets, Sun, CloudRain, Sprout, Wind, Flower2 } from "lucide-react";
 
 type Plant = {
   id: string;
@@ -13,26 +13,26 @@ const PLANTS: Plant[] = [
   {
     id: "lavanda",
     name: "Lavanda",
-    emoji: "💜",
+    emoji: "🪻",
     stages: ["🌱", "🌿", "🪻", "💐"],
   },
   {
     id: "rosmarino",
     name: "Rosmarino",
-    emoji: "🌿",
+    emoji: "🌲",
     stages: ["🌱", "🌿", "🌳", "🌲"],
   },
   {
     id: "elicriso",
     name: "Elicriso",
-    emoji: "🌼",
-    stages: ["🌱", "🌿", "🌾", "🌻"],
+    emoji: "🌻",
+    stages: ["🌱", "🌾", "🌼", "🌻"],
   },
   {
     id: "camomilla",
     name: "Camomilla",
     emoji: "🌼",
-    stages: ["🌱", "🌿", "🌾", "🌼"],
+    stages: ["🌱", "🌿", "🌷", "🌼"],
   },
 ];
 
@@ -57,7 +57,12 @@ const defaultState: State = {
 
 const PlantGrowthApp = () => {
   const [state, setState] = useState<State>(defaultState);
-  const [weather, setWeather] = useState<{ rain: number; uv: number } | null>(null);
+  const [weather, setWeather] = useState<{
+    rain: number;
+    uv: number;
+    smog: number;
+    pollen: number;
+  } | null>(null);
   const [splash, setSplash] = useState(0);
 
   // Hydrate from storage
@@ -78,19 +83,38 @@ const PlantGrowthApp = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  // Fetch weather (Ancona, Marche)
+  // Fetch weather + air quality (Ancona, Marche)
   useEffect(() => {
-    const url =
+    const meteo =
       "https://api.open-meteo.com/v1/forecast?latitude=43.6158&longitude=13.5189&daily=precipitation_sum,uv_index_max&timezone=Europe%2FRome&forecast_days=1";
-    fetch(url)
-      .then((r) => r.json())
-      .then((d) => {
+    const air =
+      "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.6158&longitude=13.5189&current=pm10,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=Europe%2FRome";
+
+    Promise.all([
+      fetch(meteo).then((r) => r.json()),
+      fetch(air).then((r) => r.json()),
+    ])
+      .then(([m, a]) => {
+        const c = a?.current ?? {};
+        const pollens = [
+          c.grass_pollen,
+          c.birch_pollen,
+          c.olive_pollen,
+          c.alder_pollen,
+          c.ragweed_pollen,
+        ]
+          .filter((v) => typeof v === "number")
+          .reduce((a: number, b: number) => a + b, 0);
         setWeather({
-          rain: d?.daily?.precipitation_sum?.[0] ?? 0,
-          uv: d?.daily?.uv_index_max?.[0] ?? 0,
+          rain: m?.daily?.precipitation_sum?.[0] ?? 0,
+          uv: m?.daily?.uv_index_max?.[0] ?? 0,
+          smog: c.pm10 ?? 0,
+          pollen: pollens,
         });
       })
-      .catch(() => setWeather({ rain: 0.4, uv: 5.2 }));
+      .catch(() =>
+        setWeather({ rain: 0.4, uv: 5.2, smog: 18, pollen: 12 })
+      );
   }, []);
 
   const plant = useMemo(
@@ -159,22 +183,32 @@ const PlantGrowthApp = () => {
             {splash > 0 && (
               <motion.div
                 key={splash}
-                initial={{ y: -80, opacity: 0 }}
-                animate={{ y: 40, opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6 }}
-                className="absolute top-4 text-3xl"
+                initial={{ y: -90, opacity: 0, scale: 0.6 }}
+                animate={{ y: 60, opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.4, y: 80 }}
+                transition={{ duration: 0.7, ease: "easeIn" }}
+                className="absolute top-2 left-1/2 -translate-x-1/2"
               >
-                💧
+                <WaterDrop className="w-10 h-14 drop-shadow-[0_4px_8px_rgba(56,189,248,0.5)]" />
               </motion.div>
             )}
           </AnimatePresence>
           <motion.div
-            key={stageIndex}
-            initial={{ scale: 0.8, opacity: 0, y: 10 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 120 }}
-            className="text-[8rem] md:text-[10rem] leading-none drop-shadow-lg"
+            key={`${plant.id}-${stageIndex}`}
+            initial={{ scale: 0.7, opacity: 0, y: 20, rotate: -8 }}
+            animate={{
+              scale: 1,
+              opacity: 1,
+              y: [0, -6, 0],
+              rotate: [-2, 2, -2],
+            }}
+            transition={{
+              scale: { type: "spring", stiffness: 120 },
+              opacity: { duration: 0.4 },
+              y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+              rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+            }}
+            className="text-[8rem] md:text-[10rem] leading-none drop-shadow-lg select-none"
           >
             {plant.stages[stageIndex]}
           </motion.div>
@@ -215,9 +249,10 @@ const PlantGrowthApp = () => {
             <button
               onClick={water}
               disabled={state.water >= MAX_WATER}
-              className="w-full bg-primary-foreground text-primary font-body font-semibold py-3 rounded-full hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 transition-transform"
+              className="w-full inline-flex items-center justify-center gap-2 bg-primary-foreground text-primary font-body font-semibold py-3 rounded-full hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 transition-transform"
             >
-              💧 Annaffia
+              <WaterDrop className="w-5 h-6" />
+              Annaffia
             </button>
           </div>
 
@@ -240,6 +275,40 @@ const PlantGrowthApp = () => {
               </div>
               <div className="text-[11px] text-primary-foreground/60">max giornaliero</div>
             </div>
+            <div className="rounded-2xl bg-primary-foreground/10 border border-primary-foreground/10 p-4">
+              <div className="flex items-center gap-2 text-primary-foreground/80 text-xs font-body mb-1">
+                <Wind size={14} /> Smog (PM10)
+              </div>
+              <div className="font-display text-2xl font-bold text-primary-foreground">
+                {weather ? `${weather.smog.toFixed(0)} µg/m³` : "—"}
+              </div>
+              <div className="text-[11px] text-primary-foreground/60">
+                {weather
+                  ? weather.smog < 25
+                    ? "Aria pulita"
+                    : weather.smog < 50
+                    ? "Discreta"
+                    : "Inquinata"
+                  : ""}
+              </div>
+            </div>
+            <div className="rounded-2xl bg-primary-foreground/10 border border-primary-foreground/10 p-4">
+              <div className="flex items-center gap-2 text-primary-foreground/80 text-xs font-body mb-1">
+                <Flower2 size={14} /> Pollini
+              </div>
+              <div className="font-display text-2xl font-bold text-primary-foreground">
+                {weather ? weather.pollen.toFixed(1) : "—"}
+              </div>
+              <div className="text-[11px] text-primary-foreground/60">
+                {weather
+                  ? weather.pollen < 5
+                    ? "Bassi"
+                    : weather.pollen < 20
+                    ? "Moderati"
+                    : "Alti"
+                  : ""}
+              </div>
+            </div>
           </div>
 
           <button
@@ -253,5 +322,28 @@ const PlantGrowthApp = () => {
     </div>
   );
 };
+
+const WaterDrop = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 32 44" className={className} xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="dropGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#bae6fd" />
+        <stop offset="55%" stopColor="#38bdf8" />
+        <stop offset="100%" stopColor="#0284c7" />
+      </linearGradient>
+      <radialGradient id="dropShine" cx="0.35" cy="0.3" r="0.3">
+        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+        <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+      </radialGradient>
+    </defs>
+    <path
+      d="M16 2 C16 2 3 18 3 28 a13 13 0 0 0 26 0 C29 18 16 2 16 2 Z"
+      fill="url(#dropGrad)"
+      stroke="rgba(255,255,255,0.35)"
+      strokeWidth="0.8"
+    />
+    <ellipse cx="11" cy="20" rx="4" ry="6" fill="url(#dropShine)" />
+  </svg>
+);
 
 export default PlantGrowthApp;
