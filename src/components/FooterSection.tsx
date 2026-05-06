@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Mail, ArrowUpRight, Instagram, Linkedin } from "lucide-react";
 import logoImg from "@/assets/amarea-footer-logo.png";
+import PlantGrowthApp from "./PlantGrowthApp";
 
 const FooterSection = () => {
   return (
@@ -17,19 +18,43 @@ const FooterSection = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-extrabold text-primary-foreground mb-6 leading-tight">
-              Collabora con noi 🌸
+              Grow With Amarea 🌸
             </h2>
             <p className="font-body text-primary-foreground/70 max-w-xl mx-auto mb-10 leading-relaxed text-lg">
               Sei un ricercatore, un'università o un'azienda interessata a progetti di ricerca nel campo della cosmesi naturale e sostenibile?
             </p>
-            <a
-              href="mailto:info@amareacosmetics.it?subject=Richiesta%20Collaborazione%20Scientifica"
-              className="group inline-flex items-center gap-3 bg-primary-foreground text-primary font-body font-bold text-lg px-10 py-4 rounded-full hover:scale-105 hover:shadow-2xl transition-all duration-500"
-            >
-              <Mail size={20} />
-              Contattaci
-              <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-            </a>
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+              <a
+                href="mailto:info@amareacosmetics.it?subject=Richiesta%20Collaborazione%20Scientifica"
+                className="group inline-flex items-center gap-3 bg-primary-foreground text-primary font-body font-bold text-lg px-8 py-4 rounded-full hover:scale-105 hover:shadow-2xl transition-all duration-500"
+              >
+                <Mail size={20} />
+                Contattaci
+                <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+              </a>
+              <a
+                href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="inline-flex items-center gap-2 bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/20 font-body font-semibold px-6 py-4 rounded-full hover:bg-primary-foreground/20 transition-all duration-300"
+              >
+                <Instagram size={20} /> Instagram
+              </a>
+              <a
+                href="https://www.linkedin.com/company/amareacosmetics/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="inline-flex items-center gap-2 bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/20 font-body font-semibold px-6 py-4 rounded-full hover:bg-primary-foreground/20 transition-all duration-300"
+              >
+                <Linkedin size={20} /> LinkedIn
+              </a>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <PlantGrowthApp />
+            </div>
           </motion.div>
         </div>
       </section>
