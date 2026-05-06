@@ -38,7 +38,7 @@ const PLANTS: Plant[] = [
 
 const STORAGE_KEY = "amarea-plant-state-v1";
 const MAX_WATER = 100;
-const GROWTH_PER_WATER = 8;
+const GROWTH_PER_WATER = 25;
 const WATER_DROP_PER_HOUR = 4;
 
 type State = {
@@ -83,14 +83,12 @@ const PlantGrowthApp = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
-  // Fetch weather + air quality (Ancona, Marche)
+  // Fetch weather + air quality based on user geolocation (fallback Ancona)
   useEffect(() => {
-    const meteo =
-      "https://api.open-meteo.com/v1/forecast?latitude=43.6158&longitude=13.5189&daily=precipitation_sum,uv_index_max&timezone=Europe%2FRome&forecast_days=1";
-    const air =
-      "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.6158&longitude=13.5189&current=pm10,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=Europe%2FRome";
-
-    Promise.all([
+    const load = (lat: number, lon: number) => {
+      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max&timezone=auto&forecast_days=1`;
+      const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto`;
+      Promise.all([
       fetch(meteo).then((r) => r.json()),
       fetch(air).then((r) => r.json()),
     ])
@@ -115,6 +113,17 @@ const PlantGrowthApp = () => {
       .catch(() =>
         setWeather({ rain: 0.4, uv: 5.2, smog: 18, pollen: 12 })
       );
+    };
+
+    if (typeof navigator !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => load(pos.coords.latitude, pos.coords.longitude),
+        () => load(43.6158, 13.5189),
+        { timeout: 6000, maximumAge: 1000 * 60 * 10 }
+      );
+    } else {
+      load(43.6158, 13.5189);
+    }
   }, []);
 
   const plant = useMemo(
