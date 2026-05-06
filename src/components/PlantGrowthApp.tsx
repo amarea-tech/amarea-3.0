@@ -273,7 +273,7 @@ const PlantGrowthApp = () => {
               <div className="font-display text-2xl font-bold text-primary-foreground">
                 {weather ? `${weather.rain.toFixed(1)} mm` : "—"}
               </div>
-              <div className="text-[11px] text-primary-foreground/60">oggi · Marche</div>
+              <div className="text-[11px] text-primary-foreground/60">oggi · zona attuale</div>
             </div>
             <div className="rounded-2xl bg-primary-foreground/10 border border-primary-foreground/10 p-4">
               <div className="flex items-center gap-2 text-primary-foreground/80 text-xs font-body mb-1">
