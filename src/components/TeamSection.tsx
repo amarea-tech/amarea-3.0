@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { teamMembers } from "@/data/teamData";
 
 const TeamSection = () => {
-  const flowers = ["🌸", "🌼", "🌺", "🌷", "🌻", "💮", "🪷", "🏵️", "🌹"];
+  const flowers = ["🌸", "🌼", "🌺", "🌷", "🌻", "💮", "🌹", "🏵️", "💐"];
   return (
     <section id="team" className="py-24 md:py-32 bg-card relative overflow-hidden">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />

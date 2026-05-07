@@ -99,7 +99,7 @@ All'interno di Amarea ricopre il ruolo di Legal Consultant, affiancando il team 
     image: alessandraMarmore,
   },
   {
-    name: "Dott.ssa Camilla Morresi",
+    name: "Prof.ssa Camilla Morresi",
     slug: "camilla-morresi",
     role: "Event & Promotions",
     title: "Professoressa in Biochimica presso Link Campus University",
