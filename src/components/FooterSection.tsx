@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, ArrowUpRight, Instagram, Linkedin } from "lucide-react";
 import logoImg from "@/assets/amarea-footer-logo.png";
-import PlantGrowthApp from "./PlantGrowthApp";
 
 const FooterSection = () => {
   return (
@@ -18,12 +17,12 @@ const FooterSection = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-extrabold text-primary-foreground mb-6 leading-tight">
-              Grow With Amarea 🌸
+              Collabora con noi 🌸
             </h2>
             <p className="font-body text-primary-foreground/70 max-w-xl mx-auto mb-10 leading-relaxed text-lg">
               Sei un ricercatore, un'università o un'azienda interessata a progetti di ricerca nel campo della cosmesi naturale e sostenibile?
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+            <div className="flex flex-wrap items-center justify-center gap-4">
               <a
                 href="mailto:info@amareacosmetics.it?subject=Richiesta%20Collaborazione%20Scientifica"
                 className="group inline-flex items-center gap-3 bg-primary-foreground text-primary font-body font-bold text-lg px-8 py-4 rounded-full hover:scale-105 hover:shadow-2xl transition-all duration-500"
@@ -50,10 +49,6 @@ const FooterSection = () => {
               >
                 <Linkedin size={20} /> LinkedIn
               </a>
-            </div>
-
-            <div className="max-w-4xl mx-auto">
-              <PlantGrowthApp />
             </div>
           </motion.div>
         </div>
