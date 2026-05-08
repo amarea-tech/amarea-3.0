@@ -11,13 +11,10 @@ import {
   Sparkles,
   Droplets,
 } from "lucide-react";
-import stage1 from "@/assets/plant/stage-1.png";
-import stage2 from "@/assets/plant/stage-2.png";
-import stage3 from "@/assets/plant/stage-3.png";
-import stage4 from "@/assets/plant/stage-4.png";
+import Plant3D from "./Plant3D";
 
-const STAGES = [stage1, stage2, stage3, stage4];
 const STAGE_NAMES = ["Seme", "Germoglio", "Foglie", "Fiorita"];
+const STAGE_COUNT = 4;
 
 type Weather = {
   rain: number;
@@ -209,8 +206,8 @@ const PlantGrowthApp = () => {
   const current = STATES[status];
 
   const stageIndex = Math.min(
-    STAGES.length - 1,
-    Math.floor((progress / 100) * STAGES.length)
+    STAGE_COUNT - 1,
+    Math.floor((progress / 100) * STAGE_COUNT)
   );
 
   const health = useMemo(() => {
@@ -304,31 +301,17 @@ const PlantGrowthApp = () => {
                 </AnimatePresence>
 
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <motion.div
                     key={stageIndex}
-                    src={STAGES[stageIndex]}
-                    alt={`Piantina Amarea — fase ${STAGE_NAMES[stageIndex]}`}
-                    initial={{ scale: 0.7, opacity: 0, y: 20 }}
-                    animate={{
-                      scale: 1,
-                      opacity: 1,
-                      y: [0, -6, 0],
-                      rotate: [-1.5, 1.5, -1.5],
-                    }}
-                    exit={{ scale: 0.85, opacity: 0 }}
-                    transition={{
-                      scale: { type: "spring", stiffness: 130, damping: 12 },
-                      opacity: { duration: 0.4 },
-                      y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                      rotate: {
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                    }}
-                    className="w-44 h-44 md:w-56 md:h-56 object-contain select-none drop-shadow-xl"
-                    draggable={false}
-                  />
+                    initial={{ scale: 0.7, opacity: 0, y: 20, rotateY: -25 }}
+                    animate={{ scale: 1, opacity: 1, y: 0, rotateY: 0 }}
+                    exit={{ scale: 0.85, opacity: 0, rotateY: 25 }}
+                    transition={{ type: "spring", stiffness: 130, damping: 14 }}
+                    style={{ perspective: 800 }}
+                    className="w-52 h-52 md:w-64 md:h-64 flex items-end justify-center"
+                  >
+                    <Plant3D stage={stageIndex} />
+                  </motion.div>
                 </AnimatePresence>
               </div>
 
