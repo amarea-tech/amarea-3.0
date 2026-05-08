@@ -272,19 +272,6 @@ const PlantGrowthApp = () => {
 
             <div className="relative p-6 md:p-8 flex flex-col items-center min-h-[380px]">
               {/* Mood badge */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={status + "badge"}
-                  initial={{ scale: 0.6, opacity: 0, y: -10 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  exit={{ scale: 0.6, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 200 }}
-                  className="absolute top-5 right-5 bg-background/90 backdrop-blur border border-border rounded-full px-3 py-1.5 text-lg shadow-sm"
-                >
-                  {current.mood}
-                </motion.div>
-              </AnimatePresence>
-
               {/* Plant illustration */}
               <div className="relative flex-1 flex items-center justify-center w-full py-4">
                 {/* Water drops (only on Annaffia) */}
