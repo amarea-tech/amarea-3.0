@@ -9,134 +9,236 @@ import {
   CloudFog,
   MapPin,
   RefreshCw,
-  Sparkles,
   Mail,
   Check,
   Loader2,
-  ArrowRight,
-  Nfc,
-  Microscope,
-  Users,
-  Leaf,
+  Sunrise,
+  Sunset,
+  Moon,
+  Monitor,
+  Activity,
+  Sparkles,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import FooterSection from "@/components/FooterSection";
 import Fogliolina, { type Mood } from "@/components/grow/Fogliolina";
 import { supabase } from "@/integrations/supabase/client";
-import univpmLogo from "@/assets/univpm-logo.png";
 
-/* ---------- types ---------- */
+/* ---------------- types ---------------- */
 
 type Env = {
   uv: number;
   pm10: number;
+  pm25: number;
+  aqi: number;
   humidity: number;
   pollen: number;
   wind: number;
   temp: number;
   rain: number;
+  isDay: boolean;
+  sunrise: string; // ISO
+  sunset: string; // ISO
 };
 
-type MoodInfo = {
-  mood: Mood;
-  eyebrow: string;
-  title: string;
-  body: string;
+type Phase = "dawn" | "day" | "sunset" | "night";
+
+/* Theme tokens per circadian phase */
+const PHASE_THEME: Record<
+  Phase,
+  {
+    bg: string;
+    surface: string;
+    surfaceAlt: string;
+    border: string;
+    text: string;
+    textMuted: string;
+    accent: string;
+    label: string;
+    eyebrow: string;
+  }
+> = {
+  dawn: {
+    bg: "linear-gradient(180deg, #F2EBDC 0%, #EFE3D2 60%, #E8D9C5 100%)",
+    surface: "#FFFFFF",
+    surfaceAlt: "#F7F1E5",
+    border: "#E5DCC9",
+    text: "#1F2520",
+    textMuted: "#6B6457",
+    accent: "#C9A877",
+    label: "Alba",
+    eyebrow: "Sunrise mode",
+  },
+  day: {
+    bg: "linear-gradient(180deg, #F4EFE6 0%, #EFEAE0 100%)",
+    surface: "#FFFFFF",
+    surfaceAlt: "#F7F2E8",
+    border: "#E0DACE",
+    text: "#1F2520",
+    textMuted: "#5A6157",
+    accent: "#A8B89A",
+    label: "Giorno",
+    eyebrow: "Daylight mode",
+  },
+  sunset: {
+    bg: "linear-gradient(180deg, #EFE0D2 0%, #E6CDB8 60%, #D8B5A0 100%)",
+    surface: "#FBF3EA",
+    surfaceAlt: "#F2E2CF",
+    border: "#DDC4AC",
+    text: "#2A201A",
+    textMuted: "#6B5A4D",
+    accent: "#C99578",
+    label: "Tramonto",
+    eyebrow: "Sunset mode",
+  },
+  night: {
+    bg: "linear-gradient(180deg, #1A1F22 0%, #14181B 100%)",
+    surface: "#1F2528",
+    surfaceAlt: "#252B2E",
+    border: "#2E3438",
+    text: "#EDE7DA",
+    textMuted: "#9AA39C",
+    accent: "#C9B8D9",
+    label: "Notte",
+    eyebrow: "Night recovery mode",
+  },
 };
 
 const FALLBACK = { lat: 43.6158, lon: 13.5189, label: "Ancona, Marche" };
 
-/* ---------- mood derivation ---------- */
+/* ---------------- helpers ---------------- */
 
-const deriveMood = (e: Env): MoodInfo => {
-  if (e.uv >= 7)
-    return {
-      mood: "uv",
-      eyebrow: "Indice UV alto",
-      title: "Oggi la luce è intensa.",
-      body: "Fogliolina si schiude con prudenza. Proteggi la barriera cutanea con SPF e gesti minimi.",
-    };
-  if (e.pm10 >= 50)
-    return {
-      mood: "smog",
-      eyebrow: "Aria carica",
-      title: "L'aria pesa un po' oggi.",
-      body: "Pollution sopra la soglia. Stasera un rituale detossinante restituirà luminosità alla pelle.",
-    };
-  if (e.pollen >= 20)
-    return {
-      mood: "pollen",
-      eyebrow: "Pollini in volo",
-      title: "C'è movimento nell'aria.",
-      body: "Pelle reattiva: detergi con dolcezza e prediligi texture leniscenti, senza profumazioni intense.",
-    };
-  if (e.rain < 0.2 && e.humidity < 40)
-    return {
-      mood: "dry",
-      eyebrow: "Aria secca",
-      title: "L'umidità si è ritirata.",
-      body: "Fogliolina ha bisogno di acqua. Rinforza il velo idrolipidico con un siero ricco di attivi umettanti.",
-    };
-  if (e.rain >= 6)
-    return {
-      mood: "rainy",
-      eyebrow: "Umidità alta",
-      title: "L'aria è bagnata e gentile.",
-      body: "Lascia respirare la pelle: routine essenziale, niente strati pesanti. La pioggia fa il resto.",
-    };
-  return {
-    mood: "serene",
-    eyebrow: "Equilibrio",
-    title: "La giornata è in equilibrio.",
-    body: "Sole misurato, aria pulita: la pelle riposa. Concediti un gesto lento, senza richieste.",
-  };
+const computePhase = (env: Env | null): Phase => {
+  if (!env) return "day";
+  const now = Date.now();
+  const sr = new Date(env.sunrise).getTime();
+  const ss = new Date(env.sunset).getTime();
+  const dawnEnd = sr + 60 * 60 * 1000;
+  const sunsetStart = ss - 60 * 60 * 1000;
+  if (now < sr || now > ss) return "night";
+  if (now < dawnEnd) return "dawn";
+  if (now >= sunsetStart) return "sunset";
+  return "day";
 };
 
-/* ---------- skincare suggestions ---------- */
+const aqiFromPm = (pm25: number, pm10: number) => {
+  // crude EU-style 1-5 banding
+  const a = pm25 < 10 ? 1 : pm25 < 20 ? 2 : pm25 < 25 ? 3 : pm25 < 50 ? 4 : 5;
+  const b = pm10 < 20 ? 1 : pm10 < 40 ? 2 : pm10 < 50 ? 3 : pm10 < 100 ? 4 : 5;
+  return Math.max(a, b);
+};
 
-const skincareFor = (m: Mood) => {
-  switch (m) {
-    case "uv":
-      return [
-        { step: "Mattina", title: "Difesa fotostabile", body: "SPF 50 a finitura velata, sopra siero antiossidante alla vitamina C." },
-        { step: "Giorno", title: "Idratazione strategica", body: "Mist termale ogni 3 ore per riequilibrare TEWL e calore residuo." },
-        { step: "Sera", title: "Riparazione barriera", body: "Crema con niacinamide e ceramidi. Niente esfolianti questa sera." },
-      ];
-    case "smog":
-      return [
-        { step: "Mattina", title: "Scudo antipollution", body: "Siero polifenolico con estratti upcycled sopra detersione delicata." },
-        { step: "Giorno", title: "Re-mist", body: "Acqua botanica per rimuovere il particolato aderente alla cute." },
-        { step: "Sera", title: "Detox notturno", body: "Maschera all'argilla bianca + olio leggero in chiusura per nutrire." },
-      ];
-    case "pollen":
-      return [
-        { step: "Mattina", title: "Lenitivo prima di tutto", body: "Detergente non schiumogeno, siero alla centella, niente fragranze." },
-        { step: "Giorno", title: "Compresse fredde", body: "Su occhi e zigomi per calmare microinfiammazioni reattive." },
-        { step: "Sera", title: "Riparazione gentile", body: "Balsamo con pantenolo e bisabololo. Rituale corto, non stratificato." },
-      ];
-    case "dry":
-      return [
-        { step: "Mattina", title: "Layer umettante", body: "Acido ialuronico a basso peso su pelle ancora umida + crema occlusiva." },
-        { step: "Giorno", title: "Ricarica", body: "Mist idratante e balsamo labbra rinforzato ogni 4 ore." },
-        { step: "Sera", title: "Sleeping mask", body: "Maschera notte ricca di squalano e burri vegetali della Marca." },
-      ];
-    case "rainy":
-      return [
-        { step: "Mattina", title: "Routine essenziale", body: "Detersione + idratazione leggera. La pelle non chiede di più." },
-        { step: "Giorno", title: "SPF leggero", body: "I raggi passano comunque le nuvole: protezione fluida non comedogena." },
-        { step: "Sera", title: "Rituale lento", body: "Olio botanico in massaggio circolare. Tre minuti, nient'altro." },
-      ];
-    default:
-      return [
-        { step: "Mattina", title: "Equilibrio", body: "Detersione delicata, siero antiossidante, SPF leggero." },
-        { step: "Giorno", title: "Acqua", body: "Idrata dall'interno. La pelle ringrazia in tre giorni." },
-        { step: "Sera", title: "Gesto lento", body: "Massaggio facciale di due minuti con olio Monti Italiani." },
-      ];
+const aqiLabel = (n: number) =>
+  ["—", "Eccellente", "Buona", "Discreta", "Scarsa", "Critica"][n] ?? "—";
+
+const moodFromEnv = (env: Env | null, phase: Phase): Mood => {
+  if (!env) return "serene";
+  if (phase === "night") return "rainy"; // calmer particles at night
+  if (env.uv >= 7) return "uv";
+  if (env.pm10 >= 50) return "smog";
+  if (env.pollen >= 20) return "pollen";
+  if (env.humidity < 40 && env.rain < 0.2) return "dry";
+  if (env.rain >= 6) return "rainy";
+  return "serene";
+};
+
+/* ---------------- skin comfort score ---------------- */
+
+const computeComfort = (env: Env | null, phase: Phase) => {
+  if (!env) return 78;
+  let s = 100;
+  if (phase !== "night") {
+    if (env.uv >= 8) s -= 20;
+    else if (env.uv >= 6) s -= 12;
+    else if (env.uv >= 3) s -= 4;
   }
+  if (env.pm25 >= 25) s -= 18;
+  else if (env.pm25 >= 10) s -= 8;
+  if (env.pollen >= 20) s -= 10;
+  else if (env.pollen >= 5) s -= 4;
+  if (env.humidity < 30) s -= 14;
+  else if (env.humidity < 40) s -= 6;
+  else if (env.humidity > 80) s -= 4;
+  if (env.wind >= 30) s -= 6;
+  if (env.temp < 5 || env.temp > 32) s -= 6;
+  return Math.max(28, Math.min(100, Math.round(s)));
 };
 
-/* ---------- page ---------- */
+const hydrationRisk = (env: Env | null) => {
+  if (!env) return { level: "—", note: "" };
+  const score =
+    (env.humidity < 40 ? 2 : env.humidity < 55 ? 1 : 0) +
+    (env.wind > 25 ? 2 : env.wind > 15 ? 1 : 0) +
+    (env.uv >= 7 ? 1 : 0) +
+    (env.temp >= 28 ? 1 : 0);
+  if (score >= 4) return { level: "Alto", note: "Barriera sotto stress idrico" };
+  if (score >= 2) return { level: "Moderato", note: "Tendenza alla disidratazione" };
+  return { level: "Basso", note: "Bilancio idrocutaneo stabile" };
+};
+
+const blueLightExposure = (phase: Phase) => {
+  if (phase === "night") return { level: "Elevato (schermi)", note: "Schermi attivi: stress ossidativo cumulativo" };
+  if (phase === "sunset") return { level: "Moderato", note: "Combina luce blu naturale e digitale" };
+  if (phase === "dawn") return { level: "Basso", note: "Esposizione naturale, energia gentile" };
+  return { level: "Diurno", note: "Luce blu naturale: integra antiossidanti" };
+};
+
+/* ---------------- recommendations ---------------- */
+
+type Reco = { tag: string; title: string; body: string };
+
+const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
+  if (!env)
+    return [
+      { tag: "Routine", title: "Equilibrio", body: "Detersione delicata, idratazione, antiossidante." },
+    ];
+  const r: Reco[] = [];
+
+  if (phase === "night") {
+    r.push({ tag: "Recovery", title: "Riparazione notturna", body: "Retinaldeide o peptidi biomimetici + crema occlusiva con squalano." });
+    r.push({ tag: "Microcircolo", title: "Massaggio facciale", body: "Tre minuti di gua sha freddo per drenare e ossigenare i tessuti." });
+    if (env.humidity < 45)
+      r.push({ tag: "Idratazione", title: "Sleeping mask umettante", body: "Acido ialuronico multipeso + glicerina sotto film leggero." });
+    else
+      r.push({ tag: "Detossinazione", title: "Maschera detox", body: "Argilla bianca + niacinamide per riequilibrare la microflora." });
+    return r;
+  }
+
+  if (env.uv >= 6)
+    r.push({ tag: "Fotoprotezione", title: "SPF 50 + antiossidanti", body: "Vitamina C 10-15% sotto SPF a finitura velata. Reapply ogni 3h." });
+  else
+    r.push({ tag: "Fotoprotezione", title: "SPF leggero", body: "SPF 30 fluido, non comedogeno, su siero antiossidante." });
+
+  if (env.pm25 >= 15 || env.pm10 >= 40)
+    r.push({ tag: "Anti-pollution", title: "Detersione bifasica + scudo polifenolico", body: "Olio detergente seguito da siero con resveratrolo o estratti upcycled." });
+
+  if (env.humidity < 40)
+    r.push({ tag: "Idratazione", title: "Layer umettante + barriera", body: "Acido ialuronico su pelle umida, sigilla con crema a ceramidi." });
+  else if (env.humidity > 75)
+    r.push({ tag: "Texture", title: "Formulazioni leggere", body: "Gel-cream e sieri acquosi: evita oli pesanti e occlusivi." });
+
+  if (env.wind >= 20 || env.temp <= 8)
+    r.push({ tag: "Barriera", title: "Ceramidi e burri vegetali", body: "Crema ricca con ceramidi NP, colesterolo e burro di karité." });
+
+  if (env.pollen >= 20)
+    r.push({ tag: "Lenitivo", title: "Routine ipo-reattiva", body: "Centella, bisabololo, zero fragranze. Compresse fredde se serve." });
+
+  return r.slice(0, 4);
+};
+
+/* ---------------- pollen formatting ---------------- */
+
+const pollenSeverity = (v: number) =>
+  v < 5 ? "Basso" : v < 20 ? "Moderato" : v < 50 ? "Alto" : "Molto alto";
+
+const pollenExplain = (v: number) =>
+  v < 5
+    ? "Esposizione trascurabile, pelle non reattiva."
+    : v < 20
+    ? "Possibili microirritazioni in pelli sensibili."
+    : "Probabili reazioni cutanee: prediligi texture leniscenti.";
+
+/* ---------------- page ---------------- */
 
 const GrowPage = () => {
   const [env, setEnv] = useState<Env | null>(null);
@@ -148,8 +250,8 @@ const GrowPage = () => {
   const fetchAll = async (lat: number, lon: number, fallback = false) => {
     setLoading(true);
     try {
-      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max&current=relative_humidity_2m,temperature_2m,wind_speed_10m&timezone=auto&forecast_days=1`;
-      const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto`;
+      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,wind_speed_10m,is_day&timezone=auto&forecast_days=1`;
+      const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto`;
       const geo = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=it&count=1`;
 
       const [m, a, g] = await Promise.all([
@@ -163,15 +265,24 @@ const GrowPage = () => {
         .filter((v) => typeof v === "number")
         .reduce((s: number, v: number) => s + v, 0);
 
-      setEnv({
+      const pm10 = c.pm10 ?? 0;
+      const pm25 = c.pm2_5 ?? 0;
+
+      const next: Env = {
         uv: m?.daily?.uv_index_max?.[0] ?? 0,
-        pm10: c.pm10 ?? 0,
+        pm10,
+        pm25,
+        aqi: aqiFromPm(pm25, pm10),
         humidity: m?.current?.relative_humidity_2m ?? 50,
         pollen,
         wind: m?.current?.wind_speed_10m ?? 0,
         temp: m?.current?.temperature_2m ?? 18,
         rain: m?.daily?.precipitation_sum?.[0] ?? 0,
-      });
+        isDay: !!m?.current?.is_day,
+        sunrise: m?.daily?.sunrise?.[0] ?? new Date().toISOString(),
+        sunset: m?.daily?.sunset?.[0] ?? new Date().toISOString(),
+      };
+      setEnv(next);
       setCoords({ lat, lon });
       const first = g?.results?.[0];
       setPlace(first ? `${first.name}, ${first.admin1 ?? first.country ?? ""}` : fallback ? FALLBACK.label : `${lat.toFixed(2)}, ${lon.toFixed(2)}`);
@@ -198,305 +309,248 @@ const GrowPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const moodInfo = useMemo<MoodInfo>(
-    () => (env ? deriveMood(env) : { mood: "serene", eyebrow: "In ascolto", title: "Sto leggendo l'ambiente.", body: "Un istante: Fogliolina si sta orientando." }),
-    [env],
-  );
+  const phase = useMemo(() => computePhase(env), [env]);
+  const theme = PHASE_THEME[phase];
+  const isNight = phase === "night";
+  const mood = useMemo(() => moodFromEnv(env, phase), [env, phase]);
+  const comfort = useMemo(() => computeComfort(env, phase), [env, phase]);
+  const hydra = useMemo(() => hydrationRisk(env), [env]);
+  const blue = useMemo(() => blueLightExposure(phase), [phase]);
+  const recos = useMemo(() => buildRecos(env, phase), [env, phase]);
 
-  const suggestions = skincareFor(moodInfo.mood);
+  const fmtTime = (iso: string) =>
+    new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+
+  const uvDisplay = isNight ? "0.0" : env ? env.uv.toFixed(1) : "—";
+  const uvHint = isNight ? "Inattivo (notte)" : env ? (env.uv < 3 ? "Basso" : env.uv < 6 ? "Moderato" : env.uv < 8 ? "Alto" : "Molto alto") : "";
 
   return (
-    <div className="min-h-screen bg-[#F4EFE6] text-[#2A2A2A]">
+    <div
+      className="min-h-screen transition-colors duration-700"
+      style={{ background: theme.bg, color: theme.text }}
+    >
       <Navbar />
 
-      {/* HERO */}
-      <section className="relative pt-36 md:pt-44 pb-20 md:pb-28 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-[#A8B89A]/25 blur-[120px]" />
-          <div className="absolute top-40 -right-32 w-[480px] h-[480px] rounded-full bg-[#C9B8D9]/25 blur-[140px]" />
-        </div>
+      {/* ======= HERO HEADER ======= */}
+      <header className="pt-32 md:pt-36 pb-10 md:pb-14">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="flex items-end justify-between gap-6 flex-wrap">
+            <div>
+              <span
+                className="text-[10px] tracking-[0.35em] uppercase font-body"
+                style={{ color: theme.textMuted }}
+              >
+                Amarea · Environmental Skin Insights
+              </span>
+              <h1
+                className="font-display text-4xl md:text-6xl mt-3 leading-[1.05]"
+                style={{ color: theme.text }}
+              >
+                Skin Weather <span className="italic font-light">Dashboard</span>
+              </h1>
+              <div
+                className="flex items-center gap-3 mt-4 font-body text-sm"
+                style={{ color: theme.textMuted }}
+              >
+                <MapPin size={14} />
+                <span>{place || "Localizzazione in corso…"}</span>
+                {updatedAt && <span className="opacity-70">· aggiornato {updatedAt}</span>}
+                <button
+                  onClick={() => (coords ? fetchAll(coords.lat, coords.lon) : requestLoc())}
+                  disabled={loading}
+                  className="ml-1 inline-flex items-center gap-1.5 hover:underline underline-offset-4"
+                  style={{ color: theme.text }}
+                >
+                  <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> aggiorna
+                </button>
+              </div>
+            </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-[1.2fr_1fr] gap-10 md:gap-16 items-center">
-          <div>
-            <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-              <Leaf size={13} /> Grow with Amarea
-            </span>
-            <h1 className="font-display text-5xl md:text-7xl leading-[1.02] mt-5 text-[#1F2520]">
-              La pelle è un<br />
-              <span className="italic font-light">ecosistema.</span>
-            </h1>
-            <p className="font-body text-lg md:text-xl text-[#5A6157] mt-6 max-w-md leading-relaxed">
-              Fogliolina ascolta l'aria intorno a te e traduce il microclima in gesti concreti per la tua pelle. Botanica, biotech, quotidiana.
-            </p>
-            <div className="flex flex-wrap items-center gap-4 mt-8">
-              <a
-                href="#piantina"
-                className="inline-flex items-center gap-2 bg-[#1F2520] text-[#F4EFE6] font-body text-sm font-medium px-7 py-3.5 rounded-full hover:bg-[#2A312A] transition-colors"
-              >
-                Inizia l'esperienza <ArrowRight size={16} />
-              </a>
-              <Link
-                to="/"
-                className="font-body text-sm text-[#5A6157] underline-offset-4 hover:underline"
-              >
-                Torna ad Amarea
-              </Link>
+            {/* Phase badge */}
+            <div
+              className="rounded-full px-5 py-2.5 flex items-center gap-3 backdrop-blur-md border"
+              style={{
+                background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.55)",
+                borderColor: theme.border,
+              }}
+            >
+              <PhaseIcon phase={phase} />
+              <div className="leading-tight">
+                <div className="text-[9px] tracking-[0.3em] uppercase font-body" style={{ color: theme.textMuted }}>
+                  Circadian skin mode
+                </div>
+                <div className="font-display text-sm" style={{ color: theme.text }}>{theme.eyebrow}</div>
+              </div>
             </div>
           </div>
+        </div>
+      </header>
 
-          <div className="flex justify-center md:justify-end">
-            <Fogliolina mood={moodInfo.mood} size={420} />
+      {/* ======= PRIMARY ROW: Comfort score + Assistant + Quick stats ======= */}
+      <section className="pb-12">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="grid lg:grid-cols-[1.4fr_1fr] gap-5">
+            {/* Comfort Score card */}
+            <GlassCard theme={theme}>
+              <div className="flex items-start justify-between gap-6 flex-wrap">
+                <div>
+                  <Eyebrow theme={theme}>Skin Comfort Score</Eyebrow>
+                  <div className="flex items-baseline gap-3 mt-3">
+                    <div className="font-display text-7xl md:text-8xl leading-none" style={{ color: theme.text }}>
+                      {comfort}
+                    </div>
+                    <div className="font-body text-sm" style={{ color: theme.textMuted }}>/ 100</div>
+                  </div>
+                  <p className="font-body text-sm mt-3 max-w-xs leading-relaxed" style={{ color: theme.textMuted }}>
+                    {comfort >= 80
+                      ? "Condizioni favorevoli: la pelle è in equilibrio."
+                      : comfort >= 60
+                      ? "Stress moderato: ottimizza la routine in base agli indicatori."
+                      : "Stress elevato: priorità a barriera, idratazione e protezione."}
+                  </p>
+                </div>
+
+                {/* Botanical assistant — subtle, small, side */}
+                <div className="ml-auto -mr-2 -mt-2 opacity-90">
+                  <Fogliolina mood={mood} size={170} />
+                </div>
+              </div>
+
+              {/* Sub-row: 3 derived insights */}
+              <div className="grid grid-cols-3 gap-px mt-8 rounded-2xl overflow-hidden" style={{ background: theme.border }}>
+                <SubInsight theme={theme} icon={<Droplets size={14} />} label="Hydration risk" value={hydra.level} note={hydra.note} />
+                <SubInsight theme={theme} icon={<Monitor size={14} />} label="Blue light" value={blue.level} note={blue.note} />
+                <SubInsight
+                  theme={theme}
+                  icon={<Activity size={14} />}
+                  label="Air quality (EU)"
+                  value={env ? aqiLabel(env.aqi) : "—"}
+                  note={env ? `Indice ${env.aqi}/5` : ""}
+                />
+              </div>
+            </GlassCard>
+
+            {/* Sun cycle card */}
+            <GlassCard theme={theme}>
+              <Eyebrow theme={theme}>Ciclo solare</Eyebrow>
+              <div className="mt-5 flex items-center justify-between">
+                <SunPoint theme={theme} icon={<Sunrise size={18} />} label="Alba" value={env ? fmtTime(env.sunrise) : "—"} />
+                <SunArc phase={phase} theme={theme} />
+                <SunPoint theme={theme} icon={<Sunset size={18} />} label="Tramonto" value={env ? fmtTime(env.sunset) : "—"} />
+              </div>
+              <p className="font-body text-xs mt-6 leading-relaxed" style={{ color: theme.textMuted }}>
+                {isNight
+                  ? "Modalità notte attiva: l'interfaccia favorisce ingredienti riparativi e luce ambientale calda."
+                  : phase === "sunset"
+                  ? "Tramonto: la pelle entra in fase di transizione, valuta antiossidanti."
+                  : phase === "dawn"
+                  ? "Alba: il microcircolo cutaneo si riattiva, idratazione prima di tutto."
+                  : "Ore diurne: protezione e antiossidanti restano la priorità."}
+              </p>
+            </GlassCard>
           </div>
         </div>
       </section>
 
-      {/* LA TUA PIANTINA */}
-      <section id="piantina" className="relative py-20 md:py-32 bg-[#EDE6D8]">
-        <div className="max-w-5xl mx-auto px-6 md:px-10 text-center">
-          <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-            <Sparkles size={13} /> La tua piantina
-          </span>
-          <h2 className="font-display text-4xl md:text-6xl text-[#1F2520] mt-5 leading-[1.05]">
-            Fogliolina, oggi.
-          </h2>
-
-          <div className="flex items-center justify-center gap-3 mt-5 text-[#5A6157] font-body text-sm">
-            <MapPin size={14} />
-            <span>{place || "Localizzazione in corso…"}</span>
-            {updatedAt && <span className="opacity-60">· aggiornato {updatedAt}</span>}
-            <button
-              onClick={() => (coords ? fetchAll(coords.lat, coords.lon) : requestLoc())}
-              disabled={loading}
-              className="ml-2 inline-flex items-center gap-1.5 text-[#1F2520] hover:underline underline-offset-4"
-            >
-              <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> aggiorna
-            </button>
+      {/* ======= ENVIRONMENTAL DASHBOARD GRID ======= */}
+      <section className="pb-12">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="flex items-end justify-between mb-6">
+            <Eyebrow theme={theme}>Indicatori ambientali</Eyebrow>
+            <span className="font-body text-[10px] tracking-[0.25em] uppercase" style={{ color: theme.textMuted }}>
+              Real-time · Open-Meteo
+            </span>
           </div>
 
-          <div className="relative mt-10 md:mt-14 flex flex-col items-center">
-            <Fogliolina mood={moodInfo.mood} size={460} />
+          <div
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px rounded-3xl overflow-hidden border"
+            style={{ background: theme.border, borderColor: theme.border }}
+          >
+            <Metric theme={theme} icon={<Sun size={16} />} label="UV Index" value={uvDisplay} unit="UVI" hint={uvHint} dim={isNight} />
+            <Metric
+              theme={theme}
+              icon={<CloudFog size={16} />}
+              label="PM2.5"
+              value={env ? env.pm25.toFixed(1) : "—"}
+              unit="µg/m³"
+              hint={env ? (env.pm25 < 10 ? "OMS: nei limiti" : env.pm25 < 25 ? "Sopra OMS" : "Critico") : ""}
+            />
+            <Metric
+              theme={theme}
+              icon={<CloudFog size={16} />}
+              label="PM10"
+              value={env ? env.pm10.toFixed(0) : "—"}
+              unit="µg/m³"
+              hint={env ? (env.pm10 < 25 ? "Aria pulita" : env.pm10 < 50 ? "Discreta" : "Carica") : ""}
+            />
+            <Metric
+              theme={theme}
+              icon={<Flower2 size={16} />}
+              label="Pollen"
+              value={env ? env.pollen.toFixed(1) : "—"}
+              unit="grains/m³"
+              hint={env ? `${pollenSeverity(env.pollen)} · ${pollenExplain(env.pollen)}` : ""}
+              wide
+            />
+            <Metric theme={theme} icon={<Droplets size={16} />} label="Humidity" value={env ? env.humidity.toFixed(0) : "—"} unit="%" hint={env ? (env.humidity < 40 ? "Aria secca" : env.humidity < 70 ? "Equilibrata" : "Umida") : ""} />
+            <Metric theme={theme} icon={<Thermometer size={16} />} label="Temperature" value={env ? env.temp.toFixed(0) : "—"} unit="°C" hint={env ? (env.temp < 10 ? "Fresco" : env.temp < 22 ? "Mite" : env.temp < 30 ? "Caldo" : "Torrido") : ""} />
+            <Metric theme={theme} icon={<Wind size={16} />} label="Wind" value={env ? env.wind.toFixed(0) : "—"} unit="km/h" hint={env ? (env.wind < 10 ? "Calmo" : env.wind < 25 ? "Brezza" : "Forte") : ""} />
+            <Metric theme={theme} icon={<Activity size={16} />} label="Air Quality" value={env ? `${env.aqi}/5` : "—"} unit={env ? aqiLabel(env.aqi) : ""} hint="Indice EU PM2.5/PM10" />
+          </div>
+        </div>
+      </section>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={moodInfo.title}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.5 }}
-                className="mt-4 max-w-xl"
-              >
-                <p className="text-[11px] tracking-[0.25em] uppercase text-[#8A9080] font-body">
-                  {moodInfo.eyebrow}
-                </p>
-                <h3 className="font-display italic text-2xl md:text-3xl text-[#1F2520] mt-2">
-                  {moodInfo.title}
-                </h3>
-                <p className="font-body text-base text-[#5A6157] mt-3 leading-relaxed">
-                  {moodInfo.body}
-                </p>
-              </motion.div>
+      {/* ======= SMART RECOMMENDATIONS ======= */}
+      <section className="pb-16 md:pb-24">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <Eyebrow theme={theme}>Smart skincare protocol</Eyebrow>
+              <h2 className="font-display text-2xl md:text-4xl mt-2" style={{ color: theme.text }}>
+                {isNight ? "Protocollo di recupero notturno" : "Routine adattiva per oggi"}
+              </h2>
+            </div>
+            <span className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline" style={{ color: theme.textMuted }}>
+              {recos.length} azioni consigliate
+            </span>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <AnimatePresence mode="popLayout">
+              {recos.map((r, i) => (
+                <motion.article
+                  key={r.title}
+                  layout
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ delay: i * 0.06, duration: 0.4 }}
+                  className="rounded-2xl p-6 border backdrop-blur-md"
+                  style={{
+                    background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.6)",
+                    borderColor: theme.border,
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={12} style={{ color: theme.accent }} />
+                    <span className="text-[10px] tracking-[0.25em] uppercase font-body" style={{ color: theme.textMuted }}>
+                      {r.tag}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-xl mt-3 leading-snug" style={{ color: theme.text }}>
+                    {r.title}
+                  </h3>
+                  <p className="font-body text-sm mt-3 leading-relaxed" style={{ color: theme.textMuted }}>
+                    {r.body}
+                  </p>
+                </motion.article>
+              ))}
             </AnimatePresence>
           </div>
         </div>
       </section>
 
-      {/* DASHBOARD AMBIENTALE */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="flex items-end justify-between flex-wrap gap-4 mb-12">
-            <div>
-              <span className="text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-                Dashboard ambientale
-              </span>
-              <h2 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-3 leading-tight">
-                Sei segnali, una sola pelle.
-              </h2>
-            </div>
-            <p className="font-body text-sm text-[#5A6157] max-w-xs">
-              Dati in tempo reale dalla tua zona. Nessun rumore, solo ciò che cambia il tuo gesto.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-[#E0DACE]">
-            <Tile icon={<Sun size={18} />} label="UV" value={env ? env.uv.toFixed(1) : "—"} hint={env ? uvHint(env.uv) : ""} />
-            <Tile icon={<CloudFog size={18} />} label="Pollution" value={env ? `${env.pm10.toFixed(0)} µg` : "—"} hint={env ? pmHint(env.pm10) : ""} />
-            <Tile icon={<Droplets size={18} />} label="Humidity" value={env ? `${env.humidity.toFixed(0)}%` : "—"} hint={env ? humHint(env.humidity) : ""} />
-            <Tile icon={<Flower2 size={18} />} label="Pollen" value={env ? env.pollen.toFixed(1) : "—"} hint={env ? pollenHint(env.pollen) : ""} />
-            <Tile icon={<Wind size={18} />} label="Wind" value={env ? `${env.wind.toFixed(0)} km/h` : "—"} hint={env ? windHint(env.wind) : ""} />
-            <Tile icon={<Thermometer size={18} />} label="Temperature" value={env ? `${env.temp.toFixed(0)}°` : "—"} hint={env ? tempHint(env.temp) : ""} />
-          </div>
-        </div>
-      </section>
-
-      {/* SKINCARE SUGGESTIONS */}
-      <section className="py-20 md:py-28 bg-[#EDE6D8]">
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-              Rituale del giorno
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-3 leading-tight">
-              Tre gesti, calibrati su <span className="italic">oggi</span>.
-            </h2>
-            <p className="font-body text-sm md:text-base text-[#5A6157] mt-4 leading-relaxed">
-              Ogni mattina Fogliolina riscrive la tua routine in base al microclima. Pochi passaggi, tutti necessari.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {suggestions.map((s, i) => (
-              <motion.article
-                key={s.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="bg-[#F4EFE6] border border-[#E0DACE] rounded-[1.5rem] p-7 md:p-8 hover:border-[#A8B89A]/60 transition-colors"
-              >
-                <span className="text-[10px] tracking-[0.3em] uppercase text-[#A8987C] font-body">
-                  0{i + 1} · {s.step}
-                </span>
-                <h3 className="font-display text-2xl md:text-[1.7rem] text-[#1F2520] mt-3 leading-snug">
-                  {s.title}
-                </h3>
-                <p className="font-body text-sm text-[#5A6157] mt-3 leading-relaxed">
-                  {s.body}
-                </p>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* COMMUNITY */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-              Community
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-3 leading-tight">
-              Una comunità che <span className="italic">ascolta</span>.
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { quote: "Da quando seguo Fogliolina, la mia pelle reattiva ha trovato un ritmo.", who: "Giulia, 34 — Ancona" },
-              { quote: "Mi piace l'idea che il rituale cambi con il vento. Non sembra più un dovere.", who: "Marta, 28 — Milano" },
-              { quote: "L'estetica è quella di una rivista, l'efficacia quella di un dermocosmetico.", who: "Beatrice, 41 — Roma" },
-            ].map((t) => (
-              <figure key={t.who} className="bg-[#F4EFE6] border border-[#E0DACE] rounded-[1.5rem] p-7">
-                <Users size={16} className="text-[#A8B89A]" />
-                <blockquote className="font-display italic text-lg text-[#1F2520] mt-4 leading-snug">
-                  "{t.quote}"
-                </blockquote>
-                <figcaption className="font-body text-xs tracking-wide uppercase text-[#8A9080] mt-5">
-                  {t.who}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* RESEARCH ECOSYSTEM */}
-      <section className="py-20 md:py-28 bg-[#1F2520] text-[#F4EFE6]">
-        <div className="max-w-6xl mx-auto px-6 md:px-10 grid md:grid-cols-[1fr_1.1fr] gap-12 items-center">
-          <div>
-            <span className="text-[11px] tracking-[0.25em] uppercase text-[#A8B89A] font-body">
-              Ecosistema di ricerca
-            </span>
-            <h2 className="font-display text-3xl md:text-5xl mt-3 leading-tight">
-              Dietro Fogliolina,<br />
-              <span className="italic font-light">un laboratorio.</span>
-            </h2>
-            <p className="font-body text-sm md:text-base text-[#C7CDC2] mt-5 leading-relaxed max-w-md">
-              Amarea nasce nell'incubatore biotech delle Marche. Lavoriamo con docenti universitari su upcycling vegetale e attivi a basso impatto, validati clinicamente.
-            </p>
-
-            <div className="mt-8 flex items-center gap-6">
-              <img src={univpmLogo} alt="Università Politecnica delle Marche" className="h-12 w-auto opacity-90 brightness-0 invert" />
-              <div className="font-body text-xs text-[#A8B89A] leading-snug">
-                In partnership con<br />
-                <span className="text-[#F4EFE6]">Università Politecnica delle Marche</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-px bg-[#2A312A]">
-            {[
-              { n: "12+", l: "Pubblicazioni scientifiche", i: <Microscope size={18} /> },
-              { n: "3", l: "Brevetti depositati", i: <Sparkles size={18} /> },
-              { n: "85%", l: "Ingredienti upcycled", i: <Leaf size={18} /> },
-              { n: "0", l: "Compromessi sulla pelle", i: <Flower2 size={18} /> },
-            ].map((s) => (
-              <div key={s.l} className="bg-[#1F2520] p-7">
-                <div className="text-[#A8B89A]">{s.i}</div>
-                <div className="font-display text-4xl md:text-5xl mt-3">{s.n}</div>
-                <div className="font-body text-xs text-[#C7CDC2] mt-2 leading-snug">{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* NFC */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <div className="bg-[#EDE6D8] border border-[#E0DACE] rounded-[2rem] p-8 md:p-14 grid md:grid-cols-[1fr_1.2fr] gap-10 items-center">
-            <div className="flex justify-center">
-              <motion.div
-                animate={{ scale: [1, 1.04, 1] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="relative w-44 h-44 rounded-full bg-[#F4EFE6] border border-[#A8B89A]/40 flex items-center justify-center"
-              >
-                <Nfc size={56} className="text-[#1F2520]" strokeWidth={1.2} />
-                <span className="absolute inset-0 rounded-full border border-[#C9B8D9]/60 animate-ping" />
-              </motion.div>
-            </div>
-            <div>
-              <span className="text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-                NFC · Tap to grow
-              </span>
-              <h2 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-3 leading-tight">
-                Avvicina, e la pianta <span className="italic">cresce</span>.
-              </h2>
-              <p className="font-body text-sm md:text-base text-[#5A6157] mt-4 leading-relaxed">
-                Ogni packaging Amarea custodisce un tag NFC. Lo avvicini al telefono e Fogliolina riceve nutrimento: tracciamo il rituale, restituiamo insight, contribuiamo a un progetto botanico nelle Marche.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA FINALE */}
-      <section className="py-24 md:py-36 text-center">
-        <div className="max-w-3xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
-            <h2 className="font-display text-5xl md:text-7xl text-[#1F2520] leading-[1.02]">
-              Grow<br />
-              <span className="italic font-light">with us.</span>
-            </h2>
-            <p className="font-body text-base md:text-lg text-[#5A6157] mt-6 max-w-md mx-auto leading-relaxed">
-              Una nuova generazione di skincare che cresce con la tua pelle, il tuo tempo e il tuo paesaggio.
-            </p>
-            <Link
-              to="/#prodotti"
-              className="inline-flex items-center gap-2 bg-[#1F2520] text-[#F4EFE6] font-body text-sm font-medium px-8 py-4 rounded-full mt-9 hover:bg-[#2A312A] transition-colors"
-            >
-              Scopri Monti Italiani <ArrowRight size={16} />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* NEWSLETTER — separated */}
+      {/* ======= NEWSLETTER (untouched rectangle) ======= */}
       <NewsletterBlock />
 
       <FooterSection />
@@ -504,20 +558,142 @@ const GrowPage = () => {
   );
 };
 
-/* ---------- subcomponents ---------- */
+/* ---------------- atoms ---------------- */
 
-const Tile = ({ icon, label, value, hint }: { icon: React.ReactNode; label: string; value: string; hint: string }) => (
-  <div className="bg-[#F4EFE6] p-6 md:p-8 hover:bg-[#EDE6D8] transition-colors group">
-    <div className="flex items-center gap-2 text-[#6B7864]">
-      {icon}
-      <span className="text-[10px] tracking-[0.3em] uppercase font-body">{label}</span>
+const Eyebrow = ({ children, theme }: { children: React.ReactNode; theme: typeof PHASE_THEME["day"] }) => (
+  <span className="text-[10px] tracking-[0.3em] uppercase font-body" style={{ color: theme.textMuted }}>
+    {children}
+  </span>
+);
+
+const GlassCard = ({ children, theme }: { children: React.ReactNode; theme: typeof PHASE_THEME["day"] }) => {
+  const isNight = theme.label === "Notte";
+  return (
+    <div
+      className="rounded-3xl border backdrop-blur-xl p-7 md:p-9"
+      style={{
+        background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.65)",
+        borderColor: theme.border,
+        boxShadow: isNight
+          ? "0 30px 80px -40px rgba(0,0,0,0.6)"
+          : "0 30px 60px -40px rgba(31,37,32,0.18)",
+      }}
+    >
+      {children}
     </div>
-    <div className="font-display text-4xl md:text-5xl text-[#1F2520] mt-4 leading-none">
-      {value}
+  );
+};
+
+const SubInsight = ({
+  theme,
+  icon,
+  label,
+  value,
+  note,
+}: {
+  theme: typeof PHASE_THEME["day"];
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  note: string;
+}) => {
+  const isNight = theme.label === "Notte";
+  return (
+    <div
+      className="p-5"
+      style={{ background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.7)" }}
+    >
+      <div className="flex items-center gap-1.5" style={{ color: theme.textMuted }}>
+        {icon}
+        <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
+      </div>
+      <div className="font-display text-lg mt-2" style={{ color: theme.text }}>{value}</div>
+      <div className="font-body text-[11px] mt-1 leading-snug" style={{ color: theme.textMuted }}>{note}</div>
     </div>
-    <div className="font-body text-xs text-[#8A9080] mt-2">{hint}</div>
+  );
+};
+
+const Metric = ({
+  theme,
+  icon,
+  label,
+  value,
+  unit,
+  hint,
+  wide,
+  dim,
+}: {
+  theme: typeof PHASE_THEME["day"];
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  unit: string;
+  hint: string;
+  wide?: boolean;
+  dim?: boolean;
+}) => {
+  const isNight = theme.label === "Notte";
+  return (
+    <div
+      className={`p-6 transition-colors ${wide ? "md:col-span-2" : ""}`}
+      style={{
+        background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.7)",
+        opacity: dim ? 0.55 : 1,
+      }}
+    >
+      <div className="flex items-center gap-1.5" style={{ color: theme.textMuted }}>
+        {icon}
+        <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
+      </div>
+      <div className="flex items-baseline gap-2 mt-3">
+        <span className="font-display text-3xl md:text-4xl leading-none" style={{ color: theme.text }}>{value}</span>
+        <span className="font-body text-[11px] tracking-wide" style={{ color: theme.textMuted }}>{unit}</span>
+      </div>
+      <div className="font-body text-[11px] mt-2 leading-snug" style={{ color: theme.textMuted }}>{hint}</div>
+    </div>
+  );
+};
+
+const PhaseIcon = ({ phase }: { phase: Phase }) => {
+  const props = { size: 18 };
+  if (phase === "night") return <Moon {...props} className="text-[#C9B8D9]" />;
+  if (phase === "sunset") return <Sunset {...props} className="text-[#C99578]" />;
+  if (phase === "dawn") return <Sunrise {...props} className="text-[#C9A877]" />;
+  return <Sun {...props} className="text-[#A8B89A]" />;
+};
+
+const SunPoint = ({
+  theme,
+  icon,
+  label,
+  value,
+}: {
+  theme: typeof PHASE_THEME["day"];
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) => (
+  <div className="text-center">
+    <div className="inline-flex" style={{ color: theme.accent }}>{icon}</div>
+    <div className="text-[9px] tracking-[0.3em] uppercase font-body mt-1" style={{ color: theme.textMuted }}>{label}</div>
+    <div className="font-display text-base mt-1" style={{ color: theme.text }}>{value}</div>
   </div>
 );
+
+const SunArc = ({ phase, theme }: { phase: Phase; theme: typeof PHASE_THEME["day"] }) => {
+  const pos = phase === "dawn" ? 0.15 : phase === "day" ? 0.5 : phase === "sunset" ? 0.85 : 1.05;
+  const x = 20 + pos * 160;
+  const y = 60 - Math.sin(Math.min(1, pos) * Math.PI) * 40;
+  return (
+    <svg viewBox="0 0 200 70" className="w-44 h-16">
+      <path d="M20 60 Q100 -20 180 60" fill="none" stroke={theme.border} strokeWidth="1.5" strokeDasharray="3 4" />
+      <circle cx={x} cy={y} r="6" fill={theme.accent} opacity="0.9" />
+      <circle cx={x} cy={y} r="11" fill={theme.accent} opacity="0.18" />
+    </svg>
+  );
+};
+
+/* ---------------- newsletter (kept exactly) ---------------- */
 
 const NewsletterBlock = () => {
   const [email, setEmail] = useState("");
@@ -617,14 +793,5 @@ const NewsletterBlock = () => {
     </section>
   );
 };
-
-/* ---------- hint helpers ---------- */
-
-const uvHint = (v: number) => (v < 3 ? "Basso" : v < 6 ? "Moderato" : v < 8 ? "Alto" : "Molto alto");
-const pmHint = (v: number) => (v < 25 ? "Aria pulita" : v < 50 ? "Discreta" : "Carica");
-const humHint = (v: number) => (v < 40 ? "Secca" : v < 70 ? "Equilibrata" : "Umida");
-const pollenHint = (v: number) => (v < 5 ? "Bassi" : v < 20 ? "Moderati" : "Alti");
-const windHint = (v: number) => (v < 10 ? "Calmo" : v < 25 ? "Brezza" : "Forte");
-const tempHint = (v: number) => (v < 10 ? "Fresco" : v < 22 ? "Mite" : v < 30 ? "Caldo" : "Torrido");
 
 export default GrowPage;
