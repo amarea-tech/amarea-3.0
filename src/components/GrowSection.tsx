@@ -18,6 +18,9 @@ import {
   Monitor,
   Activity,
   Sparkles,
+  ArrowUpRight,
+  Instagram,
+  Linkedin,
 } from "lucide-react";
 import Fogliolina, { type Mood } from "@/components/grow/Fogliolina";
 import { supabase } from "@/integrations/supabase/client";
@@ -723,8 +726,56 @@ const NewsletterBlock = () => {
   };
 
   return (
-    <section className="border-t border-[#E0DACE] bg-[#F4EFE6]">
+    <section id="contatti" className="border-t border-[#E0DACE] bg-[#F4EFE6]">
       <div className="max-w-3xl mx-auto px-6 md:px-10 py-20 md:py-28 text-center">
+        {/* Collabora con noi */}
+        <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
+          <Sparkles size={13} /> Collabora con noi
+        </span>
+        <h3 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-4 leading-tight">
+          Costruiamo insieme la prossima ricerca.
+        </h3>
+        <p className="font-body text-sm md:text-base text-[#5A6157] mt-3 max-w-md mx-auto leading-relaxed">
+          Sei un ricercatore, un'università o un'azienda interessata a progetti nel campo della cosmesi naturale e sostenibile?
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
+          <a
+            href="mailto:info@amareacosmetics.it?subject=Richiesta%20Collaborazione%20Scientifica"
+            className="group inline-flex items-center gap-2 bg-[#1F2520] text-[#F4EFE6] font-body font-medium text-sm px-5 py-3 rounded-full hover:bg-[#2A312A] transition-colors"
+          >
+            <Mail size={15} />
+            Contattaci
+            <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </a>
+          <a
+            href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="inline-flex items-center gap-2 bg-white text-[#1F2520] border border-[#E0DACE] font-body font-medium text-sm px-5 py-3 rounded-full hover:border-[#A8B89A] transition-colors"
+          >
+            <Instagram size={15} /> Instagram
+          </a>
+          <a
+            href="https://www.linkedin.com/company/amareacosmetics/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            className="inline-flex items-center gap-2 bg-white text-[#1F2520] border border-[#E0DACE] font-body font-medium text-sm px-5 py-3 rounded-full hover:border-[#A8B89A] transition-colors"
+          >
+            <Linkedin size={15} /> LinkedIn
+          </a>
+        </div>
+
+        {/* Divider */}
+        <div className="my-14 flex items-center gap-4 max-w-xs mx-auto">
+          <span className="flex-1 h-px bg-[#E0DACE]" />
+          <span className="text-[10px] tracking-[0.3em] uppercase text-[#A8987C] font-body">oppure</span>
+          <span className="flex-1 h-px bg-[#E0DACE]" />
+        </div>
+
+        {/* Newsletter */}
         <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
           <Mail size={13} /> Newsletter
         </span>
