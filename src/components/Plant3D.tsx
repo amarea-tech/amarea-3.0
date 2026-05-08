@@ -20,8 +20,8 @@ const Plant3D = ({ stage }: Props) => {
       <motion.svg
         viewBox="0 0 220 240"
         className="w-full h-full drop-shadow-[0_18px_25px_rgba(20,80,40,0.25)]"
-        animate={{ y: [0, -4, 0], rotate: [-1.2, 1.2, -1.2] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ y: [0, -6, 0], rotate: [-1.6, 1.6, -1.6], scale: [1, 1.015, 1] }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
       >
         <defs>
           <radialGradient id="potG" cx="50%" cy="35%" r="70%">
@@ -118,17 +118,23 @@ const Plant3D = ({ stage }: Props) => {
         {/* STAGE 1 — Sprout */}
         {stage === 1 && (
           <g>
-            <path
+            <motion.path
               d="M110 162 Q110 130 110 110"
               stroke="#3F9D52"
               strokeWidth="4"
               strokeLinecap="round"
               fill="none"
+              animate={{ d: [
+                "M110 162 Q108 130 110 110",
+                "M110 162 Q112 130 110 110",
+                "M110 162 Q108 130 110 110",
+              ] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.g
               style={{ transformOrigin: "110px 130px" }}
-              animate={{ rotate: [-4, 4, -4] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ rotate: [-6, 6, -6], scale: [1, 1.05, 1] }}
+              transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <ellipse
                 cx="96"
@@ -147,6 +153,11 @@ const Plant3D = ({ stage }: Props) => {
                 transform="rotate(30 124 120)"
               />
             </motion.g>
+            <motion.circle
+              cx="140" cy="100" r="2" fill="#FFE08A"
+              animate={{ opacity: [0, 1, 0], scale: [0.5, 1.3, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.4 }}
+            />
           </g>
         )}
 
@@ -160,19 +171,39 @@ const Plant3D = ({ stage }: Props) => {
               strokeLinecap="round"
               fill="none"
             />
+            {/* lower leaves */}
             <motion.g
-              style={{ transformOrigin: "110px 110px" }}
-              animate={{ rotate: [-3, 3, -3] }}
-              transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
+              style={{ transformOrigin: "110px 130px" }}
+              animate={{ rotate: [-4, 4, -4] }}
+              transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
             >
-              {/* lower leaves */}
               <ellipse cx="84" cy="130" rx="22" ry="11" fill="url(#leafG)" transform="rotate(-30 84 130)" />
               <ellipse cx="136" cy="130" rx="22" ry="11" fill="url(#leafG2)" transform="rotate(30 136 130)" />
-              {/* mid leaves */}
+            </motion.g>
+            {/* mid leaves (sfasati) */}
+            <motion.g
+              style={{ transformOrigin: "110px 100px" }}
+              animate={{ rotate: [3, -3, 3] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
               <ellipse cx="86" cy="100" rx="20" ry="10" fill="url(#leafG2)" transform="rotate(-25 86 100)" />
               <ellipse cx="134" cy="100" rx="20" ry="10" fill="url(#leafG)" transform="rotate(25 134 100)" />
-              {/* top leaf */}
-              <ellipse cx="110" cy="74" rx="12" ry="18" fill="url(#leafG2)" />
+            </motion.g>
+            {/* top leaf */}
+            <motion.ellipse
+              cx="110" cy="74" rx="12" ry="18" fill="url(#leafG2)"
+              style={{ transformOrigin: "110px 90px" }}
+              animate={{ rotate: [-5, 5, -5], scaleY: [1, 1.06, 1] }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* tiny bug */}
+            <motion.g
+              animate={{ x: [-30, 30, -30], y: [0, -10, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <circle cx="170" cy="60" r="3" fill="#E8A33A" />
+              <ellipse cx="167" cy="58" rx="3" ry="1.5" fill="#fff" opacity="0.7" />
+              <ellipse cx="173" cy="58" rx="3" ry="1.5" fill="#fff" opacity="0.7" />
             </motion.g>
           </g>
         )}
@@ -201,8 +232,11 @@ const Plant3D = ({ stage }: Props) => {
             {/* Flower */}
             <motion.g
               style={{ transformOrigin: "110px 60px" }}
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+              animate={{ rotate: [0, 360], y: [0, -3, 0] }}
+              transition={{
+                rotate: { duration: 18, repeat: Infinity, ease: "linear" },
+                y: { duration: 2.4, repeat: Infinity, ease: "easeInOut" },
+              }}
             >
               {[0, 60, 120, 180, 240, 300].map((a) => (
                 <ellipse
@@ -226,11 +260,34 @@ const Plant3D = ({ stage }: Props) => {
               style={{ transformOrigin: "110px 60px" }}
             />
 
+            {/* Butterfly */}
+            <motion.g
+              animate={{
+                x: [-40, 30, -10, 40, -40],
+                y: [-20, -40, -10, -30, -20],
+              }}
+              transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <motion.g
+                style={{ transformOrigin: "180px 50px" }}
+                animate={{ scaleX: [1, 0.4, 1] }}
+                transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ellipse cx="174" cy="48" rx="5" ry="3" fill="#FF9CB8" />
+                <ellipse cx="186" cy="48" rx="5" ry="3" fill="#FF9CB8" />
+                <ellipse cx="174" cy="54" rx="4" ry="2.5" fill="#D85A86" />
+                <ellipse cx="186" cy="54" rx="4" ry="2.5" fill="#D85A86" />
+                <rect x="179" y="47" width="2" height="9" rx="1" fill="#3a2b1a" />
+              </motion.g>
+            </motion.g>
+
             {/* sparkles */}
             {[
               { cx: 60, cy: 50, d: 0 },
               { cx: 170, cy: 70, d: 0.7 },
               { cx: 158, cy: 30, d: 1.4 },
+              { cx: 50, cy: 110, d: 1.0 },
+              { cx: 180, cy: 140, d: 1.8 },
             ].map((s, i) => (
               <motion.g
                 key={i}
