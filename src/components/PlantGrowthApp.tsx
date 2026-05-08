@@ -36,45 +36,37 @@ type StateKey =
 
 const STATES: Record<
   StateKey,
-  { mood: string; title: string; text: string }
+  { title: string; text: string }
 > = {
   loading: {
-    mood: "✨",
     title: "Sto leggendo l'ambiente…",
     text: "Un istante: la tua piantina si sta orientando.",
   },
   denied: {
-    mood: "🧭",
     title: "Posizione non disponibile",
     text: "Mostriamo dati indicativi delle Marche. Concedi la geolocalizzazione per dati locali.",
   },
   happy: {
-    mood: "😊✨",
     title: "Oggi è una giornata perfetta",
     text: "Sole gentile, aria pulita: la tua piantina (e la tua pelle) sorridono.",
   },
   uv: {
-    mood: "❤️☀️",
     title: "Troppi raggi UV",
     text: "Proteggi la tua piantina e la tua pelle: scegli ombra e SPF.",
   },
   smog: {
-    mood: "😵🌫️",
     title: "Aria pesante",
     text: "Lo smog stressa la pelle: stasera coccolala con un gesto detossinante.",
   },
   pollen: {
-    mood: "🤧🍃",
     title: "Pollini in volo",
     text: "Detergi delicatamente e scegli texture leniscenti.",
   },
   dry: {
-    mood: "🥵💦",
     title: "Ha sete!",
     text: "Poca pioggia: idrata bene la pelle e dai acqua alla tua piantina.",
   },
   rainy: {
-    mood: "💧🌦️",
     title: "Pioggia abbondante",
     text: "L'umidità accarezza tutto: lascia respirare la pelle al naturale.",
   },
