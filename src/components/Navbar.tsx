@@ -9,7 +9,7 @@ const navLinks = [
   { label: "Prodotti", href: "/#prodotti" },
   { label: "Chi Siamo", href: "/#chi-siamo" },
   { label: "Team", href: "/#team" },
-  { label: "Grow With Amarea", href: "/#contatti" },
+  { label: "Grow With Amarea", href: "/grow" },
 ];
 
 const Navbar = () => {
@@ -18,6 +18,13 @@ const Navbar = () => {
 
   const handleNav = (href: string) => {
     setOpen(false);
+    if (!href.startsWith("/#")) {
+      // plain route navigation
+      if (location.pathname !== href) {
+        window.location.href = href;
+      }
+      return;
+    }
     if (location.pathname !== "/" && href.startsWith("/#")) {
       window.location.href = href;
       return;
