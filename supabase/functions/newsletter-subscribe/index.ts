@@ -1,0 +1,118 @@
+import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.95.0/cors";
+
+const GATEWAY_URL = "https://connector-gateway.lovable.dev/brevo";
+
+// Configurable defaults — change these to match your Brevo setup
+const SENDER_NAME = "Amarea Cosmetics";
+const SENDER_EMAIL = "newsletter@amareacosmetics.com"; // must be a verified sender in Brevo
+const LIST_ID = 2; // default Brevo list id for newsletter subscribers
+
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 255;
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY non configurata");
+    if (!BREVO_API_KEY) throw new Error("BREVO_API_KEY non configurata");
+
+    const body = await req.json().catch(() => ({}));
+    const email = String(body?.email ?? "").trim().toLowerCase();
+    const consent = Boolean(body?.consent);
+
+    if (!isValidEmail(email)) {
+      return new Response(
+        JSON.stringify({ error: "Email non valida" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+    if (!consent) {
+      return new Response(
+        JSON.stringify({ error: "Devi accettare il trattamento dei dati" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    const headers = {
+      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+      "X-Connection-Api-Key": BREVO_API_KEY,
+      "Content-Type": "application/json",
+    };
+
+    // 1. Create or update contact, attribute already-confirmed consent
+    const contactRes = await fetch(`${GATEWAY_URL}/contacts`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        email,
+        listIds: [LIST_ID],
+        updateEnabled: true,
+        attributes: {
+          OPT_IN: true,
+          DOUBLE_OPT_IN: false,
+          SOURCE: "amarea-website",
+        },
+      }),
+    });
+
+    if (!contactRes.ok && contactRes.status !== 204) {
+      const errText = await contactRes.text();
+      // 400 with "Contact already exist" is fine when updateEnabled true; otherwise fail
+      if (!errText.includes("duplicate_parameter")) {
+        console.error("Brevo contact error", contactRes.status, errText);
+        throw new Error(`Iscrizione non riuscita (${contactRes.status})`);
+      }
+    }
+
+    // 2. Send confirmation email
+    const emailRes = await fetch(`${GATEWAY_URL}/smtp/email`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        sender: { name: SENDER_NAME, email: SENDER_EMAIL },
+        to: [{ email }],
+        subject: "Benvenuta nel mondo Amarea 🌿",
+        htmlContent: `
+          <div style="font-family: Georgia, serif; max-width: 540px; margin: 0 auto; padding: 32px; color: #171717; background: #faf8f5;">
+            <h1 style="font-size: 28px; margin: 0 0 16px; font-weight: 400; letter-spacing: -0.5px;">Grazie per esserti iscritta.</h1>
+            <p style="font-size: 16px; line-height: 1.7; margin: 0 0 16px;">
+              La tua iscrizione alla newsletter <strong>Amarea Cosmetics</strong> è confermata.
+            </p>
+            <p style="font-size: 16px; line-height: 1.7; margin: 0 0 24px;">
+              Riceverai aggiornamenti sui nostri rituali di bellezza, sulla ricerca biotech e sulle novità della collezione <em>Monti Italiani</em>.
+            </p>
+            <hr style="border: none; border-top: 1px solid #e5e0d8; margin: 32px 0;" />
+            <p style="font-size: 12px; color: #888; line-height: 1.6;">
+              Hai ricevuto questa email perché ti sei iscritta dal sito Amarea.<br/>
+              Puoi disiscriverti in qualsiasi momento dal link in fondo alle prossime email.
+            </p>
+          </div>
+        `,
+      }),
+    });
+
+    if (!emailRes.ok) {
+      const errText = await emailRes.text();
+      console.error("Brevo email error", emailRes.status, errText);
+      // Non blocchiamo l'iscrizione se l'email di conferma fallisce
+    }
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Errore sconosciuto";
+    console.error("newsletter-subscribe error:", message);
+    return new Response(
+      JSON.stringify({ error: message }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
+});
