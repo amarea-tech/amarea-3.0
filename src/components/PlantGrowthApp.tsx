@@ -97,7 +97,7 @@ const PlantGrowthApp = () => {
     const v = Number(localStorage.getItem(STORAGE_KEY));
     return Number.isFinite(v) && v > 0 ? v : 15;
   });
-  const [splash, setSplash] = useState(0);
+  const [drops, setDrops] = useState<{ id: number; x: number; delay: number }[]>([]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, String(progress));
@@ -197,7 +197,18 @@ const PlantGrowthApp = () => {
   };
 
   const water = () => {
-    setSplash((s) => s + 1);
+    const base = Date.now();
+    const newDrops = Array.from({ length: 5 }).map((_, i) => ({
+      id: base + i,
+      x: -28 + Math.random() * 56,
+      delay: i * 0.08,
+    }));
+    setDrops((d) => [...d, ...newDrops]);
+    newDrops.forEach((nd) => {
+      setTimeout(() => {
+        setDrops((d) => d.filter((x) => x.id !== nd.id));
+      }, 1100 + nd.delay * 1000);
+    });
     setProgress((p) => Math.min(100, p + 12));
   };
 
@@ -284,20 +295,20 @@ const PlantGrowthApp = () => {
 
               {/* Plant illustration */}
               <div className="relative flex-1 flex items-center justify-center w-full py-4">
-                {/* Water splash */}
+                {/* Water drops (only on Annaffia) */}
                 <AnimatePresence>
-                  {splash > 0 && (
+                  {drops.map((d) => (
                     <motion.div
-                      key={splash}
-                      initial={{ y: -100, opacity: 0, scale: 0.5 }}
-                      animate={{ y: 40, opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 1.6, y: 70 }}
-                      transition={{ duration: 0.7, ease: "easeIn" }}
-                      className="absolute top-2 z-10"
+                      key={d.id}
+                      initial={{ y: -110, opacity: 0, scale: 0.6, x: d.x }}
+                      animate={{ y: 60, opacity: 1, scale: 1, x: d.x }}
+                      exit={{ opacity: 0, scale: 1.8, y: 90 }}
+                      transition={{ duration: 0.85, ease: "easeIn", delay: d.delay }}
+                      className="absolute top-2 left-1/2 -ml-3 z-10 pointer-events-none"
                     >
-                      <WaterDrop className="w-8 h-12 drop-shadow-[0_4px_8px_rgba(56,189,248,0.5)]" />
+                      <WaterDrop className="w-6 h-9 drop-shadow-[0_4px_8px_rgba(56,189,248,0.5)]" />
                     </motion.div>
-                  )}
+                  ))}
                 </AnimatePresence>
 
                 <AnimatePresence mode="wait">
