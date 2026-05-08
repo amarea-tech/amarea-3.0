@@ -19,8 +19,6 @@ import {
   Activity,
   Sparkles,
 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import FooterSection from "@/components/FooterSection";
 import Fogliolina, { type Mood } from "@/components/grow/Fogliolina";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -240,7 +238,7 @@ const pollenExplain = (v: number) =>
 
 /* ---------------- page ---------------- */
 
-const GrowPage = () => {
+const GrowSection = () => {
   const [env, setEnv] = useState<Env | null>(null);
   const [place, setPlace] = useState("");
   const [updatedAt, setUpdatedAt] = useState("");
@@ -326,13 +324,12 @@ const GrowPage = () => {
 
   return (
     <div
-      className="min-h-screen transition-colors duration-700"
+      id="grow"
+      className="transition-colors duration-700"
       style={{ background: theme.bg, color: theme.text }}
     >
-      <Navbar />
-
       {/* ======= HERO HEADER ======= */}
-      <header className="pt-32 md:pt-36 pb-10 md:pb-14">
+      <header className="pt-20 md:pt-28 pb-10 md:pb-14">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="flex items-end justify-between gap-6 flex-wrap">
             <div>
@@ -552,8 +549,6 @@ const GrowPage = () => {
 
       {/* ======= NEWSLETTER (untouched rectangle) ======= */}
       <NewsletterBlock />
-
-      <FooterSection />
     </div>
   );
 };
@@ -794,4 +789,4 @@ const NewsletterBlock = () => {
   );
 };
 
-export default GrowPage;
+export default GrowSection;
