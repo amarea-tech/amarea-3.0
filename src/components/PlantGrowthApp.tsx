@@ -36,45 +36,37 @@ type StateKey =
 
 const STATES: Record<
   StateKey,
-  { mood: string; title: string; text: string }
+  { title: string; text: string }
 > = {
   loading: {
-    mood: "✨",
     title: "Sto leggendo l'ambiente…",
     text: "Un istante: la tua piantina si sta orientando.",
   },
   denied: {
-    mood: "🧭",
     title: "Posizione non disponibile",
     text: "Mostriamo dati indicativi delle Marche. Concedi la geolocalizzazione per dati locali.",
   },
   happy: {
-    mood: "😊✨",
     title: "Oggi è una giornata perfetta",
     text: "Sole gentile, aria pulita: la tua piantina (e la tua pelle) sorridono.",
   },
   uv: {
-    mood: "❤️☀️",
     title: "Troppi raggi UV",
     text: "Proteggi la tua piantina e la tua pelle: scegli ombra e SPF.",
   },
   smog: {
-    mood: "😵🌫️",
     title: "Aria pesante",
     text: "Lo smog stressa la pelle: stasera coccolala con un gesto detossinante.",
   },
   pollen: {
-    mood: "🤧🍃",
     title: "Pollini in volo",
     text: "Detergi delicatamente e scegli texture leniscenti.",
   },
   dry: {
-    mood: "🥵💦",
     title: "Ha sete!",
     text: "Poca pioggia: idrata bene la pelle e dai acqua alla tua piantina.",
   },
   rainy: {
-    mood: "💧🌦️",
     title: "Pioggia abbondante",
     text: "L'umidità accarezza tutto: lascia respirare la pelle al naturale.",
   },
@@ -280,19 +272,6 @@ const PlantGrowthApp = () => {
 
             <div className="relative p-6 md:p-8 flex flex-col items-center min-h-[380px]">
               {/* Mood badge */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={status + "badge"}
-                  initial={{ scale: 0.6, opacity: 0, y: -10 }}
-                  animate={{ scale: 1, opacity: 1, y: 0 }}
-                  exit={{ scale: 0.6, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 200 }}
-                  className="absolute top-5 right-5 bg-background/90 backdrop-blur border border-border rounded-full px-3 py-1.5 text-lg shadow-sm"
-                >
-                  {current.mood}
-                </motion.div>
-              </AnimatePresence>
-
               {/* Plant illustration */}
               <div className="relative flex-1 flex items-center justify-center w-full py-4">
                 {/* Water drops (only on Annaffia) */}
