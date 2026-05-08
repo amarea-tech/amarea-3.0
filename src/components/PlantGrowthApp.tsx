@@ -10,8 +10,12 @@ import {
   Sprout,
   Sparkles,
   Droplets,
+  Mail,
+  Check,
+  Loader2,
 } from "lucide-react";
 import Plant3D from "./Plant3D";
+import { supabase } from "@/integrations/supabase/client";
 
 const STAGE_NAMES = ["Seme", "Germoglio", "Foglie", "Fiorita"];
 const STAGE_COUNT = 4;
@@ -205,6 +209,50 @@ const PlantGrowthApp = () => {
   };
 
   const reset = () => setProgress(15);
+
+  // Newsletter
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [subResult, setSubResult] = useState<
+    { type: "success" | "error"; msg: string } | null
+  >(null);
+
+  const subscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubResult(null);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setSubResult({ type: "error", msg: "Inserisci un indirizzo email valido." });
+      return;
+    }
+    if (!consent) {
+      setSubResult({
+        type: "error",
+        msg: "Spunta il consenso al trattamento dei dati per continuare.",
+      });
+      return;
+    }
+    setSubscribing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "newsletter-subscribe",
+        { body: { email, consent } }
+      );
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setSubResult({
+        type: "success",
+        msg: "Iscrizione confermata. Ti abbiamo inviato un'email di benvenuto.",
+      });
+      setEmail("");
+      setConsent(false);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Riprova tra poco.";
+      setSubResult({ type: "error", msg });
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   const current = STATES[status];
 
@@ -450,6 +498,90 @@ const PlantGrowthApp = () => {
             <p className="font-body text-xs text-muted-foreground text-center">
               Dati ambientali in tempo reale · Open-Meteo
             </p>
+          </div>
+        </div>
+
+        {/* Newsletter */}
+        <div className="mt-8 md:mt-10 rounded-3xl bg-gradient-to-br from-secondary/20 via-background to-primary/5 border border-border p-6 md:p-8 shadow-sm">
+          <div className="grid md:grid-cols-[1fr_1.2fr] gap-6 md:gap-10 items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 bg-background/80 backdrop-blur text-primary font-body text-xs font-semibold px-4 py-1.5 rounded-full border border-primary/15">
+                <Mail size={14} /> Newsletter Amarea
+              </span>
+              <h4 className="font-display text-2xl md:text-3xl font-extrabold text-foreground mt-3 leading-tight">
+                Tienimi aggiornato
+              </h4>
+              <p className="font-body text-sm md:text-base text-muted-foreground mt-2 leading-relaxed">
+                Rituali di bellezza, ricerca biotech e nuove uscite della collezione
+                <span className="italic"> Monti Italiani</span>: direttamente nella tua casella.
+              </p>
+            </div>
+
+            <form onSubmit={subscribe} className="flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="la-tua-email@esempio.it"
+                  maxLength={255}
+                  className="flex-1 rounded-full bg-background border border-border px-5 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                />
+                <button
+                  type="submit"
+                  disabled={subscribing}
+                  className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-body font-semibold text-sm px-6 py-3 rounded-full hover:bg-primary/90 active:scale-[0.98] disabled:opacity-60 transition-all shadow-md whitespace-nowrap"
+                >
+                  {subscribing ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Mail size={16} />
+                  )}
+                  Tienimi aggiornato
+                </button>
+              </div>
+
+              <label className="flex items-start gap-2.5 cursor-pointer group select-none">
+                <span
+                  className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-[4px] border transition-all ${
+                    consent
+                      ? "bg-primary border-primary"
+                      : "bg-background border-border group-hover:border-primary/60"
+                  } flex items-center justify-center`}
+                >
+                  {consent && <Check size={12} className="text-primary-foreground" strokeWidth={3} />}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="sr-only"
+                />
+                <span className="font-body text-xs text-muted-foreground leading-relaxed">
+                  Acconsento al trattamento dei miei dati personali per ricevere la
+                  newsletter, ai sensi della Privacy Policy.
+                </span>
+              </label>
+
+              <AnimatePresence mode="wait">
+                {subResult && (
+                  <motion.p
+                    key={subResult.msg}
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={`font-body text-xs ${
+                      subResult.type === "success"
+                        ? "text-primary"
+                        : "text-destructive"
+                    }`}
+                  >
+                    {subResult.msg}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </form>
           </div>
         </div>
       </div>
