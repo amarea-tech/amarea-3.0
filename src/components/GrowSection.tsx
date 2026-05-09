@@ -626,14 +626,14 @@ const SubInsight = ({
   const isNight = theme.label === "Notte";
   return (
     <div
-      className="p-5"
+      className="p-5 flex flex-col h-full"
       style={{ background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.7)" }}
     >
-      <div className="flex items-center gap-1.5" style={{ color: theme.textMuted }}>
+      <div className="flex items-center gap-1.5 h-5" style={{ color: theme.textMuted }}>
         {icon}
         <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
       </div>
-      <div className="font-display text-lg mt-2" style={{ color: theme.text }}>{value}</div>
+      <div className="font-display text-lg mt-2 h-7" style={{ color: theme.text }}>{value}</div>
       <div className="font-body text-[11px] mt-1 leading-snug" style={{ color: theme.textMuted }}>{note}</div>
     </div>
   );
