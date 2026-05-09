@@ -633,7 +633,7 @@ const SubInsight = ({
         {icon}
         <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
       </div>
-      <div className="font-display text-lg mt-2 h-7" style={{ color: theme.text }}>{value}</div>
+      <div className="font-display text-base md:text-lg mt-2 min-h-7 leading-tight truncate" style={{ color: theme.text }} title={value}>{value}</div>
       <div className="font-body text-[11px] mt-1 leading-snug" style={{ color: theme.textMuted }}>{note}</div>
     </div>
   );
