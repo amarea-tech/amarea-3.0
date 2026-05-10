@@ -88,11 +88,11 @@ const ProductsSection = () => {
             Amarea Cosmetics
           </span>
           <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground tracking-tight">
-            Linea{" "}
-            <span className="italic text-violet">Promontori Marchigiani</span>
+            Terre di{" "}
+            <span className="italic text-violet">Amarea</span>
           </h2>
           <p className="font-body text-primary-foreground mt-5 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-            Amarea inizia da qui. Tre creme ispirate ai promontori delle Marche, formulate con ingredienti botanici di recupero.
+            Tre creme ispirate ai promontori delle Marche, formulate con ingredienti botanici rigenerati.
           </p>
 
           {/* Amarea App — quiz consigliato */}
