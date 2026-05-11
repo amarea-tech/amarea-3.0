@@ -104,9 +104,13 @@ const Fogliolina = ({ mood = "serene", size = 360, weather = "default" }: Props)
           alt="Fogliolina, la mascotte Amarea"
           width={1024}
           height={1024}
-          className="w-full h-full object-contain select-none"
+          className="w-full h-full object-cover select-none rounded-[28px]"
           draggable={false}
-          style={{ filter: TINT[mood] }}
+          style={{
+            filter: TINT[mood],
+            boxShadow:
+              "0 18px 40px -18px rgba(60,50,40,0.35), 0 2px 6px rgba(60,50,40,0.08)",
+          }}
           animate={{ scale: [1, 1.025, 1] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
         />
