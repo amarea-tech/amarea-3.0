@@ -15,7 +15,7 @@ const productData: Record<
     name: "Conero",
     subtitle: "Purifying Face Cream",
     desc: "La nostra crema idratante che nutre e mantiene la pelle morbida e protetta, ispirata alla natura del Monte Conero.",
-    details: "Con foglie di ulivo e attivi riequilibranti, aiuta a puriicare la pelle e regolare l'eccesso di sebo.",
+    details: "Con foglie di ulivo e attivi riequilibranti, aiuta a purificare la pelle e regolare l'eccesso di sebo.",
     gradient: "from-primary/20 to-lime/20",
     image: productConero,
   },
@@ -24,7 +24,7 @@ const productData: Record<
     subtitle: "Anti-Age Cream",
     desc: "La nostra crema antiage che aiuta a contrastare i segni del tempo, formulata con estratti botanici dei Monti Sibillini.",
     details:
-      "Formulata con attivi rigeneranti derivati da iori di zaerano e vinacce selezionate. Aiuta a contrastare i segnidel tempo.",
+      "Formulata con attivi rigeneranti derivati da fiori di zafferano e vinacce selezionate. Aiuta a contrastare i segni del tempo.",
     gradient: "from-violet/20 to-primary/20",
     image: productSibilla,
   },
