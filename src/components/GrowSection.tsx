@@ -143,6 +143,16 @@ const moodFromEnv = (env: Env | null, phase: Phase): Mood => {
   return "serene";
 };
 
+type Weather = "sunny" | "rainy" | "windy" | "snowy" | "default";
+const weatherFromEnv = (env: Env | null): Weather => {
+  if (!env) return "default";
+  if (env.temp <= 2 || (env.temp <= 4 && env.rain >= 0.5)) return "snowy";
+  if (env.rain >= 1) return "rainy";
+  if (env.wind >= 25) return "windy";
+  if (env.isDay) return "sunny";
+  return "default";
+};
+
 /* ---------------- skin comfort score ---------------- */
 
 const computeComfort = (env: Env | null, phase: Phase) => {
@@ -342,6 +352,7 @@ const GrowSection = () => {
   const theme = PHASE_THEME[phase];
   const isNight = phase === "night";
   const mood = useMemo(() => moodFromEnv(env, phase), [env, phase]);
+  const weather = useMemo(() => weatherFromEnv(env), [env]);
   const comfort = useMemo(() => computeComfort(env, phase), [env, phase]);
   const hydra = useMemo(() => hydrationRisk(env), [env]);
   const blue = useMemo(() => blueLightExposure(phase), [phase]);
@@ -440,7 +451,7 @@ const GrowSection = () => {
 
                 {/* Botanical assistant — subtle, small, side */}
                 <div className="ml-auto -mr-2 -mt-2 opacity-90">
-                  <Fogliolina mood={mood} size={170} />
+                  <Fogliolina mood={mood} weather={weather} size={170} />
                 </div>
               </div>
 
