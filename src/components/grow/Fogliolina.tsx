@@ -1,7 +1,20 @@
 import { motion } from "framer-motion";
 import fogliolinaImg from "@/assets/grow/fogliolina.png";
+import sunnyImg from "@/assets/grow/mascot-sunny.png";
+import rainyImg from "@/assets/grow/mascot-rainy.png";
+import windyImg from "@/assets/grow/mascot-windy.png";
+import snowyImg from "@/assets/grow/mascot-snowy.png";
 
 type Mood = "serene" | "uv" | "smog" | "pollen" | "dry" | "rainy";
+type Weather = "sunny" | "rainy" | "windy" | "snowy" | "default";
+
+const WEATHER_IMG: Record<Weather, string> = {
+  sunny: sunnyImg,
+  rainy: rainyImg,
+  windy: windyImg,
+  snowy: snowyImg,
+  default: fogliolinaImg,
+};
 
 const GLOW: Record<Mood, string> = {
   serene: "0 0 80px 8px rgba(168, 184, 154, 0.35)",
@@ -24,9 +37,11 @@ const TINT: Record<Mood, string> = {
 interface Props {
   mood?: Mood;
   size?: number;
+  weather?: Weather;
 }
 
-const Fogliolina = ({ mood = "serene", size = 360 }: Props) => {
+const Fogliolina = ({ mood = "serene", size = 360, weather = "default" }: Props) => {
+  const src = WEATHER_IMG[weather] ?? fogliolinaImg;
   return (
     <div
       className="relative flex items-center justify-center"
@@ -85,7 +100,7 @@ const Fogliolina = ({ mood = "serene", size = 360 }: Props) => {
         style={{ width: size * 0.85, height: size * 0.85 }}
       >
         <motion.img
-          src={fogliolinaImg}
+          src={src}
           alt="Fogliolina, la mascotte Amarea"
           width={1024}
           height={1024}
