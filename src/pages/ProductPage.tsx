@@ -7,12 +7,15 @@ import productConero from "@/assets/product-conero.jpg";
 import productSibilla from "@/assets/product-sibilla.jpg";
 import productCatria from "@/assets/product-catria.jpg";
 
-const productData: Record<string, { name: string; desc: string; details: string; gradient: string; subtitle: string; image: string }> = {
+const productData: Record<
+  string,
+  { name: string; desc: string; details: string; gradient: string; subtitle: string; image: string }
+> = {
   conero: {
     name: "Conero",
     subtitle: "Purifying Face Cream",
     desc: "La nostra crema idratante che nutre e mantiene la pelle morbida e protetta, ispirata alla natura del Monte Conero.",
-    details: "I protagonisti di questa crema purificante sono le foglie d'ulivo, derivanti dall'industria olearia e la niacinamide. Ideale per pelli miste e grasse.",
+    details: "Con foglie di ulivo e attivi riequilibranti, aiuta a puriicare la pelle e regolare l'eccesso di sebo.",
     gradient: "from-primary/20 to-lime/20",
     image: productConero,
   },
@@ -20,7 +23,8 @@ const productData: Record<string, { name: string; desc: string; details: string;
     name: "Sibilla",
     subtitle: "Anti-Age Cream",
     desc: "La nostra crema antiage che aiuta a contrastare i segni del tempo, formulata con estratti botanici dei Monti Sibillini.",
-    details: "La nostra crema di punta, anti-age. L'ingrediente che impreziosisce la formula sono i tepali di zafferano, raccolti rigorosamente a mano durante la stagione di fioritura.",
+    details:
+      "Formulata con attivi rigeneranti derivati da iori di zaerano e vinacce selezionate. Aiuta a contrastare i segnidel tempo.",
     gradient: "from-violet/20 to-primary/20",
     image: productSibilla,
   },
@@ -28,7 +32,7 @@ const productData: Record<string, { name: string; desc: string; details: string;
     name: "Catria",
     subtitle: "Nourishing Face Cream",
     desc: "Una crema nutriente che rigenera e protegge la pelle in profondità, con ingredienti naturali del Monte Catria.",
-    details: "Una crema idratante e nutriente che associa i benefici dei residui del caffè, con quelli dell'olio di girasole. Per chi vuole una pelle morbida e setosa.",
+    details: "Nutre e idrata grazie a una formulazione leggera arricchita con bioresidui del caffè.",
     gradient: "from-secondary/20 to-coral/20",
     image: productCatria,
   },
@@ -44,7 +48,10 @@ const ProductPage = () => {
         <div className="text-center">
           <p className="font-display text-6xl font-extrabold text-foreground mb-4">404</p>
           <p className="text-muted-foreground font-body text-lg">Prodotto non trovato.</p>
-          <Link to="/" className="inline-block mt-6 bg-primary text-primary-foreground font-body font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform">
+          <Link
+            to="/"
+            className="inline-block mt-6 bg-primary text-primary-foreground font-body font-bold px-8 py-3 rounded-full hover:scale-105 transition-transform"
+          >
             Torna alla home
           </Link>
         </div>
@@ -57,11 +64,7 @@ const ProductPage = () => {
       <Navbar />
       <div className={`pt-28 pb-16 bg-gradient-to-br ${product.gradient} min-h-[80vh] flex items-center`}>
         <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
             <Link
               to="/#prodotti"
               className="inline-flex items-center gap-2 font-body font-medium text-foreground/60 hover:text-foreground bg-background/50 backdrop-blur-sm px-5 py-2.5 rounded-full transition-all duration-300 hover:bg-background mb-10"
@@ -110,7 +113,10 @@ const ProductPage = () => {
                 className="group inline-flex items-center gap-3 bg-foreground text-primary-foreground font-body font-bold text-lg px-8 py-4 rounded-full hover:scale-105 transition-all duration-500"
               >
                 Contattaci per info
-                <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                <ArrowUpRight
+                  size={18}
+                  className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300"
+                />
               </a>
             </motion.div>
           </div>
