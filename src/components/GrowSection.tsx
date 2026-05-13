@@ -958,7 +958,7 @@ const NewsletterBlock = () => {
         </span>
         <h3 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-4 leading-tight">Tienimi aggiornato</h3>
         <p className="font-body text-sm md:text-base text-[#5A6157] mt-3 max-w-md mx-auto leading-relaxed">
-          <span className="italic"> </span>.
+          <span className="italic"> </span>
         </p>
 
         <form onSubmit={submit} className="mt-8 flex flex-col gap-3 max-w-md mx-auto">
