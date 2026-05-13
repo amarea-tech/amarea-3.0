@@ -959,8 +959,6 @@ const GrowSection = () => {
         </div>
       </section>
 
-      {/* ======= NEWSLETTER (untouched rectangle) ======= */}
-      <NewsletterBlock />
     </div>
   );
 };
