@@ -15,8 +15,7 @@ const productData: Record<
   conero: {
     name: "Conero",
     subtitle: "Purifying Face Cream",
-    desc: "La nostra crema idratante che nutre e mantiene la pelle morbida e protetta, ispirata alla natura del Monte Conero.",
-    details: "Con foglie di ulivo e attivi riequilibranti, aiuta a purificare la pelle e regolare l'eccesso di sebo.",
+    desc: "Con foglie di ulivo e attivi riequilibranti, aiuta a purificare la pelle e regolare l'eccesso di sebo.",
     gradient: "from-primary/20 to-lime/20",
     image: productConero,
   },
@@ -30,8 +29,7 @@ const productData: Record<
   catria: {
     name: "Catria",
     subtitle: "Nourishing Face Cream",
-    desc: "Una crema nutriente che rigenera e protegge la pelle in profondità, con ingredienti naturali del Monte Catria.",
-    details: "Nutre e idrata grazie a una formulazione leggera arricchita con bioresidui del caffè.",
+    desc: "Nutre e idrata grazie a una formulazione leggera arricchita con bioresidui del caffè.",
     gradient: "from-secondary/20 to-coral/20",
     image: productCatria,
   },
