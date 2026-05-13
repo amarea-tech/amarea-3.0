@@ -11,12 +11,15 @@ interface SitemapEntry {
 
 const productSlugs = ["conero", "sibilla", "catria"];
 const teamSlugs = [
-  "lucia-amici",
-  "lucia-potalivo",
-  "luca-tiano",
-  "patrick-orlando",
-  "fabiola-sciacca",
-  "ilenia-cirilli",
+  "anna-manzella",
+  "alessia-luccarini",
+  "francesco-mengarelli",
+  "loredana-rao",
+  "alida-likey",
+  "alessandra-marmore",
+  "camilla-morresi",
+  "elisabetta-damiani",
+  "tiziana-bacchetti",
 ];
 
 const entries: SitemapEntry[] = [
