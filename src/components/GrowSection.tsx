@@ -958,8 +958,7 @@ const NewsletterBlock = () => {
         </span>
         <h3 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-4 leading-tight">Tienimi aggiornato</h3>
         <p className="font-body text-sm md:text-base text-[#5A6157] mt-3 max-w-md mx-auto leading-relaxed">
-          Ricerca, rituali e nuove uscite di <span className="italic">Monti Italiani</span>. Una mail al mese, mai di
-          più.
+          Ricerca, rituali e nuove uscite di <span className="italic">AMAREA</span>.
         </p>
 
         <form onSubmit={submit} className="mt-8 flex flex-col gap-3 max-w-md mx-auto">
