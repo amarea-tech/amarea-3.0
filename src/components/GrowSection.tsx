@@ -1108,7 +1108,7 @@ const RecoCard = ({
             {reco.tag}
           </span>
         </div>
-        {reco.metric && (
+        {reco.trigger && (
           <span
             className="font-body text-[10px] tracking-wide px-2 py-0.5 rounded-full border"
             style={{
@@ -1117,7 +1117,7 @@ const RecoCard = ({
               background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.65)",
             }}
           >
-            {reco.metric}
+            {reco.trigger}
           </span>
         )}
       </div>
@@ -1130,12 +1130,12 @@ const RecoCard = ({
         {reco.title}
       </h3>
 
-      {/* body */}
+      {/* probabilistic insight */}
       <p
         className="relative font-body text-[13px] mt-2.5 leading-relaxed"
         style={{ color: theme.textMuted }}
       >
-        {reco.body}
+        {reco.insight}
       </p>
 
       {/* hairline */}
@@ -1144,16 +1144,61 @@ const RecoCard = ({
         style={{ background: isNight ? "rgba(255,255,255,0.08)" : "rgba(31,37,32,0.08)" }}
       />
 
-      {/* active ingredients */}
+      {/* "Perché questo insight?" — scientific rationale */}
+      <div
+        className="relative rounded-xl p-3.5 border"
+        style={{
+          borderColor: isNight ? "rgba(255,255,255,0.07)" : "rgba(31,37,32,0.07)",
+          background: isNight ? "rgba(255,255,255,0.025)" : "rgba(255,255,255,0.55)",
+        }}
+      >
+        <div
+          className="text-[9px] tracking-[0.28em] uppercase font-body mb-1.5 flex items-center gap-1.5"
+          style={{ color: theme.textMuted }}
+        >
+          <Sparkles className="w-2.5 h-2.5" strokeWidth={1.5} />
+          Perché questo insight
+        </div>
+        <p
+          className="font-body text-[12px] leading-relaxed italic"
+          style={{ color: theme.textMuted }}
+        >
+          {reco.rationale}
+        </p>
+      </div>
+
+      {/* protocol */}
+      <div className="relative mt-4">
+        <div
+          className="text-[9px] tracking-[0.28em] uppercase font-body mb-1.5"
+          style={{ color: theme.textMuted }}
+        >
+          Protocollo cosmetico
+        </div>
+        <p
+          className="font-body text-[12.5px] leading-relaxed"
+          style={{ color: theme.text }}
+        >
+          {reco.protocol}
+        </p>
+      </div>
+
+      {/* hairline */}
+      <div
+        className="relative my-4 h-px"
+        style={{ background: isNight ? "rgba(255,255,255,0.08)" : "rgba(31,37,32,0.08)" }}
+      />
+
+      {/* active ingredient families */}
       <div className="relative">
         <div
           className="text-[9px] tracking-[0.28em] uppercase font-body mb-2"
           style={{ color: theme.textMuted }}
         >
-          Attivi consigliati
+          Famiglie di attivi
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {reco.ingredients.map((ing) => (
+          {reco.actives.map((ing) => (
             <span
               key={ing}
               className="font-body text-[11px] px-2.5 py-1 rounded-full border"
@@ -1169,30 +1214,56 @@ const RecoCard = ({
         </div>
       </div>
 
-      {/* intensity bar */}
+      {/* environmental correlation indicator (qualitative, not biological %) */}
       <div className="relative mt-5 mt-auto pt-5">
         <div className="flex items-center justify-between mb-1.5">
           <span
             className="text-[9px] tracking-[0.28em] uppercase font-body"
             style={{ color: theme.textMuted }}
           >
-            {tok.label}
+            Correlazione ambientale
           </span>
-          <span className="font-body text-[10px]" style={{ color: theme.textMuted }}>
-            {reco.intensity}%
+          <span
+            className="font-body text-[10px] tracking-[0.18em] uppercase"
+            style={{ color: theme.textMuted }}
+          >
+            {reco.correlation === "high"
+              ? "Forte"
+              : reco.correlation === "moderate"
+                ? "Moderata"
+                : "Debole"}
           </span>
         </div>
+        <div className="flex gap-1">
+          {[0, 1, 2].map((i) => {
+            const active =
+              (reco.correlation === "high" && i < 3) ||
+              (reco.correlation === "moderate" && i < 2) ||
+              (reco.correlation === "low" && i < 1);
+            return (
+              <motion.div
+                key={i}
+                className="h-[3px] flex-1 rounded-full"
+                initial={{ opacity: 0.2, scaleX: 0.6 }}
+                animate={{ opacity: active ? 1 : 0.18, scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 + index * 0.07 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  background: active
+                    ? `linear-gradient(90deg, ${tok.dot}, ${tok.ring})`
+                    : isNight
+                      ? "rgba(255,255,255,0.08)"
+                      : "rgba(31,37,32,0.08)",
+                  transformOrigin: "left",
+                }}
+              />
+            );
+          })}
+        </div>
         <div
-          className="h-[3px] w-full rounded-full overflow-hidden"
-          style={{ background: isNight ? "rgba(255,255,255,0.07)" : "rgba(31,37,32,0.07)" }}
+          className="mt-2 font-body text-[10px] tracking-wide"
+          style={{ color: theme.textMuted }}
         >
-          <motion.div
-            className="h-full rounded-full"
-            style={{ background: `linear-gradient(90deg, ${tok.dot}, ${tok.ring})` }}
-            initial={{ width: 0 }}
-            animate={{ width: `${reco.intensity}%` }}
-            transition={{ duration: 1.1, delay: 0.2 + index * 0.07, ease: [0.22, 1, 0.36, 1] }}
-          />
+          Modalità: {tok.label}
         </div>
       </div>
     </motion.article>
