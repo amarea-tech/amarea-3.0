@@ -349,6 +349,134 @@ const pollenExplain = (v: number) =>
       ? "Possibili microirritazioni in pelli sensibili."
       : "Probabili reazioni cutanee: prediligi texture leniscenti.";
 
+/* ---------------- Skin Mood (biological state) ---------------- */
+
+type SkinMoodKey =
+  | "balanced"
+  | "barrier"
+  | "oxidative"
+  | "repair"
+  | "reactive"
+  | "detox";
+
+type SkinMoodInfo = {
+  key: SkinMoodKey;
+  label: string;
+  subtitle: string;
+  description: string;
+  status: RecoStatus;
+  metrics: { label: string; value: number /* 0-100 health */ }[];
+};
+
+const computeSkinMood = (env: Env | null, phase: Phase): SkinMoodInfo => {
+  // Health metrics (0-100, higher = better)
+  const oxidative = env
+    ? Math.max(
+        0,
+        100 -
+          (phase === "night" ? 0 : Math.min(env.uv, 11) * 7) -
+          Math.min(env.pm25, 50) * 1.1,
+      )
+    : 78;
+  const barrier = env
+    ? Math.max(
+        0,
+        100 -
+          (env.humidity < 40 ? (40 - env.humidity) * 1.6 : 0) -
+          (env.wind > 15 ? (env.wind - 15) * 1.1 : 0) -
+          (env.temp <= 5 ? (5 - env.temp) * 2 : 0),
+      )
+    : 80;
+  const microbiome = env
+    ? Math.max(
+        0,
+        100 -
+          (env.pollen >= 20 ? Math.min(env.pollen - 20, 40) * 1.2 : 0) -
+          (env.humidity > 80 ? (env.humidity - 80) * 1.5 : 0) -
+          (env.pm10 > 40 ? (env.pm10 - 40) * 0.6 : 0),
+      )
+    : 82;
+
+  const metrics = [
+    { label: "Equilibrio ossidativo", value: Math.round(oxidative) },
+    { label: "Integrità barriera", value: Math.round(barrier) },
+    { label: "Armonia microbiota", value: Math.round(microbiome) },
+  ];
+
+  if (phase === "night")
+    return {
+      key: "repair",
+      label: "Cellular Repair",
+      subtitle: "Fase circadiana riparativa",
+      description:
+        "Il ciclo notturno favorisce sintesi di collagene, autofagia e turnover dei cheratinociti: la pelle riequilibra il TEWL e consolida la matrice dermica.",
+      status: "calm",
+      metrics,
+    };
+  if (oxidative < 55)
+    return {
+      key: "oxidative",
+      label: "Oxidative Stress Risk",
+      subtitle: "Carico radicalico elevato",
+      description:
+        "L'esposizione UV e il particolato fine generano specie reattive dell'ossigeno (ROS) che ossidano lipidi cutanei e collagene. Priorità a vitamina C, ferulico e polifenoli upcycled.",
+      status: "alert",
+      metrics,
+    };
+  if (barrier < 60)
+    return {
+      key: "barrier",
+      label: "Barrier Recovery",
+      subtitle: "Disturbo del film idrolipidico",
+      description:
+        "Bassa umidità e stress meccanico aumentano il TEWL e indeboliscono lo strato corneo. La barriera richiede ceramidi NP, colesterolo e acidi grassi per ricostituire il rapporto 3:1:1.",
+      status: "watch",
+      metrics,
+    };
+  if (microbiome < 65)
+    return {
+      key: "reactive",
+      label: "Reactive Sensitivity",
+      subtitle: "Microbiota perturbato",
+      description:
+        "Pollini e umidità sbilanciata alterano la diversità microbica, predisponendo a flushing e iperreattività. Lenitivi non-occlusivi e prebiotici favoriscono l'omeostasi.",
+      status: "watch",
+      metrics,
+    };
+  if (env && env.pm25 >= 15)
+    return {
+      key: "detox",
+      label: "Detox Mode",
+      subtitle: "Carica urbana sostenuta",
+      description:
+        "Il particolato lipofilo aderisce al sebo e penetra nei follicoli. Detersione bifasica e antiossidanti polifenolici neutralizzano i metaboliti pro-infiammatori.",
+      status: "watch",
+      metrics,
+    };
+  return {
+    key: "balanced",
+    label: "Balanced",
+    subtitle: "Omeostasi cutanea ottimale",
+    description:
+      "I parametri ambientali sostengono un equilibrio tra idratazione, microbiota e difese antiossidanti. La routine entra in modalità mantenimento attivo.",
+    status: "calm",
+    metrics,
+  };
+};
+
+/* deterministic mini sparkline series from a seed */
+const sparkSeries = (seed: number, base: number) => {
+  const out: number[] = [];
+  let s = (seed * 9301 + 49297) % 233280;
+  for (let i = 0; i < 14; i++) {
+    s = (s * 9301 + 49297) % 233280;
+    const r = (s / 233280 - 0.5) * 0.45;
+    const drift = Math.sin((i / 13) * Math.PI) * 0.18;
+    out.push(Math.max(0.05, Math.min(0.95, base + r + drift - 0.1)));
+  }
+  return out;
+};
+
 /* ---------------- page ---------------- */
 
 const GrowSection = () => {
@@ -465,6 +593,7 @@ const GrowSection = () => {
   const hydra = useMemo(() => hydrationRisk(env), [env]);
   const blue = useMemo(() => blueLightExposure(phase), [phase]);
   const recos = useMemo(() => buildRecos(env, phase), [env, phase]);
+  const skinMood = useMemo(() => computeSkinMood(env, phase), [env, phase]);
 
   const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 
