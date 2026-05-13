@@ -1325,10 +1325,10 @@ const Metric = ({
         <span className="text-[9px] tracking-[0.32em] uppercase font-body">{label}</span>
       </div>
 
-      <div className="relative flex items-end justify-between gap-3 mt-4">
-        <div className="flex items-baseline gap-1.5 min-w-0">
+      <div className="relative flex flex-wrap items-end justify-between gap-x-3 gap-y-2 mt-4">
+        <div className="flex items-baseline gap-1.5 min-w-0 flex-shrink">
           <span
-            className="font-display text-[32px] md:text-[40px] leading-none tracking-tight"
+            className="font-display text-[28px] sm:text-[32px] md:text-[40px] leading-none tracking-tight truncate"
             style={{ color: theme.text }}
           >
             {value}
