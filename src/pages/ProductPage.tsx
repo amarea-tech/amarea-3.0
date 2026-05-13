@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FooterSection from "@/components/FooterSection";
@@ -61,6 +62,24 @@ const ProductPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{`${product.name} — ${product.subtitle} | Amarea Cosmetics`}</title>
+        <meta name="description" content={product.desc.slice(0, 160)} />
+        <link rel="canonical" href={`https://amareacosmetics.com/prodotti/${slug}`} />
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={`https://amareacosmetics.com/prodotti/${slug}`} />
+        <meta property="og:title" content={`${product.name} — ${product.subtitle} | Amarea Cosmetics`} />
+        <meta property="og:description" content={product.desc.slice(0, 160)} />
+        <meta property="og:image" content={`https://amareacosmetics.com${product.image}`} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: `${product.name} — ${product.subtitle}`,
+          description: product.desc,
+          image: `https://amareacosmetics.com${product.image}`,
+          brand: { "@type": "Brand", name: "Amarea Cosmetics" },
+        })}</script>
+      </Helmet>
       <Navbar />
       <div className={`pt-28 pb-16 bg-gradient-to-br ${product.gradient} min-h-[80vh] flex items-center`}>
         <div className="container mx-auto px-6">
@@ -83,7 +102,7 @@ const ProductPage = () => {
             >
               <img
                 src={product.image}
-                alt={product.name}
+                alt={`Crema viso ${product.name} — ${product.subtitle}`}
                 className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-700"
                 loading="lazy"
                 width={1024}
