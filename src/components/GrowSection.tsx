@@ -941,28 +941,6 @@ const GrowSection = () => {
         </div>
       </section>
 
-      {/* ======= SKIN MOOD ======= */}
-      <section className="relative pb-12">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <Eyebrow theme={theme}>Skin Mood</Eyebrow>
-              <h2 className="font-display text-2xl md:text-4xl mt-2" style={{ color: theme.text }}>
-                Stato biologico della pelle
-              </h2>
-            </div>
-            <span
-              className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline"
-              style={{ color: theme.textMuted }}
-            >
-              Adaptive bio-state
-            </span>
-          </div>
-
-          <SkinMoodPanel info={skinMood} theme={theme} isNight={isNight} />
-        </div>
-      </section>
-
       {/* ======= SMART RECOMMENDATIONS ======= */}
       <section className="relative pb-16 md:pb-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
