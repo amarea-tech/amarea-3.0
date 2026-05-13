@@ -427,7 +427,7 @@ const GrowSection = () => {
       style={{ background: theme.bg, color: theme.text }}
     >
       {/* ===== Ambient botanical gradient layer ===== */}
-      <AmbientLayer phase={phase} />
+      <AmbientLayer phase={phase} env={env} />
 
       {/* ======= HERO HEADER ======= */}
       <header className="relative pt-20 md:pt-28 pb-10 md:pb-14">
@@ -887,36 +887,79 @@ const SunArc = ({ phase, theme }: { phase: Phase; theme: (typeof PHASE_THEME)["d
 
 /* ---------------- ambient layer ---------------- */
 
-const AmbientLayer = ({ phase }: { phase: Phase }) => {
+const AmbientLayer = ({ phase, env }: { phase: Phase; env: Env | null }) => {
   const isNight = phase === "night";
+
+  /* UV-driven warmth intensity (0-1) */
+  const uv = isNight ? 0 : (env?.uv ?? 0);
+  const uvWarmth = Math.min(1, Math.max(0, uv < 3 ? 0 : uv < 6 ? (uv - 3) / 3 : 1));
+  const uvCool = Math.min(1, Math.max(0, uv < 3 ? 1 - uv / 3 : 0));
+
+  /* Air-quality haze (0-1) */
+  const aqi = env?.aqi ?? 1;
+  const aqHaze = Math.min(1, Math.max(0, aqi <= 2 ? 0 : (aqi - 2) / 3));
+
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* saffron orb (top-left) */}
-      <div
-        className="absolute -top-32 -left-24 h-[520px] w-[520px] rounded-full blur-3xl opacity-60"
+      {/* saffron orb (top-left) — UV-responsive warmth */}
+      <motion.div
+        className="absolute -top-32 -left-24 h-[520px] w-[520px] rounded-full blur-3xl"
         style={{
-          background: isNight
-            ? "radial-gradient(circle, rgba(201,168,119,0.18) 0%, transparent 65%)"
-            : "radial-gradient(circle, rgba(233,178,96,0.35) 0%, transparent 65%)",
+          background: "radial-gradient(circle, rgba(233,178,96,0.35) 0%, transparent 65%)",
         }}
+        animate={{
+          opacity: isNight ? 0.12 : 0.35 + uvWarmth * 0.35,
+          scale: 1 + uvWarmth * 0.15,
+        }}
+        transition={{ duration: 1.8, ease: "easeOut" }}
       />
-      {/* sea orb (right) */}
-      <div
-        className="absolute top-40 -right-32 h-[620px] w-[620px] rounded-full blur-3xl opacity-60"
+      {/* seafoam orb (right) — cool when UV low, subdued when UV high */}
+      <motion.div
+        className="absolute top-40 -right-32 h-[620px] w-[620px] rounded-full blur-3xl"
         style={{
-          background: isNight
-            ? "radial-gradient(circle, rgba(120,165,178,0.18) 0%, transparent 65%)"
-            : "radial-gradient(circle, rgba(150,194,200,0.35) 0%, transparent 65%)",
+          background: "radial-gradient(circle, rgba(150,194,200,0.35) 0%, transparent 65%)",
         }}
+        animate={{
+          opacity: isNight ? 0.12 : 0.35 + uvCool * 0.35,
+          scale: 1 + uvCool * 0.15,
+        }}
+        transition={{ duration: 1.8, ease: "easeOut" }}
       />
-      {/* UV glow accent (center-bottom) */}
-      <div
-        className="absolute bottom-1/3 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-40"
+      {/* UV accent glow — warm amber core when UV high */}
+      <motion.div
+        className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[480px] w-[600px] rounded-full blur-3xl"
         style={{
-          background: isNight
-            ? "radial-gradient(ellipse, rgba(176,158,205,0.22) 0%, transparent 70%)"
-            : "radial-gradient(ellipse, rgba(214,196,168,0.4) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(232,196,130,0.45) 0%, transparent 70%)",
         }}
+        animate={{
+          opacity: isNight ? 0.08 : 0.15 + uvWarmth * 0.4,
+          scale: 1 + uvWarmth * 0.2,
+        }}
+        transition={{ duration: 2, ease: "easeOut" }}
+      />
+      {/* air-quality subtle haze — muted mauve when AQI poor */}
+      <motion.div
+        className="absolute bottom-1/4 left-1/4 h-[400px] w-[500px] rounded-full blur-3xl"
+        style={{
+          background: "radial-gradient(circle, rgba(180,170,190,0.25) 0%, transparent 65%)",
+        }}
+        animate={{
+          opacity: isNight ? 0.05 : aqHaze * 0.35,
+          scale: 1 + aqHaze * 0.25,
+        }}
+        transition={{ duration: 2.2, ease: "easeOut" }}
+      />
+      {/* cool seafoam bottom accent for low-UV freshness */}
+      <motion.div
+        className="absolute -bottom-20 left-1/3 h-[360px] w-[480px] rounded-full blur-3xl"
+        style={{
+          background: "radial-gradient(ellipse, rgba(160,200,190,0.30) 0%, transparent 70%)",
+        }}
+        animate={{
+          opacity: isNight ? 0.08 : 0.15 + uvCool * 0.25,
+          scale: 1 + uvCool * 0.1,
+        }}
+        transition={{ duration: 2, ease: "easeOut" }}
       />
       {/* fine grain noise */}
       <div
