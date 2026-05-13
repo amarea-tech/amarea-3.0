@@ -9,7 +9,7 @@ const navLinks = [
   { label: "Prodotti", href: "/#prodotti" },
   { label: "Chi Siamo", href: "/#chi-siamo" },
   { label: "Team", href: "/#team" },
-  { label: "Grow With Amarea", href: "/#grow" },
+  { label: "Grow With Amarea", href: "/grow" },
 ];
 
 const Navbar = () => {
