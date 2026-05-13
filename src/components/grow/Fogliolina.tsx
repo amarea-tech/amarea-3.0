@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import fogliolinaImg from "@/assets/grow/fogliolina.png";
-import sunnyImg from "@/assets/grow/mascot-sunny.png";
-import rainyImg from "@/assets/grow/mascot-rainy.png";
-import windyImg from "@/assets/grow/mascot-windy.png";
-import snowyImg from "@/assets/grow/mascot-snowy.png";
+import fogliolinaImg from "@/assets/grow/fogliolina.webp";
+import sunnyImg from "@/assets/grow/mascot-sunny.webp";
+import rainyImg from "@/assets/grow/mascot-rainy.webp";
+import windyImg from "@/assets/grow/mascot-windy.webp";
+import snowyImg from "@/assets/grow/mascot-snowy.webp";
 
 type Mood = "serene" | "uv" | "smog" | "pollen" | "dry" | "rainy";
 type Weather = "sunny" | "rainy" | "windy" | "snowy" | "default";
