@@ -1378,7 +1378,7 @@ const Sparkline = ({
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
-      className="w-[88px] h-[30px] flex-shrink-0"
+      className="w-[72px] sm:w-[88px] h-[28px] sm:h-[30px] flex-shrink-0"
       style={{ opacity: dim ? 0.5 : 1 }}
     >
       <defs>
