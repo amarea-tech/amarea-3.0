@@ -1325,10 +1325,10 @@ const Metric = ({
         <span className="text-[9px] tracking-[0.32em] uppercase font-body">{label}</span>
       </div>
 
-      <div className="relative flex items-end justify-between gap-3 mt-4">
-        <div className="flex items-baseline gap-1.5 min-w-0">
+      <div className="relative flex flex-wrap items-end justify-between gap-x-3 gap-y-2 mt-4">
+        <div className="flex items-baseline gap-1.5 min-w-0 flex-shrink">
           <span
-            className="font-display text-[32px] md:text-[40px] leading-none tracking-tight"
+            className="font-display text-[28px] sm:text-[32px] md:text-[40px] leading-none tracking-tight truncate"
             style={{ color: theme.text }}
           >
             {value}
@@ -1378,7 +1378,7 @@ const Sparkline = ({
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
-      className="w-[88px] h-[30px] flex-shrink-0"
+      className="w-[72px] sm:w-[88px] h-[28px] sm:h-[30px] flex-shrink-0"
       style={{ opacity: dim ? 0.5 : 1 }}
     >
       <defs>
