@@ -129,8 +129,7 @@ const aqiFromPm = (pm25: number, pm10: number) => {
   return Math.max(a, b);
 };
 
-const aqiLabel = (n: number) =>
-  ["—", "Eccellente", "Buona", "Discreta", "Scarsa", "Critica"][n] ?? "—";
+const aqiLabel = (n: number) => ["—", "Eccellente", "Buona", "Discreta", "Scarsa", "Critica"][n] ?? "—";
 
 const moodFromEnv = (env: Env | null, phase: Phase): Mood => {
   if (!env) return "serene";
@@ -199,55 +198,95 @@ const blueLightExposure = (phase: Phase) => {
 type Reco = { tag: string; title: string; body: string };
 
 const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
-  if (!env)
-    return [
-      { tag: "Routine", title: "Equilibrio", body: "Detersione delicata, idratazione, antiossidante." },
-    ];
+  if (!env) return [{ tag: "Routine", title: "Equilibrio", body: "Detersione delicata, idratazione, antiossidante." }];
   const r: Reco[] = [];
 
   if (phase === "night") {
-    r.push({ tag: "Recovery", title: "Riparazione notturna", body: "Retinaldeide o peptidi biomimetici + crema occlusiva con squalano." });
-    r.push({ tag: "Microcircolo", title: "Massaggio facciale", body: "Tre minuti di gua sha freddo per drenare e ossigenare i tessuti." });
+    r.push({
+      tag: "Recovery",
+      title: "Riparazione notturna",
+      body: "Retinaldeide o peptidi biomimetici + crema occlusiva con squalano.",
+    });
+    r.push({
+      tag: "Microcircolo",
+      title: "Massaggio facciale",
+      body: "Tre minuti di gua sha freddo per drenare e ossigenare i tessuti.",
+    });
     if (env.humidity < 45)
-      r.push({ tag: "Idratazione", title: "Sleeping mask umettante", body: "Acido ialuronico multipeso + glicerina sotto film leggero." });
+      r.push({
+        tag: "Idratazione",
+        title: "Sleeping mask umettante",
+        body: "Acido ialuronico multipeso + glicerina sotto film leggero.",
+      });
     else
-      r.push({ tag: "Detossinazione", title: "Maschera detox", body: "Argilla bianca + niacinamide per riequilibrare la microflora." });
+      r.push({
+        tag: "Detossinazione",
+        title: "Maschera detox",
+        body: "Argilla bianca + niacinamide per riequilibrare la microflora.",
+      });
     return r;
   }
 
   if (env.uv >= 6)
-    r.push({ tag: "Fotoprotezione", title: "SPF 50 + antiossidanti", body: "Vitamina C 10-15% sotto SPF a finitura velata. Reapply ogni 3h." });
+    r.push({
+      tag: "Fotoprotezione",
+      title: "SPF 50 + antiossidanti",
+      body: "Vitamina C 10-15% sotto SPF a finitura velata. Reapply ogni 3h.",
+    });
   else
-    r.push({ tag: "Fotoprotezione", title: "SPF leggero", body: "SPF 30 fluido, non comedogeno, su siero antiossidante." });
+    r.push({
+      tag: "Fotoprotezione",
+      title: "SPF leggero",
+      body: "SPF 30 fluido, non comedogeno, su siero antiossidante.",
+    });
 
   if (env.pm25 >= 15 || env.pm10 >= 40)
-    r.push({ tag: "Anti-pollution", title: "Detersione bifasica + scudo polifenolico", body: "Olio detergente seguito da siero con resveratrolo o estratti upcycled." });
+    r.push({
+      tag: "Anti-pollution",
+      title: "Detersione bifasica + scudo polifenolico",
+      body: "Olio detergente seguito da siero con resveratrolo o estratti upcycled.",
+    });
 
   if (env.humidity < 40)
-    r.push({ tag: "Idratazione", title: "Layer umettante + barriera", body: "Acido ialuronico su pelle umida, sigilla con crema a ceramidi." });
+    r.push({
+      tag: "Idratazione",
+      title: "Layer umettante + barriera",
+      body: "Acido ialuronico su pelle umida, sigilla con crema a ceramidi.",
+    });
   else if (env.humidity > 75)
-    r.push({ tag: "Texture", title: "Formulazioni leggere", body: "Gel-cream e sieri acquosi: evita oli pesanti e occlusivi." });
+    r.push({
+      tag: "Texture",
+      title: "Formulazioni leggere",
+      body: "Gel-cream e sieri acquosi: evita oli pesanti e occlusivi.",
+    });
 
   if (env.wind >= 20 || env.temp <= 8)
-    r.push({ tag: "Barriera", title: "Ceramidi e burri vegetali", body: "Crema ricca con ceramidi NP, colesterolo e burro di karité." });
+    r.push({
+      tag: "Barriera",
+      title: "Ceramidi e burri vegetali",
+      body: "Crema ricca con ceramidi NP, colesterolo e burro di karité.",
+    });
 
   if (env.pollen >= 20)
-    r.push({ tag: "Lenitivo", title: "Routine ipo-reattiva", body: "Centella, bisabololo, zero fragranze. Compresse fredde se serve." });
+    r.push({
+      tag: "Lenitivo",
+      title: "Routine ipo-reattiva",
+      body: "Centella, bisabololo, zero fragranze. Compresse fredde se serve.",
+    });
 
   return r.slice(0, 4);
 };
 
 /* ---------------- pollen formatting ---------------- */
 
-const pollenSeverity = (v: number) =>
-  v < 5 ? "Basso" : v < 20 ? "Moderato" : v < 50 ? "Alto" : "Molto alto";
+const pollenSeverity = (v: number) => (v < 5 ? "Basso" : v < 20 ? "Moderato" : v < 50 ? "Alto" : "Molto alto");
 
 const pollenExplain = (v: number) =>
   v < 5
     ? "Esposizione trascurabile, pelle non reattiva."
     : v < 20
-    ? "Possibili microirritazioni in pelli sensibili."
-    : "Probabili reazioni cutanee: prediligi texture leniscenti.";
+      ? "Possibili microirritazioni in pelli sensibili."
+      : "Probabili reazioni cutanee: prediligi texture leniscenti.";
 
 /* ---------------- page ---------------- */
 
@@ -268,7 +307,9 @@ const GrowSection = () => {
       const [m, a, g] = await Promise.all([
         fetch(meteo).then((r) => r.json()),
         fetch(air).then((r) => r.json()),
-        fetch(geo).then((r) => r.json()).catch(() => null),
+        fetch(geo)
+          .then((r) => r.json())
+          .catch(() => null),
       ]);
 
       const c = a?.current ?? {};
@@ -296,7 +337,13 @@ const GrowSection = () => {
       setEnv(next);
       setCoords({ lat, lon });
       const first = g?.results?.[0];
-      setPlace(first ? `${first.name}, ${first.admin1 ?? first.country ?? ""}` : fallback ? FALLBACK.label : `${lat.toFixed(2)}, ${lon.toFixed(2)}`);
+      setPlace(
+        first
+          ? `${first.name}, ${first.admin1 ?? first.country ?? ""}`
+          : fallback
+            ? FALLBACK.label
+            : `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
+      );
       setUpdatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
     } finally {
       setLoading(false);
@@ -358,39 +405,35 @@ const GrowSection = () => {
   const blue = useMemo(() => blueLightExposure(phase), [phase]);
   const recos = useMemo(() => buildRecos(env, phase), [env, phase]);
 
-  const fmtTime = (iso: string) =>
-    new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+  const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 
   const uvDisplay = isNight ? "0.0" : env ? env.uv.toFixed(1) : "—";
-  const uvHint = isNight ? "Inattivo (notte)" : env ? (env.uv < 3 ? "Basso" : env.uv < 6 ? "Moderato" : env.uv < 8 ? "Alto" : "Molto alto") : "";
+  const uvHint = isNight
+    ? "Inattivo (notte)"
+    : env
+      ? env.uv < 3
+        ? "Basso"
+        : env.uv < 6
+          ? "Moderato"
+          : env.uv < 8
+            ? "Alto"
+            : "Molto alto"
+      : "";
 
   return (
-    <div
-      id="grow"
-      className="transition-colors duration-700"
-      style={{ background: theme.bg, color: theme.text }}
-    >
+    <div id="grow" className="transition-colors duration-700" style={{ background: theme.bg, color: theme.text }}>
       {/* ======= HERO HEADER ======= */}
       <header className="pt-20 md:pt-28 pb-10 md:pb-14">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="flex items-end justify-between gap-6 flex-wrap">
             <div>
-              <span
-                className="text-[10px] tracking-[0.35em] uppercase font-body"
-                style={{ color: theme.textMuted }}
-              >
+              <span className="text-[10px] tracking-[0.35em] uppercase font-body" style={{ color: theme.textMuted }}>
                 Amarea · Environmental Skin Insights
               </span>
-              <h1
-                className="font-display text-4xl md:text-6xl mt-3 leading-[1.05]"
-                style={{ color: theme.text }}
-              >
+              <h1 className="font-display text-4xl md:text-6xl mt-3 leading-[1.05]" style={{ color: theme.text }}>
                 Skin Weather <span className="italic font-light">Dashboard</span>
               </h1>
-              <div
-                className="flex items-center gap-3 mt-4 font-body text-sm"
-                style={{ color: theme.textMuted }}
-              >
+              <div className="flex items-center gap-3 mt-4 font-body text-sm" style={{ color: theme.textMuted }}>
                 <MapPin size={14} />
                 <span>{place || "Localizzazione in corso…"}</span>
                 {updatedAt && <span className="opacity-70">· aggiornato {updatedAt}</span>}
@@ -418,7 +461,9 @@ const GrowSection = () => {
                 <div className="text-[9px] tracking-[0.3em] uppercase font-body" style={{ color: theme.textMuted }}>
                   Circadian skin mode
                 </div>
-                <div className="font-display text-sm" style={{ color: theme.text }}>{theme.eyebrow}</div>
+                <div className="font-display text-sm" style={{ color: theme.text }}>
+                  {theme.eyebrow}
+                </div>
               </div>
             </div>
           </div>
@@ -438,14 +483,16 @@ const GrowSection = () => {
                     <div className="font-display text-7xl md:text-8xl leading-none" style={{ color: theme.text }}>
                       {comfort}
                     </div>
-                    <div className="font-body text-sm" style={{ color: theme.textMuted }}>/ 100</div>
+                    <div className="font-body text-sm" style={{ color: theme.textMuted }}>
+                      / 100
+                    </div>
                   </div>
                   <p className="font-body text-sm mt-3 max-w-xs leading-relaxed" style={{ color: theme.textMuted }}>
                     {comfort >= 80
                       ? "Condizioni favorevoli: la pelle è in equilibrio."
                       : comfort >= 60
-                      ? "Stress moderato: ottimizza la routine in base agli indicatori."
-                      : "Stress elevato: priorità a barriera, idratazione e protezione."}
+                        ? "Stress moderato: ottimizza la routine in base agli indicatori."
+                        : "Stress elevato: priorità a barriera, idratazione e protezione."}
                   </p>
                 </div>
 
@@ -456,9 +503,24 @@ const GrowSection = () => {
               </div>
 
               {/* Sub-row: 3 derived insights */}
-              <div className="grid grid-cols-3 gap-px mt-8 rounded-2xl overflow-hidden" style={{ background: theme.border }}>
-                <SubInsight theme={theme} icon={<Droplets size={14} />} label="Hydration risk" value={hydra.level} note={hydra.note} />
-                <SubInsight theme={theme} icon={<Monitor size={14} />} label="Blue light" value={blue.level} note={blue.note} />
+              <div
+                className="grid grid-cols-3 gap-px mt-8 rounded-2xl overflow-hidden"
+                style={{ background: theme.border }}
+              >
+                <SubInsight
+                  theme={theme}
+                  icon={<Droplets size={14} />}
+                  label="Hydration risk"
+                  value={hydra.level}
+                  note={hydra.note}
+                />
+                <SubInsight
+                  theme={theme}
+                  icon={<Monitor size={14} />}
+                  label="Blue light"
+                  value={blue.level}
+                  note={blue.note}
+                />
                 <SubInsight
                   theme={theme}
                   icon={<Activity size={14} />}
@@ -473,18 +535,28 @@ const GrowSection = () => {
             <GlassCard theme={theme}>
               <Eyebrow theme={theme}>Ciclo solare</Eyebrow>
               <div className="mt-5 flex items-center justify-between">
-                <SunPoint theme={theme} icon={<Sunrise size={18} />} label="Alba" value={env ? fmtTime(env.sunrise) : "—"} />
+                <SunPoint
+                  theme={theme}
+                  icon={<Sunrise size={18} />}
+                  label="Alba"
+                  value={env ? fmtTime(env.sunrise) : "—"}
+                />
                 <SunArc phase={phase} theme={theme} />
-                <SunPoint theme={theme} icon={<Sunset size={18} />} label="Tramonto" value={env ? fmtTime(env.sunset) : "—"} />
+                <SunPoint
+                  theme={theme}
+                  icon={<Sunset size={18} />}
+                  label="Tramonto"
+                  value={env ? fmtTime(env.sunset) : "—"}
+                />
               </div>
               <p className="font-body text-xs mt-6 leading-relaxed" style={{ color: theme.textMuted }}>
                 {isNight
                   ? "Modalità notte attiva: l'interfaccia favorisce ingredienti riparativi e luce ambientale calda."
                   : phase === "sunset"
-                  ? "Tramonto: la pelle entra in fase di transizione, valuta antiossidanti."
-                  : phase === "dawn"
-                  ? "Alba: il microcircolo cutaneo si riattiva, idratazione prima di tutto."
-                  : "Ore diurne: protezione e antiossidanti restano la priorità."}
+                    ? "Tramonto: la pelle entra in fase di transizione, valuta antiossidanti."
+                    : phase === "dawn"
+                      ? "Alba: il microcircolo cutaneo si riattiva, idratazione prima di tutto."
+                      : "Ore diurne: protezione e antiossidanti restano la priorità."}
               </p>
             </GlassCard>
           </div>
@@ -505,7 +577,15 @@ const GrowSection = () => {
             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px rounded-3xl overflow-hidden border"
             style={{ background: theme.border, borderColor: theme.border }}
           >
-            <Metric theme={theme} icon={<Sun size={16} />} label="UV Index" value={uvDisplay} unit="UVI" hint={uvHint} dim={isNight} />
+            <Metric
+              theme={theme}
+              icon={<Sun size={16} />}
+              label="UV Index"
+              value={uvDisplay}
+              unit="UVI"
+              hint={uvHint}
+              dim={isNight}
+            />
             <Metric
               theme={theme}
               icon={<CloudFog size={16} />}
@@ -531,10 +611,40 @@ const GrowSection = () => {
               hint={env ? `${pollenSeverity(env.pollen)} · ${pollenExplain(env.pollen)}` : ""}
               wide
             />
-            <Metric theme={theme} icon={<Droplets size={16} />} label="Humidity" value={env ? env.humidity.toFixed(0) : "—"} unit="%" hint={env ? (env.humidity < 40 ? "Aria secca" : env.humidity < 70 ? "Equilibrata" : "Umida") : ""} />
-            <Metric theme={theme} icon={<Thermometer size={16} />} label="Temperature" value={env ? env.temp.toFixed(0) : "—"} unit="°C" hint={env ? (env.temp < 10 ? "Fresco" : env.temp < 22 ? "Mite" : env.temp < 30 ? "Caldo" : "Torrido") : ""} />
-            <Metric theme={theme} icon={<Wind size={16} />} label="Wind" value={env ? env.wind.toFixed(0) : "—"} unit="km/h" hint={env ? (env.wind < 10 ? "Calmo" : env.wind < 25 ? "Brezza" : "Forte") : ""} />
-            <Metric theme={theme} icon={<Activity size={16} />} label="Air Quality" value={env ? `${env.aqi}/5` : "—"} unit={env ? aqiLabel(env.aqi) : ""} hint="Indice EU PM2.5/PM10" />
+            <Metric
+              theme={theme}
+              icon={<Droplets size={16} />}
+              label="Humidity"
+              value={env ? env.humidity.toFixed(0) : "—"}
+              unit="%"
+              hint={env ? (env.humidity < 40 ? "Aria secca" : env.humidity < 70 ? "Equilibrata" : "Umida") : ""}
+            />
+            <Metric
+              theme={theme}
+              icon={<Thermometer size={16} />}
+              label="Temperature"
+              value={env ? env.temp.toFixed(0) : "—"}
+              unit="°C"
+              hint={
+                env ? (env.temp < 10 ? "Fresco" : env.temp < 22 ? "Mite" : env.temp < 30 ? "Caldo" : "Torrido") : ""
+              }
+            />
+            <Metric
+              theme={theme}
+              icon={<Wind size={16} />}
+              label="Wind"
+              value={env ? env.wind.toFixed(0) : "—"}
+              unit="km/h"
+              hint={env ? (env.wind < 10 ? "Calmo" : env.wind < 25 ? "Brezza" : "Forte") : ""}
+            />
+            <Metric
+              theme={theme}
+              icon={<Activity size={16} />}
+              label="Air Quality"
+              value={env ? `${env.aqi}/5` : "—"}
+              unit={env ? aqiLabel(env.aqi) : ""}
+              hint="Indice EU PM2.5/PM10"
+            />
           </div>
         </div>
       </section>
@@ -549,7 +659,10 @@ const GrowSection = () => {
                 {isNight ? "Protocollo di recupero notturno" : "Routine adattiva per oggi"}
               </h2>
             </div>
-            <span className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline" style={{ color: theme.textMuted }}>
+            <span
+              className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline"
+              style={{ color: theme.textMuted }}
+            >
               {recos.length} azioni consigliate
             </span>
           </div>
@@ -572,7 +685,10 @@ const GrowSection = () => {
                 >
                   <div className="flex items-center gap-2">
                     <Sparkles size={12} style={{ color: theme.accent }} />
-                    <span className="text-[10px] tracking-[0.25em] uppercase font-body" style={{ color: theme.textMuted }}>
+                    <span
+                      className="text-[10px] tracking-[0.25em] uppercase font-body"
+                      style={{ color: theme.textMuted }}
+                    >
                       {r.tag}
                     </span>
                   </div>
@@ -597,13 +713,13 @@ const GrowSection = () => {
 
 /* ---------------- atoms ---------------- */
 
-const Eyebrow = ({ children, theme }: { children: React.ReactNode; theme: typeof PHASE_THEME["day"] }) => (
+const Eyebrow = ({ children, theme }: { children: React.ReactNode; theme: (typeof PHASE_THEME)["day"] }) => (
   <span className="text-[10px] tracking-[0.3em] uppercase font-body" style={{ color: theme.textMuted }}>
     {children}
   </span>
 );
 
-const GlassCard = ({ children, theme }: { children: React.ReactNode; theme: typeof PHASE_THEME["day"] }) => {
+const GlassCard = ({ children, theme }: { children: React.ReactNode; theme: (typeof PHASE_THEME)["day"] }) => {
   const isNight = theme.label === "Notte";
   return (
     <div
@@ -611,9 +727,7 @@ const GlassCard = ({ children, theme }: { children: React.ReactNode; theme: type
       style={{
         background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.65)",
         borderColor: theme.border,
-        boxShadow: isNight
-          ? "0 30px 80px -40px rgba(0,0,0,0.6)"
-          : "0 30px 60px -40px rgba(31,37,32,0.18)",
+        boxShadow: isNight ? "0 30px 80px -40px rgba(0,0,0,0.6)" : "0 30px 60px -40px rgba(31,37,32,0.18)",
       }}
     >
       {children}
@@ -628,7 +742,7 @@ const SubInsight = ({
   value,
   note,
 }: {
-  theme: typeof PHASE_THEME["day"];
+  theme: (typeof PHASE_THEME)["day"];
   icon: React.ReactNode;
   label: string;
   value: string;
@@ -644,8 +758,16 @@ const SubInsight = ({
         {icon}
         <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
       </div>
-      <div className="font-display text-base md:text-lg mt-2 min-h-7 leading-tight truncate" style={{ color: theme.text }} title={value}>{value}</div>
-      <div className="font-body text-[11px] mt-1 leading-snug" style={{ color: theme.textMuted }}>{note}</div>
+      <div
+        className="font-display text-base md:text-lg mt-2 min-h-7 leading-tight truncate"
+        style={{ color: theme.text }}
+        title={value}
+      >
+        {value}
+      </div>
+      <div className="font-body text-[11px] mt-1 leading-snug" style={{ color: theme.textMuted }}>
+        {note}
+      </div>
     </div>
   );
 };
@@ -660,7 +782,7 @@ const Metric = ({
   wide,
   dim,
 }: {
-  theme: typeof PHASE_THEME["day"];
+  theme: (typeof PHASE_THEME)["day"];
   icon: React.ReactNode;
   label: string;
   value: string;
@@ -683,10 +805,16 @@ const Metric = ({
         <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
       </div>
       <div className="flex items-baseline gap-2 mt-3">
-        <span className="font-display text-3xl md:text-4xl leading-none" style={{ color: theme.text }}>{value}</span>
-        <span className="font-body text-[11px] tracking-wide" style={{ color: theme.textMuted }}>{unit}</span>
+        <span className="font-display text-3xl md:text-4xl leading-none" style={{ color: theme.text }}>
+          {value}
+        </span>
+        <span className="font-body text-[11px] tracking-wide" style={{ color: theme.textMuted }}>
+          {unit}
+        </span>
       </div>
-      <div className="font-body text-[11px] mt-2 leading-snug" style={{ color: theme.textMuted }}>{hint}</div>
+      <div className="font-body text-[11px] mt-2 leading-snug" style={{ color: theme.textMuted }}>
+        {hint}
+      </div>
     </div>
   );
 };
@@ -705,19 +833,25 @@ const SunPoint = ({
   label,
   value,
 }: {
-  theme: typeof PHASE_THEME["day"];
+  theme: (typeof PHASE_THEME)["day"];
   icon: React.ReactNode;
   label: string;
   value: string;
 }) => (
   <div className="text-center">
-    <div className="inline-flex" style={{ color: theme.accent }}>{icon}</div>
-    <div className="text-[9px] tracking-[0.3em] uppercase font-body mt-1" style={{ color: theme.textMuted }}>{label}</div>
-    <div className="font-display text-base mt-1" style={{ color: theme.text }}>{value}</div>
+    <div className="inline-flex" style={{ color: theme.accent }}>
+      {icon}
+    </div>
+    <div className="text-[9px] tracking-[0.3em] uppercase font-body mt-1" style={{ color: theme.textMuted }}>
+      {label}
+    </div>
+    <div className="font-display text-base mt-1" style={{ color: theme.text }}>
+      {value}
+    </div>
   </div>
 );
 
-const SunArc = ({ phase, theme }: { phase: Phase; theme: typeof PHASE_THEME["day"] }) => {
+const SunArc = ({ phase, theme }: { phase: Phase; theme: (typeof PHASE_THEME)["day"] }) => {
   const pos = phase === "dawn" ? 0.15 : phase === "day" ? 0.5 : phase === "sunset" ? 0.85 : 1.05;
   const x = 20 + pos * 160;
   const y = 60 - Math.sin(Math.min(1, pos) * Math.PI) * 40;
@@ -775,7 +909,8 @@ const NewsletterBlock = () => {
           Costruiamo insieme la prossima ricerca.
         </h3>
         <p className="font-body text-sm md:text-base text-[#5A6157] mt-3 max-w-md mx-auto leading-relaxed">
-          Sei un ricercatore, un'università o un'azienda interessata a progetti nel campo della cosmesi naturale e sostenibile?
+          Sei un ricercatore, un'università o un'azienda interessata a progetti nel campo della cosmesi naturale e
+          sostenibile?
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
@@ -785,7 +920,10 @@ const NewsletterBlock = () => {
           >
             <Mail size={15} />
             Contattaci
-            <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight
+              size={14}
+              className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+            />
           </a>
           <a
             href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
@@ -818,11 +956,10 @@ const NewsletterBlock = () => {
         <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
           <Mail size={13} /> Newsletter
         </span>
-        <h3 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-4 leading-tight">
-          Tienimi aggiornato.
-        </h3>
+        <h3 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-4 leading-tight">Tienimi aggiornato</h3>
         <p className="font-body text-sm md:text-base text-[#5A6157] mt-3 max-w-md mx-auto leading-relaxed">
-          Ricerca, rituali e nuove uscite di <span className="italic">Monti Italiani</span>. Una mail al mese, mai di più.
+          Ricerca, rituali e nuove uscite di <span className="italic">Monti Italiani</span>. Una mail al mese, mai di
+          più.
         </p>
 
         <form onSubmit={submit} className="mt-8 flex flex-col gap-3 max-w-md mx-auto">
@@ -854,9 +991,15 @@ const NewsletterBlock = () => {
             >
               {consent && <Check size={12} className="text-[#F4EFE6]" strokeWidth={3} />}
             </span>
-            <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="sr-only" />
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="sr-only"
+            />
             <span className="font-body text-xs text-[#5A6157] leading-relaxed">
-              Acconsento al trattamento dei miei dati personali per ricevere la newsletter, ai sensi della Privacy Policy.
+              Acconsento al trattamento dei miei dati personali per ricevere la newsletter, ai sensi della Privacy
+              Policy.
             </span>
           </label>
 
