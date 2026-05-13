@@ -7,6 +7,7 @@ import ProductsSection from "@/components/ProductsSection";
 import AboutSection from "@/components/AboutSection";
 import TeamSection from "@/components/TeamSection";
 import FooterSection from "@/components/FooterSection";
+import NewsletterBlock from "@/components/NewsletterBlock";
 import FloatingPetals from "@/components/FloatingPetals";
 
 const Index = () => {
@@ -32,6 +33,7 @@ const Index = () => {
       <ProductsSection />
       <AboutSection />
       <TeamSection />
+      <NewsletterBlock />
       <FooterSection />
     </div>
   );
