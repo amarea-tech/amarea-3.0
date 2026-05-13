@@ -24,6 +24,7 @@ const productData: Record<
     name: "Sibilla",
     subtitle: "Anti-Age Cream",
     desc: "Formulata con attivi rigeneranti derivati da fiori di zafferano e vinacce selezionate. Aiuta a contrastare i segni del tempo.",
+    details: "Arricchita con estratti di zafferano e polifenoli della vite, sostiene l'elasticità cutanea e contrasta lo stress ossidativo.",
     gradient: "from-violet/20 to-primary/20",
     image: productSibilla,
   },
