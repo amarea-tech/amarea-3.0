@@ -10,7 +10,7 @@ import productCatria from "@/assets/product-catria.jpg";
 
 const productData: Record<
   string,
-  { name: string; desc: string; details: string; gradient: string; subtitle: string; image: string }
+  { name: string; desc: string; details?: string; gradient: string; subtitle: string; image: string }
 > = {
   conero: {
     name: "Conero",
