@@ -437,9 +437,9 @@ const GrowSection = () => {
               <span className="text-[10px] tracking-[0.35em] uppercase font-body" style={{ color: theme.textMuted }}>
                 Amarea · Environmental Skin Insights
               </span>
-              <h1 className="font-display text-4xl md:text-6xl mt-3 leading-[1.05]" style={{ color: theme.text }}>
+              <h2 className="font-display text-4xl md:text-6xl mt-3 leading-[1.05]" style={{ color: theme.text }}>
                 Skin Weather <span className="italic font-light">Dashboard</span>
-              </h1>
+              </h2>
               <div className="flex items-center gap-3 mt-4 font-body text-sm" style={{ color: theme.textMuted }}>
                 <MapPin size={14} />
                 <span>{place || "Localizzazione in corso…"}</span>
