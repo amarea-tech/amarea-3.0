@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import ProductPage from "./pages/ProductPage";
 import TeamMemberPage from "./pages/TeamMemberPage";
+import GrowPage from "./pages/GrowPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/grow" element={<GrowPage />} />
           <Route path="/prodotti/:slug" element={<ProductPage />} />
           <Route path="/team/:slug" element={<TeamMemberPage />} />
           <Route path="*" element={<NotFound />} />
