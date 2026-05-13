@@ -730,14 +730,28 @@ const GlassCard = ({ children, theme }: { children: React.ReactNode; theme: (typ
   const isNight = theme.label === "Notte";
   return (
     <div
-      className="rounded-3xl border backdrop-blur-xl p-7 md:p-9"
+      className="relative rounded-[28px] border backdrop-blur-2xl p-7 md:p-9 overflow-hidden"
       style={{
-        background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.65)",
-        borderColor: theme.border,
-        boxShadow: isNight ? "0 30px 80px -40px rgba(0,0,0,0.6)" : "0 30px 60px -40px rgba(31,37,32,0.18)",
+        background: isNight
+          ? "linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)"
+          : "linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.55) 100%)",
+        borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
+        boxShadow: isNight
+          ? "0 30px 80px -40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)"
+          : "0 30px 60px -40px rgba(31,37,32,0.22), inset 0 1px 0 rgba(255,255,255,0.9)",
       }}
     >
-      {children}
+      {/* botanical sheen */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 -right-20 h-60 w-60 rounded-full opacity-40 blur-3xl"
+        style={{
+          background: isNight
+            ? "radial-gradient(circle, rgba(201,184,217,0.35), transparent 70%)"
+            : "radial-gradient(circle, rgba(232,196,140,0.55), transparent 70%)",
+        }}
+      />
+      <div className="relative">{children}</div>
     </div>
   );
 };
@@ -868,6 +882,51 @@ const SunArc = ({ phase, theme }: { phase: Phase; theme: (typeof PHASE_THEME)["d
       <circle cx={x} cy={y} r="6" fill={theme.accent} opacity="0.9" />
       <circle cx={x} cy={y} r="11" fill={theme.accent} opacity="0.18" />
     </svg>
+  );
+};
+
+/* ---------------- ambient layer ---------------- */
+
+const AmbientLayer = ({ phase }: { phase: Phase }) => {
+  const isNight = phase === "night";
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* saffron orb (top-left) */}
+      <div
+        className="absolute -top-32 -left-24 h-[520px] w-[520px] rounded-full blur-3xl opacity-60"
+        style={{
+          background: isNight
+            ? "radial-gradient(circle, rgba(201,168,119,0.18) 0%, transparent 65%)"
+            : "radial-gradient(circle, rgba(233,178,96,0.35) 0%, transparent 65%)",
+        }}
+      />
+      {/* sea orb (right) */}
+      <div
+        className="absolute top-40 -right-32 h-[620px] w-[620px] rounded-full blur-3xl opacity-60"
+        style={{
+          background: isNight
+            ? "radial-gradient(circle, rgba(120,165,178,0.18) 0%, transparent 65%)"
+            : "radial-gradient(circle, rgba(150,194,200,0.35) 0%, transparent 65%)",
+        }}
+      />
+      {/* UV glow accent (center-bottom) */}
+      <div
+        className="absolute bottom-1/3 left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full blur-3xl opacity-40"
+        style={{
+          background: isNight
+            ? "radial-gradient(ellipse, rgba(176,158,205,0.22) 0%, transparent 70%)"
+            : "radial-gradient(ellipse, rgba(214,196,168,0.4) 0%, transparent 70%)",
+        }}
+      />
+      {/* fine grain noise */}
+      <div
+        className="absolute inset-0 opacity-[0.035] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+        }}
+      />
+    </div>
   );
 };
 
