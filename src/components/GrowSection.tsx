@@ -195,83 +195,144 @@ const blueLightExposure = (phase: Phase) => {
 
 /* ---------------- recommendations ---------------- */
 
-type Reco = { tag: string; title: string; body: string };
+type RecoStatus = "calm" | "watch" | "alert";
+type Reco = {
+  tag: string;
+  title: string;
+  body: string;
+  ingredients: string[];
+  intensity: number; // 0-100 — protocol priority
+  status: RecoStatus;
+  metric?: string;
+};
 
 const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
-  if (!env) return [{ tag: "Routine", title: "Equilibrio", body: "Detersione delicata, idratazione, antiossidante." }];
+  if (!env)
+    return [
+      {
+        tag: "Routine",
+        title: "Equilibrio",
+        body: "Detersione delicata, idratazione e antiossidante per mantenere l'omeostasi cutanea.",
+        ingredients: ["Niacinamide", "Glicerina", "Pantenolo"],
+        intensity: 40,
+        status: "calm",
+      },
+    ];
   const r: Reco[] = [];
 
   if (phase === "night") {
     r.push({
       tag: "Recovery",
       title: "Riparazione notturna",
-      body: "Retinaldeide o peptidi biomimetici + crema occlusiva con squalano.",
+      body: "Stimola sintesi di collagene e turnover cellulare durante la fase circadiana riparativa.",
+      ingredients: ["Retinaldeide 0.05%", "Peptidi biomimetici", "Squalano"],
+      intensity: 75,
+      status: "watch",
+      metric: "Notte attiva",
     });
     r.push({
       tag: "Microcircolo",
-      title: "Massaggio facciale",
-      body: "Tre minuti di gua sha freddo per drenare e ossigenare i tessuti.",
+      title: "Drenaggio linfatico",
+      body: "Tre minuti di gua sha freddo per ossigenare i tessuti e ridurre la stasi periorbitale.",
+      ingredients: ["Caffeina", "Centella", "Mentolo"],
+      intensity: 55,
+      status: "calm",
     });
     if (env.humidity < 45)
       r.push({
         tag: "Idratazione",
         title: "Sleeping mask umettante",
-        body: "Acido ialuronico multipeso + glicerina sotto film leggero.",
+        body: "Acido ialuronico multipeso e glicerina sotto film occlusivo leggero per ricostituire il TEWL.",
+        ingredients: ["HA multipeso", "Glicerina 5%", "Squalano"],
+        intensity: 80,
+        status: "alert",
+        metric: `Umidità ${env.humidity.toFixed(0)}%`,
       });
     else
       r.push({
         tag: "Detossinazione",
         title: "Maschera detox",
-        body: "Argilla bianca + niacinamide per riequilibrare la microflora.",
+        body: "Argilla bianca e niacinamide per riequilibrare microflora e ridurre porosità apparente.",
+        ingredients: ["Argilla kaolin", "Niacinamide 5%", "Zinco PCA"],
+        intensity: 50,
+        status: "calm",
       });
-    return r;
+    return r.slice(0, 4);
   }
 
   if (env.uv >= 6)
     r.push({
       tag: "Fotoprotezione",
-      title: "SPF 50 + antiossidanti",
-      body: "Vitamina C 10-15% sotto SPF a finitura velata. Reapply ogni 3h.",
+      title: "SPF 50 + scudo antiossidante",
+      body: "Vitamina C stabilizzata sotto SPF a finitura velata: neutralizza ROS UV-indotti. Reapply ogni 3h.",
+      ingredients: ["Acido L-ascorbico 15%", "Vitamina E", "Filtri UVA/UVB"],
+      intensity: 90,
+      status: "alert",
+      metric: `UV ${env.uv.toFixed(1)}`,
     });
   else
     r.push({
       tag: "Fotoprotezione",
-      title: "SPF leggero",
-      body: "SPF 30 fluido, non comedogeno, su siero antiossidante.",
+      title: "SPF leggero quotidiano",
+      body: "SPF 30 fluido non comedogeno su siero antiossidante: protezione di mantenimento.",
+      ingredients: ["Vitamina C 10%", "Acido ferulico", "SPF 30"],
+      intensity: 55,
+      status: "calm",
+      metric: `UV ${env.uv.toFixed(1)}`,
     });
 
   if (env.pm25 >= 15 || env.pm10 >= 40)
     r.push({
       tag: "Anti-pollution",
       title: "Detersione bifasica + scudo polifenolico",
-      body: "Olio detergente seguito da siero con resveratrolo o estratti upcycled.",
+      body: "Olio detergente per rimuovere particolato lipofilo, poi siero polifenolico contro stress ossidativo urbano.",
+      ingredients: ["Olio di vinaccioli", "Resveratrolo", "Estratti upcycled"],
+      intensity: 78,
+      status: "alert",
+      metric: `PM2.5 ${env.pm25.toFixed(1)}`,
     });
 
   if (env.humidity < 40)
     r.push({
       tag: "Idratazione",
-      title: "Layer umettante + barriera",
-      body: "Acido ialuronico su pelle umida, sigilla con crema a ceramidi.",
+      title: "Layer umettante e barriera",
+      body: "Acido ialuronico su pelle umida, sigillato con crema a ceramidi: ripristino del film idrolipidico.",
+      ingredients: ["HA basso PM", "Ceramidi NP", "Colesterolo"],
+      intensity: 72,
+      status: "watch",
+      metric: `RH ${env.humidity.toFixed(0)}%`,
     });
   else if (env.humidity > 75)
     r.push({
       tag: "Texture",
-      title: "Formulazioni leggere",
-      body: "Gel-cream e sieri acquosi: evita oli pesanti e occlusivi.",
+      title: "Formulazioni acquose",
+      body: "Gel-cream e sieri leggeri: evita occlusivi pesanti che potenziano l'effetto serra cutaneo.",
+      ingredients: ["Gel HA", "Niacinamide", "Estratto saffron"],
+      intensity: 45,
+      status: "calm",
+      metric: `RH ${env.humidity.toFixed(0)}%`,
     });
 
   if (env.wind >= 20 || env.temp <= 8)
     r.push({
       tag: "Barriera",
       title: "Ceramidi e burri vegetali",
-      body: "Crema ricca con ceramidi NP, colesterolo e burro di karité.",
+      body: "Crema ricca con ceramidi NP, colesterolo e karité: protegge dal disturbo barriera meccanico.",
+      ingredients: ["Ceramidi NP", "Burro di karité", "Olio di jojoba"],
+      intensity: 70,
+      status: "watch",
+      metric: env.wind >= 20 ? `Vento ${env.wind.toFixed(0)} km/h` : `Temp ${env.temp.toFixed(0)}°C`,
     });
 
   if (env.pollen >= 20)
     r.push({
       tag: "Lenitivo",
-      title: "Routine ipo-reattiva",
-      body: "Centella, bisabololo, zero fragranze. Compresse fredde se serve.",
+      title: "Protocollo ipo-reattivo",
+      body: "Estratti lenitivi senza fragranze; compresse fredde in caso di flushing istamino-mediato.",
+      ingredients: ["Centella asiatica", "Bisabololo", "Allantoina"],
+      intensity: 68,
+      status: "alert",
+      metric: `Pollini ${env.pollen.toFixed(0)}`,
     });
 
   return r.slice(0, 4);
@@ -677,35 +738,7 @@ const GrowSection = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             <AnimatePresence mode="popLayout">
               {recos.map((r, i) => (
-                <motion.article
-                  key={r.title}
-                  layout
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  className="rounded-2xl p-6 border backdrop-blur-md"
-                  style={{
-                    background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.6)",
-                    borderColor: theme.border,
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <Sparkles size={12} style={{ color: theme.accent }} />
-                    <span
-                      className="text-[10px] tracking-[0.25em] uppercase font-body"
-                      style={{ color: theme.textMuted }}
-                    >
-                      {r.tag}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-xl mt-3 leading-snug" style={{ color: theme.text }}>
-                    {r.title}
-                  </h3>
-                  <p className="font-body text-sm mt-3 leading-relaxed" style={{ color: theme.textMuted }}>
-                    {r.body}
-                  </p>
-                </motion.article>
+                <RecoCard key={r.title} reco={r} theme={theme} isNight={isNight} index={i} />
               ))}
             </AnimatePresence>
           </div>
@@ -790,6 +823,165 @@ const SubInsight = ({
         {note}
       </div>
     </div>
+  );
+};
+
+/* ---------------- Premium scientific recommendation card ---------------- */
+
+const STATUS_TOKEN: Record<RecoStatus, { dot: string; ring: string; label: string }> = {
+  calm:  { dot: "rgba(168,184,154,0.95)", ring: "rgba(168,184,154,0.30)", label: "Mantenimento" },
+  watch: { dot: "rgba(214,178,120,0.95)", ring: "rgba(214,178,120,0.30)", label: "Adattamento" },
+  alert: { dot: "rgba(201,128,108,0.95)", ring: "rgba(201,128,108,0.30)", label: "Priorità" },
+};
+
+const RecoCard = ({
+  reco,
+  theme,
+  isNight,
+  index,
+}: {
+  reco: Reco;
+  theme: (typeof PHASE_THEME)["day"];
+  isNight: boolean;
+  index: number;
+}) => {
+  const tok = STATUS_TOKEN[reco.status];
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ delay: index * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className="group relative rounded-[22px] p-6 border backdrop-blur-xl overflow-hidden flex flex-col"
+      style={{
+        background: isNight
+          ? "linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%)"
+          : "linear-gradient(160deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.5) 100%)",
+        borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
+        boxShadow: isNight
+          ? "0 20px 50px -30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)"
+          : "0 20px 40px -28px rgba(31,37,32,0.18), inset 0 1px 0 rgba(255,255,255,0.85)",
+      }}
+    >
+      {/* status accent corner */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full blur-2xl opacity-50"
+        style={{ background: `radial-gradient(circle, ${tok.ring}, transparent 70%)` }}
+      />
+
+      {/* header: status dot + tag + metric */}
+      <div className="relative flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <motion.span
+              className="absolute inline-flex h-full w-full rounded-full"
+              style={{ background: tok.dot }}
+              animate={{ scale: [1, 2.2, 1], opacity: [0.5, 0, 0.5] }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+            />
+            <span
+              className="relative inline-flex rounded-full h-2 w-2"
+              style={{ background: tok.dot }}
+            />
+          </span>
+          <span
+            className="text-[9px] tracking-[0.3em] uppercase font-body"
+            style={{ color: theme.textMuted }}
+          >
+            {reco.tag}
+          </span>
+        </div>
+        {reco.metric && (
+          <span
+            className="font-body text-[10px] tracking-wide px-2 py-0.5 rounded-full border"
+            style={{
+              color: theme.textMuted,
+              borderColor: theme.border,
+              background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.65)",
+            }}
+          >
+            {reco.metric}
+          </span>
+        )}
+      </div>
+
+      {/* title */}
+      <h3
+        className="relative font-display text-xl mt-4 leading-snug"
+        style={{ color: theme.text }}
+      >
+        {reco.title}
+      </h3>
+
+      {/* body */}
+      <p
+        className="relative font-body text-[13px] mt-2.5 leading-relaxed"
+        style={{ color: theme.textMuted }}
+      >
+        {reco.body}
+      </p>
+
+      {/* hairline */}
+      <div
+        className="relative my-5 h-px"
+        style={{ background: isNight ? "rgba(255,255,255,0.08)" : "rgba(31,37,32,0.08)" }}
+      />
+
+      {/* active ingredients */}
+      <div className="relative">
+        <div
+          className="text-[9px] tracking-[0.28em] uppercase font-body mb-2"
+          style={{ color: theme.textMuted }}
+        >
+          Attivi consigliati
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {reco.ingredients.map((ing) => (
+            <span
+              key={ing}
+              className="font-body text-[11px] px-2.5 py-1 rounded-full border"
+              style={{
+                color: theme.text,
+                borderColor: isNight ? "rgba(255,255,255,0.12)" : "rgba(31,37,32,0.10)",
+                background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.7)",
+              }}
+            >
+              {ing}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* intensity bar */}
+      <div className="relative mt-5 mt-auto pt-5">
+        <div className="flex items-center justify-between mb-1.5">
+          <span
+            className="text-[9px] tracking-[0.28em] uppercase font-body"
+            style={{ color: theme.textMuted }}
+          >
+            {tok.label}
+          </span>
+          <span className="font-body text-[10px]" style={{ color: theme.textMuted }}>
+            {reco.intensity}%
+          </span>
+        </div>
+        <div
+          className="h-[3px] w-full rounded-full overflow-hidden"
+          style={{ background: isNight ? "rgba(255,255,255,0.07)" : "rgba(31,37,32,0.07)" }}
+        >
+          <motion.div
+            className="h-full rounded-full"
+            style={{ background: `linear-gradient(90deg, ${tok.dot}, ${tok.ring})` }}
+            initial={{ width: 0 }}
+            animate={{ width: `${reco.intensity}%` }}
+            transition={{ duration: 1.1, delay: 0.2 + index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+      </div>
+    </motion.article>
   );
 };
 

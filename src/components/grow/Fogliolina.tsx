@@ -34,6 +34,16 @@ const TINT: Record<Mood, string> = {
   rainy: "saturate(1.05) brightness(1.02)",
 };
 
+/* mood-driven micro-reactions: breathing rhythm + tilt amplitude */
+const REACTION: Record<Mood, { breath: number; tiltA: number; floatA: number; cycle: number }> = {
+  serene: { breath: 0.022, tiltA: 1.0, floatA: 8, cycle: 7.5 },
+  uv:     { breath: 0.030, tiltA: 1.6, floatA: 10, cycle: 6.2 },
+  smog:   { breath: 0.014, tiltA: 0.6, floatA: 5,  cycle: 9.0 },
+  pollen: { breath: 0.026, tiltA: 1.4, floatA: 9,  cycle: 6.8 },
+  dry:    { breath: 0.018, tiltA: 0.8, floatA: 6,  cycle: 8.2 },
+  rainy:  { breath: 0.020, tiltA: 1.0, floatA: 7,  cycle: 7.0 },
+};
+
 interface Props {
   mood?: Mood;
   size?: number;
@@ -42,6 +52,7 @@ interface Props {
 
 const Fogliolina = ({ mood = "serene", size = 360, weather = "default" }: Props) => {
   const src = WEATHER_IMG[weather] ?? fogliolinaImg;
+  const r = REACTION[mood];
   return (
     <div
       className="relative flex items-center justify-center"
@@ -89,11 +100,11 @@ const Fogliolina = ({ mood = "serene", size = 360, weather = "default" }: Props)
       <motion.div
         className="relative"
         animate={{
-          y: [0, -10, 0],
-          rotate: [-1.2, 1.2, -1.2],
+          y: [0, -r.floatA, 0],
+          rotate: [-r.tiltA, r.tiltA, -r.tiltA],
         }}
         transition={{
-          duration: 7,
+          duration: r.cycle,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -111,9 +122,44 @@ const Fogliolina = ({ mood = "serene", size = 360, weather = "default" }: Props)
             boxShadow:
               "0 18px 40px -18px rgba(60,50,40,0.35), 0 2px 6px rgba(60,50,40,0.08)",
           }}
-          animate={{ scale: [1, 1.025, 1] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ scale: [1, 1 + r.breath, 1] }}
+          transition={{ duration: 5.5, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
         />
+
+        {/* "blink" — subtle luminance dip simulating a slow, elegant blink */}
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 rounded-[28px] pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(180deg, transparent 38%, rgba(40,30,25,0.10) 47%, rgba(40,30,25,0.14) 50%, rgba(40,30,25,0.10) 53%, transparent 62%)",
+            mixBlendMode: "multiply",
+          }}
+          animate={{ opacity: [0, 0, 0, 0.85, 0, 0, 0, 0, 0.7, 0] }}
+          transition={{
+            duration: 9,
+            repeat: Infinity,
+            times: [0, 0.18, 0.22, 0.235, 0.25, 0.45, 0.6, 0.74, 0.755, 0.77],
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* vitality sheen — slow light pass */}
+        <motion.div
+          aria-hidden
+          className="absolute inset-0 rounded-[28px] pointer-events-none overflow-hidden"
+        >
+          <motion.div
+            className="absolute -inset-y-4 w-[40%]"
+            style={{
+              background:
+                "linear-gradient(110deg, transparent 0%, rgba(255,245,225,0.18) 50%, transparent 100%)",
+              filter: "blur(8px)",
+            }}
+            animate={{ x: ["-60%", "260%"] }}
+            transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", repeatDelay: 4 }}
+          />
+        </motion.div>
       </motion.div>
     </div>
   );
