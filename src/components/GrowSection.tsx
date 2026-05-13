@@ -936,16 +936,16 @@ const GrowSection = () => {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <Eyebrow theme={theme}>Smart skincare protocol</Eyebrow>
+              <Eyebrow theme={theme}>Environmental skin insights</Eyebrow>
               <h2 className="font-display text-2xl md:text-4xl mt-2" style={{ color: theme.text }}>
-                {isNight ? "Protocollo di recupero notturno" : "Routine adattiva per oggi"}
+                {isNight ? "Insight notturni per la pelle" : "Insight ambientali per la tua pelle"}
               </h2>
             </div>
             <span
               className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline"
               style={{ color: theme.textMuted }}
             >
-              {recos.length} azioni consigliate
+              {recos.length} insight scientifici
             </span>
           </div>
 
