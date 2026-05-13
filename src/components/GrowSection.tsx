@@ -738,35 +738,7 @@ const GrowSection = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             <AnimatePresence mode="popLayout">
               {recos.map((r, i) => (
-                <motion.article
-                  key={r.title}
-                  layout
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ delay: i * 0.06, duration: 0.4 }}
-                  className="rounded-2xl p-6 border backdrop-blur-md"
-                  style={{
-                    background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.6)",
-                    borderColor: theme.border,
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <Sparkles size={12} style={{ color: theme.accent }} />
-                    <span
-                      className="text-[10px] tracking-[0.25em] uppercase font-body"
-                      style={{ color: theme.textMuted }}
-                    >
-                      {r.tag}
-                    </span>
-                  </div>
-                  <h3 className="font-display text-xl mt-3 leading-snug" style={{ color: theme.text }}>
-                    {r.title}
-                  </h3>
-                  <p className="font-body text-sm mt-3 leading-relaxed" style={{ color: theme.textMuted }}>
-                    {r.body}
-                  </p>
-                </motion.article>
+                <RecoCard key={r.title} reco={r} theme={theme} isNight={isNight} index={i} />
               ))}
             </AnimatePresence>
           </div>
