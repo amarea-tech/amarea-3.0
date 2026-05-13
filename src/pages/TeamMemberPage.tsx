@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft } from "lucide-react";
 import { teamMembers } from "@/data/teamData";
 import Navbar from "@/components/Navbar";
@@ -27,6 +28,15 @@ const TeamMemberPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{`${member.name} — ${member.role} | Team Amarea Cosmetics`}</title>
+        <meta name="description" content={member.desc.slice(0, 160)} />
+        <link rel="canonical" href={`https://amareacosmetics.com/team/${slug}`} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content={`https://amareacosmetics.com/team/${slug}`} />
+        <meta property="og:title" content={`${member.name} — ${member.role} | Amarea Cosmetics`} />
+        <meta property="og:description" content={member.desc.slice(0, 160)} />
+      </Helmet>
       <Navbar />
 
       <section className="pt-32 pb-24">
