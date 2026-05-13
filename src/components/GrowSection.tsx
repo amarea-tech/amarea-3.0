@@ -677,9 +677,41 @@ const GrowSection = () => {
               <span className="text-[10px] tracking-[0.35em] uppercase font-body" style={{ color: theme.textMuted }}>
                 Amarea · Skin Weather Dashboard
               </span>
-              <h2 className="font-display text-4xl md:text-6xl mt-3 leading-[1.05]" style={{ color: theme.text }}>
-                Grow <span className="italic font-light">With Amarea</span>
-              </h2>
+              <div className="flex items-center gap-4 flex-wrap mt-3">
+                <h2 className="font-display text-4xl md:text-6xl leading-[1.05]" style={{ color: theme.text }}>
+                  Grow <span className="italic font-light">With Amarea</span>
+                </h2>
+                <div className="flex items-center gap-2">
+                  <a
+                    href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram Amarea Cosmetics"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full border backdrop-blur-md transition-colors hover:opacity-80"
+                    style={{
+                      borderColor: theme.border,
+                      color: theme.text,
+                      background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.55)",
+                    }}
+                  >
+                    <Instagram size={15} />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/company/amareacosmetics/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn Amarea Cosmetics"
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full border backdrop-blur-md transition-colors hover:opacity-80"
+                    style={{
+                      borderColor: theme.border,
+                      color: theme.text,
+                      background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.55)",
+                    }}
+                  >
+                    <Linkedin size={15} />
+                  </a>
+                </div>
+              </div>
               <div className="flex items-center gap-3 mt-4 font-body text-sm" style={{ color: theme.textMuted }}>
                 <MapPin size={14} />
                 <span>{place || "Localizzazione in corso…"}</span>
