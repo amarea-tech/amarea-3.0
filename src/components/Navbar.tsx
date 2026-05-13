@@ -62,7 +62,12 @@ const Navbar = () => {
             Contattaci 🌸
           </button>
 
-          <button className="md:hidden text-primary-foreground" onClick={() => setOpen(!open)}>
+          <button
+            className="md:hidden text-primary-foreground"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "Chiudi menu" : "Apri menu"}
+            aria-expanded={open}
+          >
             {open ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
