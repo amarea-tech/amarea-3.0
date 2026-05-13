@@ -23,9 +23,7 @@ const productData: Record<
   sibilla: {
     name: "Sibilla",
     subtitle: "Anti-Age Cream",
-    desc: "La nostra crema antiage che aiuta a contrastare i segni del tempo, formulata con estratti botanici dei Monti Sibillini.",
-    details:
-      "Formulata con attivi rigeneranti derivati da fiori di zafferano e vinacce selezionate. Aiuta a contrastare i segni del tempo.",
+    desc: "Formulata con attivi rigeneranti derivati da fiori di zafferano e vinacce selezionate. Aiuta a contrastare i segni del tempo.",
     gradient: "from-violet/20 to-primary/20",
     image: productSibilla,
   },
@@ -71,14 +69,16 @@ const ProductPage = () => {
         <meta property="og:title" content={`${product.name} — ${product.subtitle} | Amarea Cosmetics`} />
         <meta property="og:description" content={product.desc.slice(0, 160)} />
         <meta property="og:image" content={`https://amareacosmetics.com${product.image}`} />
-        <script type="application/ld+json">{JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Product",
-          name: `${product.name} — ${product.subtitle}`,
-          description: product.desc,
-          image: `https://amareacosmetics.com${product.image}`,
-          brand: { "@type": "Brand", name: "Amarea Cosmetics" },
-        })}</script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: `${product.name} — ${product.subtitle}`,
+            description: product.desc,
+            image: `https://amareacosmetics.com${product.image}`,
+            brand: { "@type": "Brand", name: "Amarea Cosmetics" },
+          })}
+        </script>
       </Helmet>
       <Navbar />
       <div className={`pt-28 pb-16 bg-gradient-to-br ${product.gradient} min-h-[80vh] flex items-center`}>
