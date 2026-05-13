@@ -36,10 +36,10 @@ All'interno di Amarea è Founder & CEO e responsabile della formulazione cosmeti
     name: "Dott.ssa Alessia Luccarini",
     slug: "alessia-luccarini",
     role: "Laboratory Research & Development",
-    title: "Dottoranda in Scienze della Vita e dell'Ambiente",
+    title: "PhD in Biomolecular Sciences",
     desc: "Specializzata nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini con applicazioni cosmetiche.",
     shortBio: "Studio di agenti fotoprotettivi naturali.",
-    fullBio: `Dottoranda in Scienze della Vita e dell'Ambiente presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata e una specializzazione nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini, con applicazioni in ambito cosmetico. Il suo percorso di ricerca si concentra sulla caratterizzazione del potenziale fotoprotettivo di nuovi composti naturali come filtri UV eco-friendly, attraverso l'utilizzo di colture cellulari cutanee, analisi molecolari, saggi di fotobiologia e tecniche di microscopia.
+    fullBio: `PhD in Biomolecular Sciences presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata e una specializzazione nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini, con applicazioni in ambito cosmetico. Il suo percorso di ricerca si concentra sulla caratterizzazione del potenziale fotoprotettivo di nuovi composti naturali come filtri UV eco-friendly, attraverso l'utilizzo di colture cellulari cutanee, analisi molecolari, saggi di fotobiologia e tecniche di microscopia.
 
 Ha maturato esperienza di ricerca anche in ambito internazionale, presso il Dipartimento di Dermatologia della Medical University of Vienna, ed è autrice e coautrice di numerose pubblicazioni scientifiche su riviste internazionali peer-reviewed.
 
