@@ -196,25 +196,33 @@ const blueLightExposure = (phase: Phase) => {
 /* ---------------- recommendations ---------------- */
 
 type RecoStatus = "calm" | "watch" | "alert";
+type Correlation = "low" | "moderate" | "high";
 type Reco = {
   tag: string;
   title: string;
-  body: string;
-  ingredients: string[];
-  intensity: number; // 0-100 — protocol priority
+  insight: string;        // probabilistic statement about environment
+  rationale: string;      // "Perché questo insight?" — scientific evidence
+  protocol: string;       // cosmetic protocol (non-commercial)
+  actives: string[];      // ingredient families / functional classes
+  correlation: Correlation; // strength of environmental correlation
   status: RecoStatus;
-  metric?: string;
+  trigger?: string;       // environmental trigger label (e.g. "UV 7.2")
 };
 
 const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
   if (!env)
     return [
       {
-        tag: "Routine",
-        title: "Equilibrio",
-        body: "Detersione delicata, idratazione e antiossidante per mantenere l'omeostasi cutanea.",
-        ingredients: ["Niacinamide", "Glicerina", "Pantenolo"],
-        intensity: 40,
+        tag: "Mantenimento",
+        title: "Condizioni di equilibrio",
+        insight:
+          "I parametri ambientali non evidenziano stressori rilevanti: la routine può rimanere in modalità di mantenimento.",
+        rationale:
+          "In assenza di trigger ambientali significativi (UV, particolato, bassa umidità), la letteratura suggerisce di privilegiare gesti delicati per preservare l'omeostasi della barriera.",
+        protocol:
+          "Detersione delicata, idratazione leggera e supporto antiossidante quotidiano.",
+        actives: ["Umettanti", "Antiossidanti soft", "Lenitivi"],
+        correlation: "low",
         status: "calm",
       },
     ];
@@ -222,39 +230,46 @@ const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
 
   if (phase === "night") {
     r.push({
-      tag: "Recovery",
-      title: "Riparazione notturna",
-      body: "Stimola sintesi di collagene e turnover cellulare durante la fase circadiana riparativa.",
-      ingredients: ["Retinaldeide 0.05%", "Peptidi biomimetici", "Squalano"],
-      intensity: 75,
+      tag: "Recupero notturno",
+      title: "Fase circadiana riparativa",
+      insight:
+        "Le ore notturne possono favorire i processi di rigenerazione cutanea e il consolidamento della matrice dermica.",
+      rationale:
+        "Studi sul ritmo circadiano cutaneo (Matsui et al., 2016) mostrano un picco notturno di proliferazione dei cheratinociti e di sintesi di collagene, condizione favorevole all'uso di attivi rinnovanti.",
+      protocol:
+        "Routine serale focalizzata su rinnovamento cellulare e supporto della matrice extracellulare.",
+      actives: ["Retinoidi cosmetici", "Peptidi biomimetici", "Emollienti occlusivi leggeri"],
+      correlation: "moderate",
       status: "watch",
-      metric: "Notte attiva",
-    });
-    r.push({
-      tag: "Microcircolo",
-      title: "Drenaggio linfatico",
-      body: "Tre minuti di gua sha freddo per ossigenare i tessuti e ridurre la stasi periorbitale.",
-      ingredients: ["Caffeina", "Centella", "Mentolo"],
-      intensity: 55,
-      status: "calm",
+      trigger: "Fase notturna",
     });
     if (env.humidity < 45)
       r.push({
-        tag: "Idratazione",
-        title: "Sleeping mask umettante",
-        body: "Acido ialuronico multipeso e glicerina sotto film occlusivo leggero per ricostituire il TEWL.",
-        ingredients: ["HA multipeso", "Glicerina 5%", "Squalano"],
-        intensity: 80,
+        tag: "Supporto barriera",
+        title: "Condizioni favorevoli alla disidratazione",
+        insight:
+          "L'umidità relativa ridotta nelle ore notturne può favorire un aumento della perdita di acqua transepidermica (TEWL).",
+        rationale:
+          "A umidità inferiore al 45% la letteratura dermatologica (Engebretsen et al., 2016) descrive un incremento del TEWL e una riduzione transitoria dell'integrità dello strato corneo.",
+        protocol:
+          "Layering umettante seguito da una texture più ricca per supportare il film idrolipidico durante la notte.",
+        actives: ["Umettanti polari", "Ceramidi", "Lipidi barriera"],
+        correlation: "high",
         status: "alert",
-        metric: `Umidità ${env.humidity.toFixed(0)}%`,
+        trigger: `Umidità ${env.humidity.toFixed(0)}%`,
       });
     else
       r.push({
-        tag: "Detossinazione",
-        title: "Maschera detox",
-        body: "Argilla bianca e niacinamide per riequilibrare microflora e ridurre porosità apparente.",
-        ingredients: ["Argilla kaolin", "Niacinamide 5%", "Zinco PCA"],
-        intensity: 50,
+        tag: "Comfort cutaneo",
+        title: "Mantenimento dell'equilibrio sebo-idrico",
+        insight:
+          "Con umidità adeguata la pelle può beneficiare di gesti di riequilibrio leggeri, senza ricorrere a formule occlusive.",
+        rationale:
+          "Un'umidità ambientale fisiologica (45–65%) è associata in letteratura a un funzionamento ottimale degli enzimi della desquamazione e della sintesi lipidica.",
+        protocol:
+          "Maschera leggera riequilibrante, evitando attivi aggressivi e tensioattivi forti.",
+        actives: ["Argille fini", "Niacinamide", "Prebiotici"],
+        correlation: "low",
         status: "calm",
       });
     return r.slice(0, 4);
@@ -263,76 +278,111 @@ const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
   if (env.uv >= 6)
     r.push({
       tag: "Fotoprotezione",
-      title: "SPF 50 + scudo antiossidante",
-      body: "Vitamina C stabilizzata sotto SPF a finitura velata: neutralizza ROS UV-indotti. Reapply ogni 3h.",
-      ingredients: ["Acido L-ascorbico 15%", "Vitamina E", "Filtri UVA/UVB"],
-      intensity: 90,
+      title: "Esposizione UV elevata",
+      insight:
+        "L'indice UV attuale può favorire un aumento dello stress ossidativo cutaneo e accelerare i meccanismi di photoaging.",
+      rationale:
+        "Per UV ≥ 6 la letteratura (ICNIRP, WHO) raccomanda fotoprotezione ad ampio spettro; antiossidanti topici sono studiati per ridurre il carico di specie reattive dell'ossigeno (ROS) UV-indotte.",
+      protocol:
+        "Fotoprotezione ad ampio spettro come gesto cardine, abbinata a un supporto antiossidante mattutino e a riapplicazione durante l'esposizione.",
+      actives: ["Filtri UVA/UVB", "Vitamina C stabilizzata", "Vitamina E", "Polifenoli"],
+      correlation: "high",
       status: "alert",
-      metric: `UV ${env.uv.toFixed(1)}`,
+      trigger: `UV ${env.uv.toFixed(1)}`,
     });
   else
     r.push({
       tag: "Fotoprotezione",
-      title: "SPF leggero quotidiano",
-      body: "SPF 30 fluido non comedogeno su siero antiossidante: protezione di mantenimento.",
-      ingredients: ["Vitamina C 10%", "Acido ferulico", "SPF 30"],
-      intensity: 55,
+      title: "Esposizione UV contenuta",
+      insight:
+        "L'indice UV attuale è moderato: la fotoprotezione resta consigliata come misura preventiva quotidiana.",
+      rationale:
+        "Anche a UV bassi, l'esposizione cumulativa è considerata un fattore rilevante nell'invecchiamento cutaneo cronico (chronic photoaging).",
+      protocol:
+        "Fotoprotezione leggera quotidiana su base antiossidante, come gesto di mantenimento.",
+      actives: ["Filtri UVA/UVB", "Vitamina C", "Acido ferulico"],
+      correlation: "moderate",
       status: "calm",
-      metric: `UV ${env.uv.toFixed(1)}`,
+      trigger: `UV ${env.uv.toFixed(1)}`,
     });
 
   if (env.pm25 >= 15 || env.pm10 >= 40)
     r.push({
       tag: "Anti-pollution",
-      title: "Detersione bifasica + scudo polifenolico",
-      body: "Olio detergente per rimuovere particolato lipofilo, poi siero polifenolico contro stress ossidativo urbano.",
-      ingredients: ["Olio di vinaccioli", "Resveratrolo", "Estratti upcycled"],
-      intensity: 78,
+      title: "Carico di particolato urbano",
+      insight:
+        "I livelli attuali di particolato fine (PM2.5/PM10) possono favorire fenomeni di stress ossidativo e infiammazione cutanea di basso grado.",
+      rationale:
+        "L'esposizione cronica al particolato è associata in letteratura (Vierkötter et al., 2010) a iperpigmentazione, perdita di tono e accentuazione delle rughe; la frazione lipofila tende ad aderire al sebo cutaneo.",
+      protocol:
+        "Detersione accurata in due tempi a fine giornata e supporto antiossidante mirato contro lo stress ossidativo da exposome urbano.",
+      actives: ["Detergenti lipofili delicati", "Polifenoli", "Resveratrolo", "Estratti upcycled"],
+      correlation: "high",
       status: "alert",
-      metric: `PM2.5 ${env.pm25.toFixed(1)}`,
+      trigger: `PM2.5 ${env.pm25.toFixed(1)} µg/m³`,
     });
 
   if (env.humidity < 40)
     r.push({
-      tag: "Idratazione",
-      title: "Layer umettante e barriera",
-      body: "Acido ialuronico su pelle umida, sigillato con crema a ceramidi: ripristino del film idrolipidico.",
-      ingredients: ["HA basso PM", "Ceramidi NP", "Colesterolo"],
-      intensity: 72,
+      tag: "Supporto barriera",
+      title: "Condizioni favorevoli alla disidratazione cutanea",
+      insight:
+        "Con umidità relativa inferiore al 40% può aumentare la perdita di acqua transepidermica e ridursi la sensazione di comfort cutaneo.",
+      rationale:
+        "In ambienti secchi lo strato corneo tende a perdere flessibilità; il supporto della barriera con lipidi fisiologici è documentato come strategia di ripristino del film idrolipidico.",
+      protocol:
+        "Sequenza umettante su pelle ancora umida, sigillata da una texture ricca di lipidi affini a quelli cutanei.",
+      actives: ["Acido ialuronico a basso PM", "Ceramidi NP", "Colesterolo", "Acidi grassi essenziali"],
+      correlation: "high",
       status: "watch",
-      metric: `RH ${env.humidity.toFixed(0)}%`,
+      trigger: `Umidità ${env.humidity.toFixed(0)}%`,
     });
   else if (env.humidity > 75)
     r.push({
-      tag: "Texture",
-      title: "Formulazioni acquose",
-      body: "Gel-cream e sieri leggeri: evita occlusivi pesanti che potenziano l'effetto serra cutaneo.",
-      ingredients: ["Gel HA", "Niacinamide", "Estratto saffron"],
-      intensity: 45,
+      tag: "Comfort cutaneo",
+      title: "Umidità elevata",
+      insight:
+        "Con umidità ambientale alta, formule troppo occlusive possono amplificare la sensazione di pesantezza cutanea.",
+      rationale:
+        "In ambienti molto umidi la diffusione del vapore acqueo dalla pelle è ridotta: texture più leggere sono in genere meglio tollerate dal punto di vista sensoriale.",
+      protocol:
+        "Privilegiare texture acquose, gel-cream e sieri leggeri; ridurre i film occlusivi pesanti.",
+      actives: ["Gel di acido ialuronico", "Niacinamide", "Estratti botanici leggeri"],
+      correlation: "moderate",
       status: "calm",
-      metric: `RH ${env.humidity.toFixed(0)}%`,
+      trigger: `Umidità ${env.humidity.toFixed(0)}%`,
     });
 
   if (env.wind >= 20 || env.temp <= 8)
     r.push({
-      tag: "Barriera",
-      title: "Ceramidi e burri vegetali",
-      body: "Crema ricca con ceramidi NP, colesterolo e karité: protegge dal disturbo barriera meccanico.",
-      ingredients: ["Ceramidi NP", "Burro di karité", "Olio di jojoba"],
-      intensity: 70,
+      tag: "Stress meccanico-termico",
+      title: env.wind >= 20 ? "Vento sostenuto" : "Temperatura bassa",
+      insight:
+        "Vento e basse temperature possono favorire il raffreddamento e la disidratazione superficiale, sollecitando la barriera cutanea.",
+      rationale:
+        "Il vento accelera l'evaporazione dell'acqua dalla superficie cutanea; il freddo riduce temporaneamente la fluidità dei lipidi intercorneocitari, condizione associata a sensazione di tensione e rossore.",
+      protocol:
+        "Texture confortevoli con lipidi affini a quelli cutanei e burri vegetali, applicate prima dell'esposizione.",
+      actives: ["Ceramidi NP", "Burro di karité", "Squalano", "Oli vegetali ricchi in omega"],
+      correlation: "moderate",
       status: "watch",
-      metric: env.wind >= 20 ? `Vento ${env.wind.toFixed(0)} km/h` : `Temp ${env.temp.toFixed(0)}°C`,
+      trigger: env.wind >= 20 ? `Vento ${env.wind.toFixed(0)} km/h` : `Temp ${env.temp.toFixed(0)}°C`,
     });
 
   if (env.pollen >= 20)
     r.push({
-      tag: "Lenitivo",
-      title: "Protocollo ipo-reattivo",
-      body: "Estratti lenitivi senza fragranze; compresse fredde in caso di flushing istamino-mediato.",
-      ingredients: ["Centella asiatica", "Bisabololo", "Allantoina"],
-      intensity: 68,
+      tag: "Sensibilità reattiva",
+      title: "Carica pollinica elevata",
+      insight:
+        "Concentrazioni elevate di pollini possono favorire reattività cutanea, in particolare nelle pelli predisposte a sensibilità.",
+      rationale:
+        "Studi sull'esposoma (Krutmann et al., 2017) descrivono interazioni tra allergeni aerodispersi e barriera cutanea, con possibile attivazione di mediatori pro-infiammatori.",
+      protocol:
+        "Routine minimalista lenitiva: ridurre temporaneamente attivi potenzialmente irritanti (acidi forti, retinoidi ad alta concentrazione).",
+      actives: ["Centella asiatica", "Bisabololo", "Allantoina", "Pantenolo"],
+      correlation: "moderate",
       status: "alert",
-      metric: `Pollini ${env.pollen.toFixed(0)}`,
+      trigger: `Pollini ${env.pollen.toFixed(0)} gr/m³`,
     });
 
   return r.slice(0, 4);
