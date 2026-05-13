@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import univpmLogo from "@/assets/univpm-logo.png";
+import univpmLogo from "@/assets/univpm-logo.webp";
 
 const stats = [
   { value: "8", label: "Ricercatori nel team" },

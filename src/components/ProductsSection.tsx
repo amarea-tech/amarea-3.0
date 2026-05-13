@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import productsHero from "@/assets/products-hero-new.png";
+import productsHero from "@/assets/products-hero-new.webp";
 
 interface ProductZone {
   name: string;
