@@ -826,6 +826,165 @@ const SubInsight = ({
   );
 };
 
+/* ---------------- Premium scientific recommendation card ---------------- */
+
+const STATUS_TOKEN: Record<RecoStatus, { dot: string; ring: string; label: string }> = {
+  calm:  { dot: "rgba(168,184,154,0.95)", ring: "rgba(168,184,154,0.30)", label: "Mantenimento" },
+  watch: { dot: "rgba(214,178,120,0.95)", ring: "rgba(214,178,120,0.30)", label: "Adattamento" },
+  alert: { dot: "rgba(201,128,108,0.95)", ring: "rgba(201,128,108,0.30)", label: "Priorità" },
+};
+
+const RecoCard = ({
+  reco,
+  theme,
+  isNight,
+  index,
+}: {
+  reco: Reco;
+  theme: (typeof PHASE_THEME)["day"];
+  isNight: boolean;
+  index: number;
+}) => {
+  const tok = STATUS_TOKEN[reco.status];
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ delay: index * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className="group relative rounded-[22px] p-6 border backdrop-blur-xl overflow-hidden flex flex-col"
+      style={{
+        background: isNight
+          ? "linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%)"
+          : "linear-gradient(160deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.5) 100%)",
+        borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
+        boxShadow: isNight
+          ? "0 20px 50px -30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)"
+          : "0 20px 40px -28px rgba(31,37,32,0.18), inset 0 1px 0 rgba(255,255,255,0.85)",
+      }}
+    >
+      {/* status accent corner */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full blur-2xl opacity-50"
+        style={{ background: `radial-gradient(circle, ${tok.ring}, transparent 70%)` }}
+      />
+
+      {/* header: status dot + tag + metric */}
+      <div className="relative flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <motion.span
+              className="absolute inline-flex h-full w-full rounded-full"
+              style={{ background: tok.dot }}
+              animate={{ scale: [1, 2.2, 1], opacity: [0.5, 0, 0.5] }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+            />
+            <span
+              className="relative inline-flex rounded-full h-2 w-2"
+              style={{ background: tok.dot }}
+            />
+          </span>
+          <span
+            className="text-[9px] tracking-[0.3em] uppercase font-body"
+            style={{ color: theme.textMuted }}
+          >
+            {reco.tag}
+          </span>
+        </div>
+        {reco.metric && (
+          <span
+            className="font-body text-[10px] tracking-wide px-2 py-0.5 rounded-full border"
+            style={{
+              color: theme.textMuted,
+              borderColor: theme.border,
+              background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.65)",
+            }}
+          >
+            {reco.metric}
+          </span>
+        )}
+      </div>
+
+      {/* title */}
+      <h3
+        className="relative font-display text-xl mt-4 leading-snug"
+        style={{ color: theme.text }}
+      >
+        {reco.title}
+      </h3>
+
+      {/* body */}
+      <p
+        className="relative font-body text-[13px] mt-2.5 leading-relaxed"
+        style={{ color: theme.textMuted }}
+      >
+        {reco.body}
+      </p>
+
+      {/* hairline */}
+      <div
+        className="relative my-5 h-px"
+        style={{ background: isNight ? "rgba(255,255,255,0.08)" : "rgba(31,37,32,0.08)" }}
+      />
+
+      {/* active ingredients */}
+      <div className="relative">
+        <div
+          className="text-[9px] tracking-[0.28em] uppercase font-body mb-2"
+          style={{ color: theme.textMuted }}
+        >
+          Attivi consigliati
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {reco.ingredients.map((ing) => (
+            <span
+              key={ing}
+              className="font-body text-[11px] px-2.5 py-1 rounded-full border"
+              style={{
+                color: theme.text,
+                borderColor: isNight ? "rgba(255,255,255,0.12)" : "rgba(31,37,32,0.10)",
+                background: isNight ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.7)",
+              }}
+            >
+              {ing}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* intensity bar */}
+      <div className="relative mt-5 mt-auto pt-5">
+        <div className="flex items-center justify-between mb-1.5">
+          <span
+            className="text-[9px] tracking-[0.28em] uppercase font-body"
+            style={{ color: theme.textMuted }}
+          >
+            {tok.label}
+          </span>
+          <span className="font-body text-[10px]" style={{ color: theme.textMuted }}>
+            {reco.intensity}%
+          </span>
+        </div>
+        <div
+          className="h-[3px] w-full rounded-full overflow-hidden"
+          style={{ background: isNight ? "rgba(255,255,255,0.07)" : "rgba(31,37,32,0.07)" }}
+        >
+          <motion.div
+            className="h-full rounded-full"
+            style={{ background: `linear-gradient(90deg, ${tok.dot}, ${tok.ring})` }}
+            initial={{ width: 0 }}
+            animate={{ width: `${reco.intensity}%` }}
+            transition={{ duration: 1.1, delay: 0.2 + index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+      </div>
+    </motion.article>
+  );
+};
+
 const Metric = ({
   theme,
   icon,
