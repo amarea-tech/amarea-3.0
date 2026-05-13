@@ -195,83 +195,144 @@ const blueLightExposure = (phase: Phase) => {
 
 /* ---------------- recommendations ---------------- */
 
-type Reco = { tag: string; title: string; body: string };
+type RecoStatus = "calm" | "watch" | "alert";
+type Reco = {
+  tag: string;
+  title: string;
+  body: string;
+  ingredients: string[];
+  intensity: number; // 0-100 — protocol priority
+  status: RecoStatus;
+  metric?: string;
+};
 
 const buildRecos = (env: Env | null, phase: Phase): Reco[] => {
-  if (!env) return [{ tag: "Routine", title: "Equilibrio", body: "Detersione delicata, idratazione, antiossidante." }];
+  if (!env)
+    return [
+      {
+        tag: "Routine",
+        title: "Equilibrio",
+        body: "Detersione delicata, idratazione e antiossidante per mantenere l'omeostasi cutanea.",
+        ingredients: ["Niacinamide", "Glicerina", "Pantenolo"],
+        intensity: 40,
+        status: "calm",
+      },
+    ];
   const r: Reco[] = [];
 
   if (phase === "night") {
     r.push({
       tag: "Recovery",
       title: "Riparazione notturna",
-      body: "Retinaldeide o peptidi biomimetici + crema occlusiva con squalano.",
+      body: "Stimola sintesi di collagene e turnover cellulare durante la fase circadiana riparativa.",
+      ingredients: ["Retinaldeide 0.05%", "Peptidi biomimetici", "Squalano"],
+      intensity: 75,
+      status: "watch",
+      metric: "Notte attiva",
     });
     r.push({
       tag: "Microcircolo",
-      title: "Massaggio facciale",
-      body: "Tre minuti di gua sha freddo per drenare e ossigenare i tessuti.",
+      title: "Drenaggio linfatico",
+      body: "Tre minuti di gua sha freddo per ossigenare i tessuti e ridurre la stasi periorbitale.",
+      ingredients: ["Caffeina", "Centella", "Mentolo"],
+      intensity: 55,
+      status: "calm",
     });
     if (env.humidity < 45)
       r.push({
         tag: "Idratazione",
         title: "Sleeping mask umettante",
-        body: "Acido ialuronico multipeso + glicerina sotto film leggero.",
+        body: "Acido ialuronico multipeso e glicerina sotto film occlusivo leggero per ricostituire il TEWL.",
+        ingredients: ["HA multipeso", "Glicerina 5%", "Squalano"],
+        intensity: 80,
+        status: "alert",
+        metric: `Umidità ${env.humidity.toFixed(0)}%`,
       });
     else
       r.push({
         tag: "Detossinazione",
         title: "Maschera detox",
-        body: "Argilla bianca + niacinamide per riequilibrare la microflora.",
+        body: "Argilla bianca e niacinamide per riequilibrare microflora e ridurre porosità apparente.",
+        ingredients: ["Argilla kaolin", "Niacinamide 5%", "Zinco PCA"],
+        intensity: 50,
+        status: "calm",
       });
-    return r;
+    return r.slice(0, 4);
   }
 
   if (env.uv >= 6)
     r.push({
       tag: "Fotoprotezione",
-      title: "SPF 50 + antiossidanti",
-      body: "Vitamina C 10-15% sotto SPF a finitura velata. Reapply ogni 3h.",
+      title: "SPF 50 + scudo antiossidante",
+      body: "Vitamina C stabilizzata sotto SPF a finitura velata: neutralizza ROS UV-indotti. Reapply ogni 3h.",
+      ingredients: ["Acido L-ascorbico 15%", "Vitamina E", "Filtri UVA/UVB"],
+      intensity: 90,
+      status: "alert",
+      metric: `UV ${env.uv.toFixed(1)}`,
     });
   else
     r.push({
       tag: "Fotoprotezione",
-      title: "SPF leggero",
-      body: "SPF 30 fluido, non comedogeno, su siero antiossidante.",
+      title: "SPF leggero quotidiano",
+      body: "SPF 30 fluido non comedogeno su siero antiossidante: protezione di mantenimento.",
+      ingredients: ["Vitamina C 10%", "Acido ferulico", "SPF 30"],
+      intensity: 55,
+      status: "calm",
+      metric: `UV ${env.uv.toFixed(1)}`,
     });
 
   if (env.pm25 >= 15 || env.pm10 >= 40)
     r.push({
       tag: "Anti-pollution",
       title: "Detersione bifasica + scudo polifenolico",
-      body: "Olio detergente seguito da siero con resveratrolo o estratti upcycled.",
+      body: "Olio detergente per rimuovere particolato lipofilo, poi siero polifenolico contro stress ossidativo urbano.",
+      ingredients: ["Olio di vinaccioli", "Resveratrolo", "Estratti upcycled"],
+      intensity: 78,
+      status: "alert",
+      metric: `PM2.5 ${env.pm25.toFixed(1)}`,
     });
 
   if (env.humidity < 40)
     r.push({
       tag: "Idratazione",
-      title: "Layer umettante + barriera",
-      body: "Acido ialuronico su pelle umida, sigilla con crema a ceramidi.",
+      title: "Layer umettante e barriera",
+      body: "Acido ialuronico su pelle umida, sigillato con crema a ceramidi: ripristino del film idrolipidico.",
+      ingredients: ["HA basso PM", "Ceramidi NP", "Colesterolo"],
+      intensity: 72,
+      status: "watch",
+      metric: `RH ${env.humidity.toFixed(0)}%`,
     });
   else if (env.humidity > 75)
     r.push({
       tag: "Texture",
-      title: "Formulazioni leggere",
-      body: "Gel-cream e sieri acquosi: evita oli pesanti e occlusivi.",
+      title: "Formulazioni acquose",
+      body: "Gel-cream e sieri leggeri: evita occlusivi pesanti che potenziano l'effetto serra cutaneo.",
+      ingredients: ["Gel HA", "Niacinamide", "Estratto saffron"],
+      intensity: 45,
+      status: "calm",
+      metric: `RH ${env.humidity.toFixed(0)}%`,
     });
 
   if (env.wind >= 20 || env.temp <= 8)
     r.push({
       tag: "Barriera",
       title: "Ceramidi e burri vegetali",
-      body: "Crema ricca con ceramidi NP, colesterolo e burro di karité.",
+      body: "Crema ricca con ceramidi NP, colesterolo e karité: protegge dal disturbo barriera meccanico.",
+      ingredients: ["Ceramidi NP", "Burro di karité", "Olio di jojoba"],
+      intensity: 70,
+      status: "watch",
+      metric: env.wind >= 20 ? `Vento ${env.wind.toFixed(0)} km/h` : `Temp ${env.temp.toFixed(0)}°C`,
     });
 
   if (env.pollen >= 20)
     r.push({
       tag: "Lenitivo",
-      title: "Routine ipo-reattiva",
-      body: "Centella, bisabololo, zero fragranze. Compresse fredde se serve.",
+      title: "Protocollo ipo-reattivo",
+      body: "Estratti lenitivi senza fragranze; compresse fredde in caso di flushing istamino-mediato.",
+      ingredients: ["Centella asiatica", "Bisabololo", "Allantoina"],
+      intensity: 68,
+      status: "alert",
+      metric: `Pollini ${env.pollen.toFixed(0)}`,
     });
 
   return r.slice(0, 4);
