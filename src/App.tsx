@@ -3,12 +3,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import Index from "./pages/Index";
-import ProductPage from "./pages/ProductPage";
-import TeamMemberPage from "./pages/TeamMemberPage";
-import GrowPage from "./pages/GrowPage";
-import NotFound from "./pages/NotFound";
+
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const TeamMemberPage = lazy(() => import("./pages/TeamMemberPage"));
+const GrowPage = lazy(() => import("./pages/GrowPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -41,13 +42,15 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/grow" element={<GrowPage />} />
-          <Route path="/prodotti/:slug" element={<ProductPage />} />
-          <Route path="/team/:slug" element={<TeamMemberPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="min-h-screen bg-background" />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/grow" element={<GrowPage />} />
+            <Route path="/prodotti/:slug" element={<ProductPage />} />
+            <Route path="/team/:slug" element={<TeamMemberPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
