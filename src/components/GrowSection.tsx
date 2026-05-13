@@ -349,6 +349,134 @@ const pollenExplain = (v: number) =>
       ? "Possibili microirritazioni in pelli sensibili."
       : "Probabili reazioni cutanee: prediligi texture leniscenti.";
 
+/* ---------------- Skin Mood (biological state) ---------------- */
+
+type SkinMoodKey =
+  | "balanced"
+  | "barrier"
+  | "oxidative"
+  | "repair"
+  | "reactive"
+  | "detox";
+
+type SkinMoodInfo = {
+  key: SkinMoodKey;
+  label: string;
+  subtitle: string;
+  description: string;
+  status: RecoStatus;
+  metrics: { label: string; value: number /* 0-100 health */ }[];
+};
+
+const computeSkinMood = (env: Env | null, phase: Phase): SkinMoodInfo => {
+  // Health metrics (0-100, higher = better)
+  const oxidative = env
+    ? Math.max(
+        0,
+        100 -
+          (phase === "night" ? 0 : Math.min(env.uv, 11) * 7) -
+          Math.min(env.pm25, 50) * 1.1,
+      )
+    : 78;
+  const barrier = env
+    ? Math.max(
+        0,
+        100 -
+          (env.humidity < 40 ? (40 - env.humidity) * 1.6 : 0) -
+          (env.wind > 15 ? (env.wind - 15) * 1.1 : 0) -
+          (env.temp <= 5 ? (5 - env.temp) * 2 : 0),
+      )
+    : 80;
+  const microbiome = env
+    ? Math.max(
+        0,
+        100 -
+          (env.pollen >= 20 ? Math.min(env.pollen - 20, 40) * 1.2 : 0) -
+          (env.humidity > 80 ? (env.humidity - 80) * 1.5 : 0) -
+          (env.pm10 > 40 ? (env.pm10 - 40) * 0.6 : 0),
+      )
+    : 82;
+
+  const metrics = [
+    { label: "Equilibrio ossidativo", value: Math.round(oxidative) },
+    { label: "Integrità barriera", value: Math.round(barrier) },
+    { label: "Armonia microbiota", value: Math.round(microbiome) },
+  ];
+
+  if (phase === "night")
+    return {
+      key: "repair",
+      label: "Cellular Repair",
+      subtitle: "Fase circadiana riparativa",
+      description:
+        "Il ciclo notturno favorisce sintesi di collagene, autofagia e turnover dei cheratinociti: la pelle riequilibra il TEWL e consolida la matrice dermica.",
+      status: "calm",
+      metrics,
+    };
+  if (oxidative < 55)
+    return {
+      key: "oxidative",
+      label: "Oxidative Stress Risk",
+      subtitle: "Carico radicalico elevato",
+      description:
+        "L'esposizione UV e il particolato fine generano specie reattive dell'ossigeno (ROS) che ossidano lipidi cutanei e collagene. Priorità a vitamina C, ferulico e polifenoli upcycled.",
+      status: "alert",
+      metrics,
+    };
+  if (barrier < 60)
+    return {
+      key: "barrier",
+      label: "Barrier Recovery",
+      subtitle: "Disturbo del film idrolipidico",
+      description:
+        "Bassa umidità e stress meccanico aumentano il TEWL e indeboliscono lo strato corneo. La barriera richiede ceramidi NP, colesterolo e acidi grassi per ricostituire il rapporto 3:1:1.",
+      status: "watch",
+      metrics,
+    };
+  if (microbiome < 65)
+    return {
+      key: "reactive",
+      label: "Reactive Sensitivity",
+      subtitle: "Microbiota perturbato",
+      description:
+        "Pollini e umidità sbilanciata alterano la diversità microbica, predisponendo a flushing e iperreattività. Lenitivi non-occlusivi e prebiotici favoriscono l'omeostasi.",
+      status: "watch",
+      metrics,
+    };
+  if (env && env.pm25 >= 15)
+    return {
+      key: "detox",
+      label: "Detox Mode",
+      subtitle: "Carica urbana sostenuta",
+      description:
+        "Il particolato lipofilo aderisce al sebo e penetra nei follicoli. Detersione bifasica e antiossidanti polifenolici neutralizzano i metaboliti pro-infiammatori.",
+      status: "watch",
+      metrics,
+    };
+  return {
+    key: "balanced",
+    label: "Balanced",
+    subtitle: "Omeostasi cutanea ottimale",
+    description:
+      "I parametri ambientali sostengono un equilibrio tra idratazione, microbiota e difese antiossidanti. La routine entra in modalità mantenimento attivo.",
+    status: "calm",
+    metrics,
+  };
+};
+
+/* deterministic mini sparkline series from a seed */
+const sparkSeries = (seed: number, base: number) => {
+  const out: number[] = [];
+  let s = (seed * 9301 + 49297) % 233280;
+  for (let i = 0; i < 14; i++) {
+    s = (s * 9301 + 49297) % 233280;
+    const r = (s / 233280 - 0.5) * 0.45;
+    const drift = Math.sin((i / 13) * Math.PI) * 0.18;
+    out.push(Math.max(0.05, Math.min(0.95, base + r + drift - 0.1)));
+  }
+  return out;
+};
+
 /* ---------------- page ---------------- */
 
 const GrowSection = () => {
@@ -465,6 +593,7 @@ const GrowSection = () => {
   const hydra = useMemo(() => hydrationRisk(env), [env]);
   const blue = useMemo(() => blueLightExposure(phase), [phase]);
   const recos = useMemo(() => buildRecos(env, phase), [env, phase]);
+  const skinMood = useMemo(() => computeSkinMood(env, phase), [env, phase]);
 
   const fmtTime = (iso: string) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 
@@ -641,10 +770,7 @@ const GrowSection = () => {
             </span>
           </div>
 
-          <div
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px rounded-3xl overflow-hidden border"
-            style={{ background: theme.border, borderColor: theme.border }}
-          >
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             <Metric
               theme={theme}
               icon={<Sun size={16} />}
@@ -652,6 +778,8 @@ const GrowSection = () => {
               value={uvDisplay}
               unit="UVI"
               hint={uvHint}
+              series={sparkSeries(1, isNight ? 0.1 : Math.min(1, (env?.uv ?? 0) / 11))}
+              accent="#E2B670"
               dim={isNight}
             />
             <Metric
@@ -661,6 +789,8 @@ const GrowSection = () => {
               value={env ? env.pm25.toFixed(1) : "—"}
               unit="µg/m³"
               hint={env ? (env.pm25 < 10 ? "OMS: nei limiti" : env.pm25 < 25 ? "Sopra OMS" : "Critico") : ""}
+              series={sparkSeries(2, Math.min(1, (env?.pm25 ?? 0) / 50))}
+              accent="#B8A89A"
             />
             <Metric
               theme={theme}
@@ -669,6 +799,8 @@ const GrowSection = () => {
               value={env ? env.pm10.toFixed(0) : "—"}
               unit="µg/m³"
               hint={env ? (env.pm10 < 25 ? "Aria pulita" : env.pm10 < 50 ? "Discreta" : "Carica") : ""}
+              series={sparkSeries(3, Math.min(1, (env?.pm10 ?? 0) / 100))}
+              accent="#A89C8E"
             />
             <Metric
               theme={theme}
@@ -677,6 +809,8 @@ const GrowSection = () => {
               value={env ? env.pollen.toFixed(1) : "—"}
               unit="grains/m³"
               hint={env ? `${pollenSeverity(env.pollen)} · ${pollenExplain(env.pollen)}` : ""}
+              series={sparkSeries(4, Math.min(1, (env?.pollen ?? 0) / 60))}
+              accent="#C9A877"
               wide
             />
             <Metric
@@ -686,6 +820,8 @@ const GrowSection = () => {
               value={env ? env.humidity.toFixed(0) : "—"}
               unit="%"
               hint={env ? (env.humidity < 40 ? "Aria secca" : env.humidity < 70 ? "Equilibrata" : "Umida") : ""}
+              series={sparkSeries(5, Math.min(1, (env?.humidity ?? 50) / 100))}
+              accent="#96C2C8"
             />
             <Metric
               theme={theme}
@@ -696,6 +832,8 @@ const GrowSection = () => {
               hint={
                 env ? (env.temp < 10 ? "Fresco" : env.temp < 22 ? "Mite" : env.temp < 30 ? "Caldo" : "Torrido") : ""
               }
+              series={sparkSeries(6, Math.min(1, Math.max(0, ((env?.temp ?? 18) + 5) / 45)))}
+              accent="#D69478"
             />
             <Metric
               theme={theme}
@@ -704,6 +842,8 @@ const GrowSection = () => {
               value={env ? env.wind.toFixed(0) : "—"}
               unit="km/h"
               hint={env ? (env.wind < 10 ? "Calmo" : env.wind < 25 ? "Brezza" : "Forte") : ""}
+              series={sparkSeries(7, Math.min(1, (env?.wind ?? 0) / 60))}
+              accent="#A8B89A"
             />
             <Metric
               theme={theme}
@@ -712,8 +852,32 @@ const GrowSection = () => {
               value={env ? `${env.aqi}/5` : "—"}
               unit={env ? aqiLabel(env.aqi) : ""}
               hint="Indice EU PM2.5/PM10"
+              series={sparkSeries(8, Math.min(1, (env?.aqi ?? 1) / 5))}
+              accent="#B5A0C2"
             />
           </div>
+        </div>
+      </section>
+
+      {/* ======= SKIN MOOD ======= */}
+      <section className="relative pb-12">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <Eyebrow theme={theme}>Skin Mood</Eyebrow>
+              <h2 className="font-display text-2xl md:text-4xl mt-2" style={{ color: theme.text }}>
+                Stato biologico della pelle
+              </h2>
+            </div>
+            <span
+              className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline"
+              style={{ color: theme.textMuted }}
+            >
+              Adaptive bio-state
+            </span>
+          </div>
+
+          <SkinMoodPanel info={skinMood} theme={theme} isNight={isNight} />
         </div>
       </section>
 
@@ -994,6 +1158,8 @@ const Metric = ({
   hint,
   wide,
   dim,
+  series,
+  accent,
 }: {
   theme: (typeof PHASE_THEME)["day"];
   icon: React.ReactNode;
@@ -1003,31 +1169,249 @@ const Metric = ({
   hint: string;
   wide?: boolean;
   dim?: boolean;
+  series?: number[];
+  accent?: string;
 }) => {
   const isNight = theme.label === "Notte";
+  const stroke = accent ?? theme.accent;
   return (
-    <div
-      className={`p-6 transition-colors ${wide ? "md:col-span-2" : ""}`}
+    <motion.div
+      whileHover={{ y: -3 }}
+      transition={{ type: "spring", stiffness: 260, damping: 24 }}
+      className={`group relative rounded-[22px] border backdrop-blur-xl p-5 md:p-6 overflow-hidden flex flex-col ${
+        wide ? "md:col-span-2" : ""
+      }`}
       style={{
-        background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.7)",
-        opacity: dim ? 0.55 : 1,
+        background: isNight
+          ? "linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%)"
+          : "linear-gradient(160deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.55) 100%)",
+        borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
+        boxShadow: isNight
+          ? "0 18px 40px -28px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)"
+          : "0 18px 36px -28px rgba(31,37,32,0.18), inset 0 1px 0 rgba(255,255,255,0.85)",
+        opacity: dim ? 0.6 : 1,
       }}
     >
-      <div className="flex items-center gap-1.5" style={{ color: theme.textMuted }}>
-        {icon}
-        <span className="text-[9px] tracking-[0.3em] uppercase font-body">{label}</span>
+      {/* hover glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-12 -right-10 h-32 w-32 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-700"
+        style={{ background: `radial-gradient(circle, ${stroke}55, transparent 70%)` }}
+      />
+
+      <div className="relative flex items-center gap-1.5" style={{ color: theme.textMuted }}>
+        <span style={{ color: stroke }}>{icon}</span>
+        <span className="text-[9px] tracking-[0.32em] uppercase font-body">{label}</span>
       </div>
-      <div className="flex items-baseline gap-2 mt-3">
-        <span className="font-display text-3xl md:text-4xl leading-none" style={{ color: theme.text }}>
-          {value}
-        </span>
-        <span className="font-body text-[11px] tracking-wide" style={{ color: theme.textMuted }}>
-          {unit}
-        </span>
+
+      <div className="relative flex items-end justify-between gap-3 mt-4">
+        <div className="flex items-baseline gap-1.5 min-w-0">
+          <span
+            className="font-display text-[32px] md:text-[40px] leading-none tracking-tight"
+            style={{ color: theme.text }}
+          >
+            {value}
+          </span>
+          <span
+            className="font-body text-[10px] tracking-[0.18em] uppercase"
+            style={{ color: theme.textMuted }}
+          >
+            {unit}
+          </span>
+        </div>
+        {series && series.length > 1 && (
+          <Sparkline series={series} stroke={stroke} dim={dim} />
+        )}
       </div>
-      <div className="font-body text-[11px] mt-2 leading-snug" style={{ color: theme.textMuted }}>
+
+      <div
+        className="relative font-body text-[11px] mt-3 leading-snug"
+        style={{ color: theme.textMuted }}
+      >
         {hint}
       </div>
+    </motion.div>
+  );
+};
+
+/* ---------------- mini live sparkline ---------------- */
+
+const Sparkline = ({
+  series,
+  stroke,
+  dim,
+}: {
+  series: number[];
+  stroke: string;
+  dim?: boolean;
+}) => {
+  const w = 84;
+  const h = 30;
+  const step = w / (series.length - 1);
+  const pts = series.map((v, i) => `${(i * step).toFixed(1)},${(h - v * (h - 4) - 2).toFixed(1)}`);
+  const d = `M${pts.join(" L")}`;
+  const area = `${d} L${w},${h} L0,${h} Z`;
+  const last = series[series.length - 1];
+  const cx = w;
+  const cy = h - last * (h - 4) - 2;
+  return (
+    <svg
+      viewBox={`0 0 ${w} ${h}`}
+      className="w-[88px] h-[30px] flex-shrink-0"
+      style={{ opacity: dim ? 0.5 : 1 }}
+    >
+      <defs>
+        <linearGradient id={`spk-${stroke.replace(/[^a-z0-9]/gi, "")}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stroke} stopOpacity="0.32" />
+          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={area} fill={`url(#spk-${stroke.replace(/[^a-z0-9]/gi, "")})`} />
+      <motion.path
+        d={d}
+        fill="none"
+        stroke={stroke}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <motion.circle
+        cx={cx}
+        cy={cy}
+        r="2"
+        fill={stroke}
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </svg>
+  );
+};
+
+/* ---------------- Skin Mood panel ---------------- */
+
+const SkinMoodPanel = ({
+  info,
+  theme,
+  isNight,
+}: {
+  info: SkinMoodInfo;
+  theme: (typeof PHASE_THEME)["day"];
+  isNight: boolean;
+}) => {
+  const tok = STATUS_TOKEN[info.status];
+  return (
+    <div className="grid lg:grid-cols-[1.3fr_1fr] gap-4">
+      {/* Primary state card */}
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="relative rounded-[28px] border backdrop-blur-2xl p-7 md:p-9 overflow-hidden"
+        style={{
+          background: isNight
+            ? "linear-gradient(160deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)"
+            : "linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.55) 100%)",
+          borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
+          boxShadow: isNight
+            ? "0 30px 80px -40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)"
+            : "0 30px 60px -40px rgba(31,37,32,0.22), inset 0 1px 0 rgba(255,255,255,0.9)",
+        }}
+      >
+        {/* mood aura */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -top-24 -left-20 h-72 w-72 rounded-full blur-3xl"
+          style={{ background: `radial-gradient(circle, ${tok.ring}, transparent 70%)` }}
+          animate={{ scale: [1, 1.08, 1], opacity: [0.55, 0.8, 0.55] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div className="relative flex items-center gap-2">
+          <span className="relative flex h-2 w-2">
+            <motion.span
+              className="absolute inline-flex h-full w-full rounded-full"
+              style={{ background: tok.dot }}
+              animate={{ scale: [1, 2.2, 1], opacity: [0.5, 0, 0.5] }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+            />
+            <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: tok.dot }} />
+          </span>
+          <span className="text-[10px] tracking-[0.32em] uppercase font-body" style={{ color: theme.textMuted }}>
+            {info.subtitle}
+          </span>
+        </div>
+
+        <h3
+          className="relative font-display text-4xl md:text-5xl mt-4 leading-[1.05] tracking-tight"
+          style={{ color: theme.text }}
+        >
+          <span className="italic font-light">{info.label}</span>
+        </h3>
+
+        <p
+          className="relative font-body text-[14px] md:text-[15px] mt-5 max-w-xl leading-relaxed"
+          style={{ color: theme.textMuted }}
+        >
+          {info.description}
+        </p>
+      </motion.div>
+
+      {/* Bio metrics card */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+        className="relative rounded-[28px] border backdrop-blur-2xl p-7 md:p-8 overflow-hidden flex flex-col justify-center"
+        style={{
+          background: isNight
+            ? "linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.015) 100%)"
+            : "linear-gradient(160deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.5) 100%)",
+          borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.7)",
+          boxShadow: isNight
+            ? "0 20px 50px -30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05)"
+            : "0 20px 40px -28px rgba(31,37,32,0.18), inset 0 1px 0 rgba(255,255,255,0.85)",
+        }}
+      >
+        <div className="text-[10px] tracking-[0.32em] uppercase font-body mb-5" style={{ color: theme.textMuted }}>
+          Bio-indicatori
+        </div>
+        <div className="space-y-5">
+          {info.metrics.map((m, i) => (
+            <div key={m.label}>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="font-body text-[12px]" style={{ color: theme.text }}>
+                  {m.label}
+                </span>
+                <span className="font-body text-[10px] tabular-nums" style={{ color: theme.textMuted }}>
+                  {m.value}%
+                </span>
+              </div>
+              <div
+                className="h-[3px] w-full rounded-full overflow-hidden"
+                style={{ background: isNight ? "rgba(255,255,255,0.07)" : "rgba(31,37,32,0.07)" }}
+              >
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background:
+                      m.value >= 70
+                        ? "linear-gradient(90deg, rgba(168,184,154,0.95), rgba(168,184,154,0.4))"
+                        : m.value >= 50
+                          ? "linear-gradient(90deg, rgba(214,178,120,0.95), rgba(214,178,120,0.4))"
+                          : "linear-gradient(90deg, rgba(201,128,108,0.95), rgba(201,128,108,0.4))",
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${m.value}%` }}
+                  transition={{ duration: 1.1, delay: 0.25 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
     </div>
   );
 };
