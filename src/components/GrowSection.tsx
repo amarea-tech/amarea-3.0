@@ -770,10 +770,7 @@ const GrowSection = () => {
             </span>
           </div>
 
-          <div
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px rounded-3xl overflow-hidden border"
-            style={{ background: theme.border, borderColor: theme.border }}
-          >
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             <Metric
               theme={theme}
               icon={<Sun size={16} />}
@@ -781,6 +778,8 @@ const GrowSection = () => {
               value={uvDisplay}
               unit="UVI"
               hint={uvHint}
+              series={sparkSeries(1, isNight ? 0.1 : Math.min(1, (env?.uv ?? 0) / 11))}
+              accent="#E2B670"
               dim={isNight}
             />
             <Metric
@@ -790,6 +789,8 @@ const GrowSection = () => {
               value={env ? env.pm25.toFixed(1) : "—"}
               unit="µg/m³"
               hint={env ? (env.pm25 < 10 ? "OMS: nei limiti" : env.pm25 < 25 ? "Sopra OMS" : "Critico") : ""}
+              series={sparkSeries(2, Math.min(1, (env?.pm25 ?? 0) / 50))}
+              accent="#B8A89A"
             />
             <Metric
               theme={theme}
@@ -798,6 +799,8 @@ const GrowSection = () => {
               value={env ? env.pm10.toFixed(0) : "—"}
               unit="µg/m³"
               hint={env ? (env.pm10 < 25 ? "Aria pulita" : env.pm10 < 50 ? "Discreta" : "Carica") : ""}
+              series={sparkSeries(3, Math.min(1, (env?.pm10 ?? 0) / 100))}
+              accent="#A89C8E"
             />
             <Metric
               theme={theme}
@@ -806,6 +809,8 @@ const GrowSection = () => {
               value={env ? env.pollen.toFixed(1) : "—"}
               unit="grains/m³"
               hint={env ? `${pollenSeverity(env.pollen)} · ${pollenExplain(env.pollen)}` : ""}
+              series={sparkSeries(4, Math.min(1, (env?.pollen ?? 0) / 60))}
+              accent="#C9A877"
               wide
             />
             <Metric
@@ -815,6 +820,8 @@ const GrowSection = () => {
               value={env ? env.humidity.toFixed(0) : "—"}
               unit="%"
               hint={env ? (env.humidity < 40 ? "Aria secca" : env.humidity < 70 ? "Equilibrata" : "Umida") : ""}
+              series={sparkSeries(5, Math.min(1, (env?.humidity ?? 50) / 100))}
+              accent="#96C2C8"
             />
             <Metric
               theme={theme}
@@ -825,6 +832,8 @@ const GrowSection = () => {
               hint={
                 env ? (env.temp < 10 ? "Fresco" : env.temp < 22 ? "Mite" : env.temp < 30 ? "Caldo" : "Torrido") : ""
               }
+              series={sparkSeries(6, Math.min(1, Math.max(0, ((env?.temp ?? 18) + 5) / 45)))}
+              accent="#D69478"
             />
             <Metric
               theme={theme}
@@ -833,6 +842,8 @@ const GrowSection = () => {
               value={env ? env.wind.toFixed(0) : "—"}
               unit="km/h"
               hint={env ? (env.wind < 10 ? "Calmo" : env.wind < 25 ? "Brezza" : "Forte") : ""}
+              series={sparkSeries(7, Math.min(1, (env?.wind ?? 0) / 60))}
+              accent="#A8B89A"
             />
             <Metric
               theme={theme}
@@ -841,8 +852,32 @@ const GrowSection = () => {
               value={env ? `${env.aqi}/5` : "—"}
               unit={env ? aqiLabel(env.aqi) : ""}
               hint="Indice EU PM2.5/PM10"
+              series={sparkSeries(8, Math.min(1, (env?.aqi ?? 1) / 5))}
+              accent="#B5A0C2"
             />
           </div>
+        </div>
+      </section>
+
+      {/* ======= SKIN MOOD ======= */}
+      <section className="relative pb-12">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <Eyebrow theme={theme}>Skin Mood</Eyebrow>
+              <h2 className="font-display text-2xl md:text-4xl mt-2" style={{ color: theme.text }}>
+                Stato biologico della pelle
+              </h2>
+            </div>
+            <span
+              className="font-body text-[10px] tracking-[0.25em] uppercase hidden md:inline"
+              style={{ color: theme.textMuted }}
+            >
+              Adaptive bio-state
+            </span>
+          </div>
+
+          <SkinMoodPanel info={skinMood} theme={theme} isNight={isNight} />
         </div>
       </section>
 
