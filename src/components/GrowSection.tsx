@@ -1198,7 +1198,7 @@ const RecoCard = ({
           Famiglie di attivi
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {reco.actives.map((ing) => (
+          {(reco.actives ?? []).map((ing) => (
             <span
               key={ing}
               className="font-body text-[11px] px-2.5 py-1 rounded-full border"
