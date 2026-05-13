@@ -421,9 +421,16 @@ const GrowSection = () => {
       : "";
 
   return (
-    <div id="grow" className="transition-colors duration-700" style={{ background: theme.bg, color: theme.text }}>
+    <div
+      id="grow"
+      className="relative overflow-hidden transition-colors duration-700"
+      style={{ background: theme.bg, color: theme.text }}
+    >
+      {/* ===== Ambient botanical gradient layer ===== */}
+      <AmbientLayer phase={phase} />
+
       {/* ======= HERO HEADER ======= */}
-      <header className="pt-20 md:pt-28 pb-10 md:pb-14">
+      <header className="relative pt-20 md:pt-28 pb-10 md:pb-14">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="flex items-end justify-between gap-6 flex-wrap">
             <div>
@@ -471,7 +478,7 @@ const GrowSection = () => {
       </header>
 
       {/* ======= PRIMARY ROW: Comfort score + Assistant + Quick stats ======= */}
-      <section className="pb-12">
+      <section className="relative pb-12">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="grid lg:grid-cols-[1.4fr_1fr] gap-5">
             {/* Comfort Score card */}
@@ -564,7 +571,7 @@ const GrowSection = () => {
       </section>
 
       {/* ======= ENVIRONMENTAL DASHBOARD GRID ======= */}
-      <section className="pb-12">
+      <section className="relative pb-12">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="flex items-end justify-between mb-6">
             <Eyebrow theme={theme}>Indicatori ambientali</Eyebrow>
@@ -650,7 +657,7 @@ const GrowSection = () => {
       </section>
 
       {/* ======= SMART RECOMMENDATIONS ======= */}
-      <section className="pb-16 md:pb-24">
+      <section className="relative pb-16 md:pb-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="flex items-end justify-between mb-6">
             <div>
