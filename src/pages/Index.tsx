@@ -1,14 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import PhilosophySection from "@/components/PhilosophySection";
-import ProductsSection from "@/components/ProductsSection";
-import AboutSection from "@/components/AboutSection";
-import TeamSection from "@/components/TeamSection";
-import FooterSection from "@/components/FooterSection";
-import NewsletterBlock from "@/components/NewsletterBlock";
 import FloatingPetals from "@/components/FloatingPetals";
+
+const PhilosophySection = lazy(() => import("@/components/PhilosophySection"));
+const ProductsSection = lazy(() => import("@/components/ProductsSection"));
+const AboutSection = lazy(() => import("@/components/AboutSection"));
+const TeamSection = lazy(() => import("@/components/TeamSection"));
+const NewsletterBlock = lazy(() => import("@/components/NewsletterBlock"));
+const FooterSection = lazy(() => import("@/components/FooterSection"));
 
 const Index = () => {
   const { hash } = useLocation();
@@ -29,12 +30,14 @@ const Index = () => {
         <FloatingPetals />
         <HeroSection />
       </div>
-      <PhilosophySection />
-      <ProductsSection />
-      <AboutSection />
-      <TeamSection />
-      <NewsletterBlock />
-      <FooterSection />
+      <Suspense fallback={<div className="min-h-[60vh]" />}>
+        <PhilosophySection />
+        <ProductsSection />
+        <AboutSection />
+        <TeamSection />
+        <NewsletterBlock />
+        <FooterSection />
+      </Suspense>
     </div>
   );
 };
