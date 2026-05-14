@@ -916,6 +916,7 @@ const GrowSection = () => {
               series={sparkSeries(1, isNight ? 0.1 : Math.min(1, (env?.uv ?? 0) / 11))}
               accent="#E2B670"
               dim={isNight}
+              onClick={() => setOpenMetric("uv")}
             />
             <Metric
               theme={theme}
@@ -926,6 +927,7 @@ const GrowSection = () => {
               hint={env ? (env.pm25 < 10 ? "OMS: nei limiti" : env.pm25 < 25 ? "Sopra OMS" : "Critico") : ""}
               series={sparkSeries(2, Math.min(1, (env?.pm25 ?? 0) / 50))}
               accent="#B8A89A"
+              onClick={() => setOpenMetric("pm25")}
             />
             <Metric
               theme={theme}
@@ -936,6 +938,7 @@ const GrowSection = () => {
               hint={env ? (env.pm10 < 25 ? "Aria pulita" : env.pm10 < 50 ? "Discreta" : "Carica") : ""}
               series={sparkSeries(3, Math.min(1, (env?.pm10 ?? 0) / 100))}
               accent="#A89C8E"
+              onClick={() => setOpenMetric("pm10")}
             />
             <Metric
               theme={theme}
@@ -947,6 +950,7 @@ const GrowSection = () => {
               series={sparkSeries(4, Math.min(1, (env?.pollen ?? 0) / 60))}
               accent="#C9A877"
               wide
+              onClick={() => setOpenMetric("pollen")}
             />
             <Metric
               theme={theme}
@@ -957,6 +961,7 @@ const GrowSection = () => {
               hint={env ? (env.humidity < 40 ? "Aria secca" : env.humidity < 70 ? "Equilibrata" : "Umida") : ""}
               series={sparkSeries(5, Math.min(1, (env?.humidity ?? 50) / 100))}
               accent="#96C2C8"
+              onClick={() => setOpenMetric("humidity")}
             />
             <Metric
               theme={theme}
@@ -969,6 +974,7 @@ const GrowSection = () => {
               }
               series={sparkSeries(6, Math.min(1, Math.max(0, ((env?.temp ?? 18) + 5) / 45)))}
               accent="#D69478"
+              onClick={() => setOpenMetric("temp")}
             />
             <Metric
               theme={theme}
@@ -979,6 +985,7 @@ const GrowSection = () => {
               hint={env ? (env.wind < 10 ? "Calmo" : env.wind < 25 ? "Brezza" : "Forte") : ""}
               series={sparkSeries(7, Math.min(1, (env?.wind ?? 0) / 60))}
               accent="#A8B89A"
+              onClick={() => setOpenMetric("wind")}
             />
             <Metric
               theme={theme}
@@ -989,10 +996,19 @@ const GrowSection = () => {
               hint="Indice EU PM2.5/PM10"
               series={sparkSeries(8, Math.min(1, (env?.aqi ?? 1) / 5))}
               accent="#B5A0C2"
+              onClick={() => setOpenMetric("aqi")}
             />
           </div>
         </div>
       </section>
+
+      {/* ===== METRIC DETAIL POPUP ===== */}
+      <MetricDetailDialog
+        metric={openMetric}
+        hourly={hourly}
+        theme={theme}
+        onClose={() => setOpenMetric(null)}
+      />
 
       {/* ======= SMART RECOMMENDATIONS ======= */}
       <section className="relative pb-16 md:pb-24">
