@@ -1342,6 +1342,7 @@ const Metric = ({
   dim,
   series,
   accent,
+  onClick,
 }: {
   theme: (typeof PHASE_THEME)["day"];
   icon: React.ReactNode;
@@ -1353,6 +1354,7 @@ const Metric = ({
   dim?: boolean;
   series?: number[];
   accent?: string;
+  onClick?: () => void;
 }) => {
   const isNight = theme.label === "Notte";
   const stroke = accent ?? theme.accent;
@@ -1360,7 +1362,22 @@ const Metric = ({
     <motion.div
       whileHover={{ y: -3 }}
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
       className={`group relative rounded-[22px] border backdrop-blur-xl p-5 md:p-6 overflow-hidden flex flex-col ${
+        onClick ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0" : ""
+      } ${
         wide ? "md:col-span-2" : ""
       }`}
       style={{
