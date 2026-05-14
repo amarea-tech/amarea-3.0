@@ -677,10 +677,16 @@ const GrowSection = () => {
               <span className="text-[10px] tracking-[0.35em] uppercase font-body" style={{ color: theme.textMuted }}>
                 Amarea · Skin Weather Dashboard
               </span>
-              <div className="flex items-center gap-4 flex-wrap mt-3">
-                <h2 className="font-display text-4xl md:text-6xl leading-[1.05]" style={{ color: theme.text }}>
-                  Grow <span className="italic font-light">With Amarea</span>
-                </h2>
+              <h2 className="font-display text-4xl md:text-6xl leading-[1.05] mt-3" style={{ color: theme.text }}>
+                Grow <span className="italic font-light">With Amarea</span>
+              </h2>
+              <div className="mt-4">
+                <div
+                  className="text-[10px] tracking-[0.35em] uppercase font-body mb-2"
+                  style={{ color: theme.textMuted }}
+                >
+                  Follow us
+                </div>
                 <div className="flex items-center gap-2">
                   <a
                     href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
