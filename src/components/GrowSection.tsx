@@ -21,6 +21,7 @@ import {
   ArrowUpRight,
   Instagram,
   Linkedin,
+  X,
 } from "lucide-react";
 import Fogliolina, { type Mood } from "@/components/grow/Fogliolina";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,6 +42,20 @@ type Env = {
   sunrise: string; // ISO
   sunset: string; // ISO
 };
+
+type Hourly = {
+  time: string[]; // ISO hour strings
+  uv: number[];
+  pm25: number[];
+  pm10: number[];
+  pollen: number[];
+  humidity: number[];
+  temp: number[];
+  wind: number[];
+  aqi: number[];
+};
+
+type MetricKey = "uv" | "pm25" | "pm10" | "pollen" | "humidity" | "temp" | "wind" | "aqi";
 
 type Phase = "dawn" | "day" | "sunset" | "night";
 
