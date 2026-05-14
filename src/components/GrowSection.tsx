@@ -548,6 +548,7 @@ const GrowSection = () => {
   const [env, setEnv] = useState<Env | null>(null);
   const [hourly, setHourly] = useState<Hourly | null>(null);
   const [openMetric, setOpenMetric] = useState<MetricKey | null>(null);
+  const [openSun, setOpenSun] = useState(false);
   const [place, setPlace] = useState("");
   const [updatedAt, setUpdatedAt] = useState("");
   const [loading, setLoading] = useState(false);
