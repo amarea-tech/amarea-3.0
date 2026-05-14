@@ -548,6 +548,7 @@ const GrowSection = () => {
   const [env, setEnv] = useState<Env | null>(null);
   const [hourly, setHourly] = useState<Hourly | null>(null);
   const [openMetric, setOpenMetric] = useState<MetricKey | null>(null);
+  const [openSun, setOpenSun] = useState(false);
   const [place, setPlace] = useState("");
   const [updatedAt, setUpdatedAt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -864,6 +865,12 @@ const GrowSection = () => {
             </GlassCard>
 
             {/* Sun cycle card */}
+            <button
+              type="button"
+              onClick={() => setOpenSun(true)}
+              className="text-left w-full rounded-[28px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 transition-transform hover:-translate-y-[2px]"
+              aria-label="Apri andamento ciclo solare"
+            >
             <GlassCard theme={theme}>
               <Eyebrow theme={theme}>Ciclo solare</Eyebrow>
               <div className="mt-5 flex items-center justify-between">
@@ -891,6 +898,7 @@ const GrowSection = () => {
                       : "Ore diurne: protezione e antiossidanti restano la priorità."}
               </p>
             </GlassCard>
+            </button>
           </div>
         </div>
       </section>
@@ -1008,6 +1016,15 @@ const GrowSection = () => {
         hourly={hourly}
         theme={theme}
         onClose={() => setOpenMetric(null)}
+      />
+
+      {/* ===== SUN CYCLE POPUP ===== */}
+      <SunCycleDialog
+        open={openSun}
+        env={env}
+        hourly={hourly}
+        theme={theme}
+        onClose={() => setOpenSun(false)}
       />
 
       {/* ======= SMART RECOMMENDATIONS ======= */}
@@ -1756,6 +1773,223 @@ const HourlyChart = ({
         </div>
       )}
     </div>
+  );
+};
+
+/* ---------------- sun cycle dialog ---------------- */
+
+const SunCycleDialog = ({
+  open,
+  env,
+  hourly,
+  theme,
+  onClose,
+}: {
+  open: boolean;
+  env: Env | null;
+  hourly: Hourly | null;
+  theme: (typeof PHASE_THEME)["day"];
+  onClose: () => void;
+}) => {
+  const isNight = theme.label === "Notte";
+  const fmtTime = (iso: string) =>
+    new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+
+  const sunriseDate = env ? new Date(env.sunrise) : null;
+  const sunsetDate = env ? new Date(env.sunset) : null;
+  const dayMinutes =
+    sunriseDate && sunsetDate
+      ? Math.max(0, (sunsetDate.getTime() - sunriseDate.getTime()) / 60000)
+      : 0;
+  const dayHours = Math.floor(dayMinutes / 60);
+  const dayMins = Math.round(dayMinutes % 60);
+  const noonDate =
+    sunriseDate && sunsetDate
+      ? new Date((sunriseDate.getTime() + sunsetDate.getTime()) / 2)
+      : null;
+
+  const now = new Date();
+  const minutesIntoDay = now.getHours() * 60 + now.getMinutes();
+  const sunriseMin = sunriseDate ? sunriseDate.getHours() * 60 + sunriseDate.getMinutes() : 360;
+  const sunsetMin = sunsetDate ? sunsetDate.getHours() * 60 + sunsetDate.getMinutes() : 1200;
+  const dawnStart = Math.max(0, sunriseMin - 30);
+  const dawnEnd = sunriseMin + 30;
+  const sunsetStart = sunsetMin - 30;
+  const sunsetEnd = Math.min(1440, sunsetMin + 30);
+
+  const totalMin = 1440;
+  const pct = (m: number) => `${(m / totalMin) * 100}%`;
+
+  const uvSeries = hourly?.uv ?? [];
+  const peakUvIdx = uvSeries.length
+    ? uvSeries.reduce((maxI, v, i, a) => (v > a[maxI] ? i : maxI), 0)
+    : -1;
+  const peakUvHour = peakUvIdx >= 0 && hourly?.time?.[peakUvIdx]
+    ? new Date(hourly.time[peakUvIdx]).getHours()
+    : null;
+  const peakUv = peakUvIdx >= 0 ? uvSeries[peakUvIdx] : null;
+
+  return (
+    <AnimatePresence>
+      {open && env && (
+        <motion.div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <motion.div
+            className="absolute inset-0 backdrop-blur-md"
+            style={{ background: isNight ? "rgba(8,10,18,0.65)" : "rgba(20,22,28,0.45)" }}
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 280, damping: 28 }}
+            className="relative w-full max-w-[640px] rounded-[28px] border backdrop-blur-2xl p-6 md:p-8 max-h-[85vh] overflow-y-auto"
+            style={{
+              background: isNight
+                ? "linear-gradient(160deg, rgba(28,30,40,0.92) 0%, rgba(18,20,28,0.92) 100%)"
+                : "linear-gradient(160deg, rgba(255,255,255,0.96) 0%, rgba(248,246,242,0.92) 100%)",
+              borderColor: isNight ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.7)",
+              color: theme.text,
+              boxShadow: isNight
+                ? "0 30px 80px -30px rgba(0,0,0,0.7)"
+                : "0 30px 80px -30px rgba(31,37,32,0.3)",
+            }}
+          >
+            <button
+              onClick={onClose}
+              aria-label="Chiudi"
+              className="absolute top-4 right-4 inline-flex items-center justify-center w-9 h-9 rounded-full border transition-colors hover:opacity-80"
+              style={{ borderColor: theme.border, color: theme.text }}
+            >
+              <X size={16} />
+            </button>
+
+            <div className="text-[10px] tracking-[0.35em] uppercase font-body" style={{ color: theme.textMuted }}>
+              Andamento giornaliero · 24h
+            </div>
+            <h3 className="font-display text-3xl md:text-4xl mt-2" style={{ color: theme.text }}>
+              Ciclo solare
+            </h3>
+
+            {/* 24h timeline bar with phases */}
+            <div className="mt-8">
+              <div
+                className="relative h-12 rounded-full overflow-hidden border"
+                style={{
+                  borderColor: theme.border,
+                  background: isNight ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)",
+                }}
+              >
+                {/* night before sunrise */}
+                <div
+                  className="absolute top-0 bottom-0"
+                  style={{
+                    left: 0,
+                    width: pct(dawnStart),
+                    background: "linear-gradient(90deg, #1a1f2e 0%, #2a2f44 100%)",
+                  }}
+                />
+                {/* dawn */}
+                <div
+                  className="absolute top-0 bottom-0"
+                  style={{
+                    left: pct(dawnStart),
+                    width: pct(dawnEnd - dawnStart),
+                    background: "linear-gradient(90deg, #2a2f44 0%, #E2B670 100%)",
+                  }}
+                />
+                {/* day */}
+                <div
+                  className="absolute top-0 bottom-0"
+                  style={{
+                    left: pct(dawnEnd),
+                    width: pct(sunsetStart - dawnEnd),
+                    background: "linear-gradient(90deg, #E2B670 0%, #F2D08A 50%, #E2B670 100%)",
+                  }}
+                />
+                {/* sunset */}
+                <div
+                  className="absolute top-0 bottom-0"
+                  style={{
+                    left: pct(sunsetStart),
+                    width: pct(sunsetEnd - sunsetStart),
+                    background: "linear-gradient(90deg, #E2B670 0%, #6b3a44 100%)",
+                  }}
+                />
+                {/* night after sunset */}
+                <div
+                  className="absolute top-0 bottom-0"
+                  style={{
+                    left: pct(sunsetEnd),
+                    width: pct(totalMin - sunsetEnd),
+                    background: "linear-gradient(90deg, #6b3a44 0%, #1a1f2e 100%)",
+                  }}
+                />
+
+                {/* now marker */}
+                <div
+                  className="absolute top-0 bottom-0 w-[2px]"
+                  style={{ left: pct(minutesIntoDay), background: "#ffffff", boxShadow: "0 0 8px rgba(255,255,255,0.8)" }}
+                />
+              </div>
+
+              {/* hour ticks */}
+              <div className="relative mt-2 h-4">
+                {[0, 6, 12, 18, 24].map((h) => (
+                  <div
+                    key={h}
+                    className="absolute -translate-x-1/2 text-[10px] font-body"
+                    style={{ left: `${(h / 24) * 100}%`, color: theme.textMuted }}
+                  >
+                    {String(h).padStart(2, "0")}:00
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stats grid */}
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <DialogStat label="Alba" value={fmtTime(env.sunrise)} theme={theme} />
+              <DialogStat label="Tramonto" value={fmtTime(env.sunset)} theme={theme} />
+              <DialogStat
+                label="Mezzogiorno"
+                value={noonDate ? fmtTime(noonDate.toISOString()) : "—"}
+                theme={theme}
+              />
+              <DialogStat
+                label="Durata giorno"
+                value={dayMinutes > 0 ? `${dayHours}h ${dayMins}m` : "—"}
+                theme={theme}
+              />
+            </div>
+
+            {peakUvHour !== null && peakUv !== null && (
+              <div
+                className="mt-6 rounded-2xl border p-4 font-body text-sm leading-relaxed"
+                style={{
+                  borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+                  background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.5)",
+                  color: theme.textMuted,
+                }}
+              >
+                <span style={{ color: theme.text }}>Picco UV</span> previsto intorno alle{" "}
+                <span style={{ color: theme.text }}>
+                  {String(peakUvHour).padStart(2, "0")}:00
+                </span>{" "}
+                con UVI <span style={{ color: theme.text }}>{peakUv.toFixed(1)}</span>. Privilegia
+                fotoprotezione ad ampio spettro nelle ore centrali.
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
