@@ -546,6 +546,8 @@ const sparkSeries = (seed: number, base: number) => {
 
 const GrowSection = () => {
   const [env, setEnv] = useState<Env | null>(null);
+  const [hourly, setHourly] = useState<Hourly | null>(null);
+  const [openMetric, setOpenMetric] = useState<MetricKey | null>(null);
   const [place, setPlace] = useState("");
   const [updatedAt, setUpdatedAt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -554,8 +556,8 @@ const GrowSection = () => {
   const fetchAll = async (lat: number, lon: number, fallback = false) => {
     setLoading(true);
     try {
-      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,wind_speed_10m,is_day&timezone=auto&forecast_days=1`;
-      const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto`;
+      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,wind_speed_10m,is_day&hourly=uv_index,relative_humidity_2m,temperature_2m,wind_speed_10m&timezone=auto&forecast_days=1`;
+      const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&hourly=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto&forecast_days=1`;
       const geo = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=it&count=1`;
 
       const [m, a, g] = await Promise.all([
@@ -589,6 +591,36 @@ const GrowSection = () => {
         sunset: m?.daily?.sunset?.[0] ?? new Date().toISOString(),
       };
       setEnv(next);
+
+      // Hourly series (24h, today)
+      const mh = m?.hourly ?? {};
+      const ah = a?.hourly ?? {};
+      const time: string[] = mh.time ?? ah.time ?? [];
+      const len = time.length;
+      const num = (arr: unknown): number[] =>
+        Array.isArray(arr) ? (arr as unknown[]).map((v) => (typeof v === "number" ? v : 0)) : new Array(len).fill(0);
+      const sumAt = (i: number, ...arrs: number[][]) =>
+        arrs.reduce((s, a) => s + (a[i] ?? 0), 0);
+      const grass = num(ah.grass_pollen);
+      const birch = num(ah.birch_pollen);
+      const olive = num(ah.olive_pollen);
+      const alder = num(ah.alder_pollen);
+      const ragweed = num(ah.ragweed_pollen);
+      const pollenH = time.map((_, i) => sumAt(i, grass, birch, olive, alder, ragweed));
+      const pm25H = num(ah.pm2_5);
+      const pm10H = num(ah.pm10);
+      setHourly({
+        time,
+        uv: num(mh.uv_index),
+        humidity: num(mh.relative_humidity_2m),
+        temp: num(mh.temperature_2m),
+        wind: num(mh.wind_speed_10m),
+        pm25: pm25H,
+        pm10: pm10H,
+        pollen: pollenH,
+        aqi: time.map((_, i) => aqiFromPm(pm25H[i] ?? 0, pm10H[i] ?? 0)),
+      });
+
       setCoords({ lat, lon });
       const first = g?.results?.[0];
       setPlace(
