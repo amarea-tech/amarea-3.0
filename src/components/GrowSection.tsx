@@ -865,6 +865,12 @@ const GrowSection = () => {
             </GlassCard>
 
             {/* Sun cycle card */}
+            <button
+              type="button"
+              onClick={() => setOpenSun(true)}
+              className="text-left w-full rounded-[28px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 transition-transform hover:-translate-y-[2px]"
+              aria-label="Apri andamento ciclo solare"
+            >
             <GlassCard theme={theme}>
               <Eyebrow theme={theme}>Ciclo solare</Eyebrow>
               <div className="mt-5 flex items-center justify-between">
@@ -892,6 +898,7 @@ const GrowSection = () => {
                       : "Ore diurne: protezione e antiossidanti restano la priorità."}
               </p>
             </GlassCard>
+            </button>
           </div>
         </div>
       </section>
@@ -1009,6 +1016,15 @@ const GrowSection = () => {
         hourly={hourly}
         theme={theme}
         onClose={() => setOpenMetric(null)}
+      />
+
+      {/* ===== SUN CYCLE POPUP ===== */}
+      <SunCycleDialog
+        open={openSun}
+        env={env}
+        hourly={hourly}
+        theme={theme}
+        onClose={() => setOpenSun(false)}
       />
 
       {/* ======= SMART RECOMMENDATIONS ======= */}
