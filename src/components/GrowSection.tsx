@@ -1449,6 +1449,316 @@ const Metric = ({
   );
 };
 
+/* ---------------- metric detail dialog ---------------- */
+
+const METRIC_META: Record<
+  MetricKey,
+  { label: string; unit: string; accent: string; fmt: (n: number) => string; hint: (n: number) => string }
+> = {
+  uv: {
+    label: "UV Index",
+    unit: "UVI",
+    accent: "#E2B670",
+    fmt: (n) => n.toFixed(1),
+    hint: (n) => (n < 3 ? "Basso" : n < 6 ? "Moderato" : n < 8 ? "Alto" : "Molto alto"),
+  },
+  pm25: {
+    label: "PM2.5",
+    unit: "µg/m³",
+    accent: "#B8A89A",
+    fmt: (n) => n.toFixed(1),
+    hint: (n) => (n < 10 ? "Nei limiti OMS" : n < 25 ? "Sopra OMS" : "Critico"),
+  },
+  pm10: {
+    label: "PM10",
+    unit: "µg/m³",
+    accent: "#A89C8E",
+    fmt: (n) => n.toFixed(0),
+    hint: (n) => (n < 25 ? "Aria pulita" : n < 50 ? "Discreta" : "Carica"),
+  },
+  pollen: {
+    label: "Pollini",
+    unit: "grains/m³",
+    accent: "#C9A877",
+    fmt: (n) => n.toFixed(1),
+    hint: (n) => pollenSeverity(n),
+  },
+  humidity: {
+    label: "Umidità",
+    unit: "%",
+    accent: "#96C2C8",
+    fmt: (n) => n.toFixed(0),
+    hint: (n) => (n < 40 ? "Aria secca" : n < 70 ? "Equilibrata" : "Umida"),
+  },
+  temp: {
+    label: "Temperatura",
+    unit: "°C",
+    accent: "#D69478",
+    fmt: (n) => n.toFixed(0),
+    hint: (n) => (n < 10 ? "Fresco" : n < 22 ? "Mite" : n < 30 ? "Caldo" : "Torrido"),
+  },
+  wind: {
+    label: "Vento",
+    unit: "km/h",
+    accent: "#A8B89A",
+    fmt: (n) => n.toFixed(0),
+    hint: (n) => (n < 10 ? "Calmo" : n < 25 ? "Brezza" : "Forte"),
+  },
+  aqi: {
+    label: "Qualità dell'aria",
+    unit: "",
+    accent: "#B5A0C2",
+    fmt: (n) => `${Math.round(n)}/5`,
+    hint: (n) => aqiLabel(Math.round(n)),
+  },
+};
+
+const MetricDetailDialog = ({
+  metric,
+  hourly,
+  theme,
+  onClose,
+}: {
+  metric: MetricKey | null;
+  hourly: Hourly | null;
+  theme: (typeof PHASE_THEME)["day"];
+  onClose: () => void;
+}) => {
+  const isNight = theme.label === "Notte";
+  return (
+    <AnimatePresence>
+      {metric && (
+        <motion.div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          {/* backdrop */}
+          <motion.div
+            className="absolute inset-0 backdrop-blur-md"
+            style={{ background: isNight ? "rgba(8,10,18,0.65)" : "rgba(20,22,28,0.45)" }}
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 280, damping: 28 }}
+            className="relative w-full max-w-[640px] rounded-[28px] border backdrop-blur-2xl p-6 md:p-8 max-h-[85vh] overflow-y-auto"
+            style={{
+              background: isNight
+                ? "linear-gradient(160deg, rgba(28,30,40,0.92) 0%, rgba(18,20,28,0.92) 100%)"
+                : "linear-gradient(160deg, rgba(255,255,255,0.96) 0%, rgba(248,246,242,0.92) 100%)",
+              borderColor: isNight ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.7)",
+              color: theme.text,
+              boxShadow: isNight
+                ? "0 30px 80px -30px rgba(0,0,0,0.7)"
+                : "0 30px 80px -30px rgba(31,37,32,0.3)",
+            }}
+          >
+            <button
+              onClick={onClose}
+              aria-label="Chiudi"
+              className="absolute top-4 right-4 inline-flex items-center justify-center w-9 h-9 rounded-full border transition-colors hover:opacity-80"
+              style={{ borderColor: theme.border, color: theme.text }}
+            >
+              <X size={16} />
+            </button>
+
+            {(() => {
+              const meta = METRIC_META[metric];
+              const series = hourly?.[metric] ?? [];
+              const times = hourly?.time ?? [];
+              return (
+                <>
+                  <div className="text-[10px] tracking-[0.35em] uppercase font-body" style={{ color: theme.textMuted }}>
+                    Andamento giornaliero · 24h
+                  </div>
+                  <h3
+                    className="font-display text-3xl md:text-4xl mt-2"
+                    style={{ color: theme.text }}
+                  >
+                    {meta.label}
+                  </h3>
+                  {series.length > 0 ? (
+                    <HourlyChart
+                      values={series}
+                      times={times}
+                      stroke={meta.accent}
+                      unit={meta.unit}
+                      fmt={meta.fmt}
+                      theme={theme}
+                    />
+                  ) : (
+                    <div
+                      className="mt-8 font-body text-sm"
+                      style={{ color: theme.textMuted }}
+                    >
+                      Dati orari non ancora disponibili.
+                    </div>
+                  )}
+
+                  {series.length > 0 && (
+                    <div
+                      className="mt-6 grid grid-cols-3 gap-3 font-body text-xs"
+                      style={{ color: theme.textMuted }}
+                    >
+                      <DialogStat
+                        label="Min"
+                        value={`${meta.fmt(Math.min(...series))} ${meta.unit}`}
+                        theme={theme}
+                      />
+                      <DialogStat
+                        label="Media"
+                        value={`${meta.fmt(series.reduce((s, v) => s + v, 0) / series.length)} ${meta.unit}`}
+                        theme={theme}
+                      />
+                      <DialogStat
+                        label="Max"
+                        value={`${meta.fmt(Math.max(...series))} ${meta.unit}`}
+                        theme={theme}
+                      />
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const DialogStat = ({
+  label,
+  value,
+  theme,
+}: {
+  label: string;
+  value: string;
+  theme: (typeof PHASE_THEME)["day"];
+}) => {
+  const isNight = theme.label === "Notte";
+  return (
+    <div
+      className="rounded-2xl border p-3"
+      style={{
+        borderColor: isNight ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+        background: isNight ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.5)",
+      }}
+    >
+      <div className="text-[9px] tracking-[0.28em] uppercase" style={{ color: theme.textMuted }}>
+        {label}
+      </div>
+      <div className="font-display text-base mt-1" style={{ color: theme.text }}>
+        {value}
+      </div>
+    </div>
+  );
+};
+
+const HourlyChart = ({
+  values,
+  times,
+  stroke,
+  unit,
+  fmt,
+  theme,
+}: {
+  values: number[];
+  times: string[];
+  stroke: string;
+  unit: string;
+  fmt: (n: number) => string;
+  theme: (typeof PHASE_THEME)["day"];
+}) => {
+  const w = 600;
+  const h = 200;
+  const pad = { l: 8, r: 8, t: 16, b: 24 };
+  const max = Math.max(...values, 0.0001);
+  const min = Math.min(...values, 0);
+  const range = max - min || 1;
+  const innerW = w - pad.l - pad.r;
+  const innerH = h - pad.t - pad.b;
+  const step = innerW / Math.max(1, values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = pad.l + i * step;
+    const y = pad.t + innerH - ((v - min) / range) * innerH;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const d = `M${pts.join(" L")}`;
+  const area = `${d} L${pad.l + innerW},${pad.t + innerH} L${pad.l},${pad.t + innerH} Z`;
+  const nowH = new Date().getHours();
+  const nowIdx = times.findIndex((t) => new Date(t).getHours() === nowH);
+  const nowPt = nowIdx >= 0 ? pts[nowIdx]?.split(",") : null;
+  const id = `hc-${stroke.replace(/[^a-z0-9]/gi, "")}`;
+  const ticks = [0, 6, 12, 18, 23].filter((i) => i < times.length);
+  return (
+    <div className="mt-6">
+      <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={stroke} stopOpacity="0.45" />
+            <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={area} fill={`url(#${id})`} />
+        <motion.path
+          d={d}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        />
+        {nowPt && (
+          <>
+            <line
+              x1={nowPt[0]}
+              y1={pad.t}
+              x2={nowPt[0]}
+              y2={pad.t + innerH}
+              stroke={theme.textMuted}
+              strokeWidth="0.8"
+              strokeDasharray="3 3"
+              opacity="0.5"
+            />
+            <circle cx={nowPt[0]} cy={nowPt[1]} r="4" fill={stroke} />
+          </>
+        )}
+        {ticks.map((i) => {
+          const x = pad.l + i * step;
+          const t = times[i] ? new Date(times[i]) : null;
+          return (
+            <text
+              key={i}
+              x={x}
+              y={h - 6}
+              fontSize="10"
+              textAnchor="middle"
+              fill={theme.textMuted}
+              style={{ fontFamily: "inherit" }}
+            >
+              {t ? `${String(t.getHours()).padStart(2, "0")}:00` : ""}
+            </text>
+          );
+        })}
+      </svg>
+      {nowIdx >= 0 && (
+        <div className="font-body text-xs mt-3" style={{ color: theme.textMuted }}>
+          Ora attuale: <span style={{ color: theme.text }}>{fmt(values[nowIdx])} {unit}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
 /* ---------------- mini live sparkline ---------------- */
 
 const Sparkline = ({
