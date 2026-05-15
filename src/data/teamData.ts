@@ -58,6 +58,7 @@ La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazion
 
 All'interno di Amarea fa parte del team di Laboratory Research & Development, contribuendo allo studio sperimentale degli attivi e alla validazione scientifica delle formulazioni. Il suo lavoro è essenziale per garantire che i prodotti siano supportati da dati affidabili e sviluppati secondo un approccio scientifico solido, con particolare attenzione alla sicurezza e all'efficacia.`,
     image: francescoMengarelli,
+    email: "francesco.mengarelli@amareacosmetics.it",
   },
   {
     name: "Dott.ssa Loredana Rao",
@@ -127,6 +128,7 @@ La sua ricerca attuale si focalizza sui meccanismi di fotoprotezione e sullo svi
 
 All'interno di Amarea, ricopre il ruolo di Scientific Advisor, supportando lo sviluppo e la validazione scientifica delle formulazioni. Il suo contributo garantisce un approccio rigoroso allo studio dei meccanismi di fotoprotezione e all'impiego di molecole naturali e sintetiche ad applicazione cosmetica, assicurando l'efficacia e la solidità scientifica dei prodotti.`,
     image: elisabettaDamiani,
+    email: "e.damiani@univpm.it",
   },
   {
     name: "Prof.ssa Tiziana Bacchetti",
@@ -141,5 +143,6 @@ Autrice di oltre 115 articoli su riviste scientifiche internazionali peer-review
 
 In Amarea opera come Scientific Advisor, contribuendo alla definizione del razionale scientifico dei prodotti e all'inquadramento dei processi biologici alla base dell'invecchiamento cutaneo. La sua esperienza assicura che l'innovazione cosmetica di Amarea sia fondata su evidenze scientifiche solide e aggiornate.`,
     image: tizianaBacchetti,
+    email: "t.bacchetti@staff.univpm.it",
   },
 ];
