@@ -58,7 +58,6 @@ La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazion
 
 All'interno di Amarea fa parte del team di Laboratory Research & Development, contribuendo allo studio sperimentale degli attivi e alla validazione scientifica delle formulazioni. Il suo lavoro è essenziale per garantire che i prodotti siano supportati da dati affidabili e sviluppati secondo un approccio scientifico solido, con particolare attenzione alla sicurezza e all'efficacia.`,
     image: francescoMengarelli,
-    email: "Francesco.mengarelli@amareacosmetics.it",
   },
   {
     name: "Dott.ssa Loredana Rao",
@@ -95,9 +94,8 @@ All'interno di Amarea ricopre il ruolo di Digital & Social Media Manager, dove u
     title: "Avvocato specializzato in diritto societario",
     desc: "Supporta Amarea nella gestione degli aspetti legali e di compliance, garantendo trasparenza e conformità.",
     shortBio: "Specializzata in diritto societario e compliance.",
-    fullBio: `Laureata in Giurisprudenza, con una formazione focalizzata sul diritto penale, civile e sulla responsabilità degli enti, con particolare attenzione ai temi della compliance aziendale e della prevenzione del rischio legale. Ha maturato esperienza in studi legali occupandosi di diritto societario, contrattualistica, privacy, gestione del debito e consulenza legale alle imprese.
-
-All'interno di Amarea ricopre il ruolo di Legal Consultant, affiancando il team nella gestione degli aspetti giuridici e regolatori legati allo sviluppo del brand. Il suo contributo è fondamentale per garantire solidità, correttezza e trasparenza nelle scelte aziendali, supportando una crescita strutturata e conforme ai requisiti normativi.`,
+    fullBio: `Il suo percorso nasce da una formazione umanistica e giuridica, maturata nel liceo classico e nella facoltà di Giurisprudenza, che ha orientato fin da subito il suo interesse per il diritto e le sue applicazioni concrete. Dopo la pratica forense, svoltasi con particolare focus iniziale nel diritto penale, ha affiancato all’ambito legale anche attività legate alla gestione di eventi nel settore culturale, mantenendo uno sguardo aperto e curioso verso contesti differenti.
+Attualmente lavora come Avvocato nel campo del diritto societario, della contrattualistica e della compliance. In Amarea ricopre il ruolo di Legal Consultant, supportando il team nella gestione degli aspetti giuridici e regolatori legati allo sviluppo del brand. All’interno della startup contribuisce a garantire correttezza e trasparenza nelle scelte aziendali, con un approccio dinamico e orientato alla crescita, aperto anche a future collaborazioni trasversali.`,
     image: alessandraMarmore,
     email: "alessandramarmore@outlook.it",
   },
@@ -129,7 +127,6 @@ La sua ricerca attuale si focalizza sui meccanismi di fotoprotezione e sullo svi
 
 All'interno di Amarea, ricopre il ruolo di Scientific Advisor, supportando lo sviluppo e la validazione scientifica delle formulazioni. Il suo contributo garantisce un approccio rigoroso allo studio dei meccanismi di fotoprotezione e all'impiego di molecole naturali e sintetiche ad applicazione cosmetica, assicurando l'efficacia e la solidità scientifica dei prodotti.`,
     image: elisabettaDamiani,
-    email: "e.damiani@univpm.it",
   },
   {
     name: "Prof.ssa Tiziana Bacchetti",
@@ -144,6 +141,5 @@ Autrice di oltre 115 articoli su riviste scientifiche internazionali peer-review
 
 In Amarea opera come Scientific Advisor, contribuendo alla definizione del razionale scientifico dei prodotti e all'inquadramento dei processi biologici alla base dell'invecchiamento cutaneo. La sua esperienza assicura che l'innovazione cosmetica di Amarea sia fondata su evidenze scientifiche solide e aggiornate.`,
     image: tizianaBacchetti,
-    email: "t.bacchetti@staff.univpm.it",
   },
 ];
