@@ -88,9 +88,25 @@ const ProductsSection = () => {
             Amarea Cosmetics
           </span>
           <div>
-            <span className="inline-block bg-primary text-primary-foreground text-xs tracking-wide uppercase font-body font-bold px-5 py-2 rounded-full mb-6">
-              Prossimamente ✨
-            </span>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center gap-3 mb-6 px-6 py-2.5 rounded-full border border-violet/40 bg-gradient-to-r from-violet/10 via-violet/20 to-violet/10 backdrop-blur-sm relative overflow-hidden"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-violet"></span>
+              </span>
+              <span className="font-body text-[0.7rem] md:text-xs tracking-[0.35em] uppercase text-primary-foreground font-semibold">
+                Stay Tuned
+              </span>
+              <span className="h-3 w-px bg-primary-foreground/30"></span>
+              <span className="font-display italic text-xs md:text-sm text-violet font-medium tracking-wide">
+                September 2026
+              </span>
+            </motion.div>
           </div>
           <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground tracking-tight">
             Terre di{" "}
