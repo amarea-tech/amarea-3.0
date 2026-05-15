@@ -17,6 +17,7 @@ export interface TeamMember {
   shortBio: string;
   fullBio: string;
   image: string;
+  email?: string;
 }
 
 export const teamMembers: TeamMember[] = [
@@ -29,6 +30,7 @@ export const teamMembers: TeamMember[] = [
     shortBio: "Specializzata in biologia della pelle e rigenerazione tissutale.",
     fullBio: `Il percorso di Anna nasce dall'incontro tra una rigorosa formazione in Biologia Molecolare e Applicata e una profonda passione per la cosmesi. Questa sinergia l'ha spinta a orientare la sua carriera accademica verso lo studio della pelle, utilizzando le sue competenze biologiche per comprendere a fondo i reali bisogni dei tessuti a livello cellulare. Attualmente Dottoranda in Scienze Biomolecolari all'Università Politecnica delle Marche, si è occupata dello studio della rigenerazione tissutale e dei meccanismi della barriera cutanea, forte di esperienze maturate tra accademia e industria, anche in contesti internazionali. Amarea nasce proprio dalla volontà di superare i confini della ricerca puramente teorica, per dare un'applicazione concreta a questi studi. In qualità di Founder, CEO e responsabile della formulazione, Anna fa da ponte tra il laboratorio e le persone per trasformare i dati e l'innovazione scientifica in prodotti tangibili, assicurando efficacia e sostenibilità.`,
     image: annaManzella,
+    email: "anna.manzella@amareacosmetics.com",
   },
   {
     name: "Dott.ssa Alessia Luccarini",
@@ -41,6 +43,7 @@ export const teamMembers: TeamMember[] = [
 PhD in Scienze Biomolecolari presso l'Università Politecnica delle Marche, dedica la sua ricerca alla caratterizzazione di nuovi composti naturali come filtri UV eco-friendly. Attraverso l'utilizzo di colture cellulari cutanee, analisi molecolari, saggi di fotobiologia e microscopia, indaga il potenziale protettivo di questi attivi, forte di un'importante esperienza internazionale presso il Dipartimento di Dermatologia della Medical University of Vienna e della co-autorialità di numerose pubblicazioni scientifiche su riviste peer-reviewed.
 La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazione concreta a questi complessi studi, portando l'innovazione direttamente sulla pelle delle persone.`,
     image: alessiaLuccarini,
+    email: "alessia.luccarini@amareacosmetics.com",
   },
   {
     name: "Dott. Francesco Mengarelli",
@@ -67,6 +70,7 @@ All'interno di Amarea fa parte del team di Laboratory Research & Development, co
 
 In Amarea ricopre il ruolo di Packaging & Production Development, dove mette le sue competenze scientifiche al servizio dello sviluppo di soluzioni produttive e di confezionamento affidabili, sicure e coerenti con i valori di sostenibilità del brand. Il suo contributo è fondamentale per garantire che ogni prodotto non sia solo efficace dal punto di vista formulativo, ma anche progettato con attenzione alla qualità, alla stabilità e all'impatto ambientale.`,
     image: loredanaRao,
+    email: "loredana.rao@amareacosmetics.com",
   },
   {
     name: "Dott.ssa Alida Likey",
@@ -107,6 +111,7 @@ Titolare di plurimi assegni di ricerca, ha sviluppato significative competenze n
 
 All'interno di Amarea ricopre il ruolo di Events & Promotions, occupandosi della pianificazione e gestione di eventi, fiere, attività sul territorio e iniziative di promozione del brand. Il suo lavoro è orientato a creare occasioni di incontro tra Amarea e le persone, favorendo un'esperienza diretta del prodotto e dei valori del marchio.`,
     image: camillaMorresi,
+    email: "c.morresi@unilink.it",
   },
   {
     name: "Prof.ssa Elisabetta Damiani",
