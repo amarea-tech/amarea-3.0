@@ -73,7 +73,7 @@ In Amarea ricopre il ruolo di Packaging & Production Development, dove mette le 
     slug: "alida-likey",
     role: "Digital & Social Media",
     title: "Dottoranda in Scienze Biomediche",
-    desc: "Cura la comunicazione digitale di Amarea, trasformando la ricerca scientifica e i valori del brand in contenuti chiari, coerenti e informativi.",
+    desc: "Con un background in biologia della pelle e cosmetologia anti-aging, in veste di divulgatrice, traduce la ricerca in contenuti chairi e trasparenti, guidando la community verso scelte di cura della pelle consapevoli e basate sui dati scientificamente testati.",
     shortBio: "Specializzata in biologia della pelle e cosmetologia anti-aging.",
     fullBio: `Possiede una formazione scientifica avanzata in Biologia Molecolare ed è attualmente dottoranda presso l'Università Politecnica delle Marche. Il suo percorso di ricerca si è concentrato su stress ossidativo, tossicologia cellulare, rigenerazione dei tessuti e biologia della pelle, con esperienza maturata sia in ambito accademico che industriale, anche a livello internazionale.
 
