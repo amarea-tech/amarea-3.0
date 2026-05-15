@@ -25,11 +25,9 @@ export const teamMembers: TeamMember[] = [
     slug: "anna-manzella",
     role: "Founder & CEO",
     title: "Dottoranda in Scienze della Vita e dell'Ambiente",
-    desc: "Fondatrice e formulatrice di Amarea Cosmetics, si occupa dello sviluppo dei prodotti del brand, integrando ricerca scientifica e formulazione cosmetica.",
+    desc: "Fondatrice e formulatrice di Amarea Cosmetics, traduce la ricerca in prodotti tangibili. La sua supervisione garantisce che ogni cosmetico sviluppato sia supportato da solidi principi di sostenibilità ed efficacia.",
     shortBio: "Specializzata in biologia della pelle e rigenerazione tissutale.",
-    fullBio: `Dottoranda in Scienze della Vita e dell'Ambiente presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata. Il suo percorso di ricerca si concentra sulla biologia della pelle e sui processi di rigenerazione tissutale, con attività svolte in ambito accademico e industriale, anche in contesti internazionali, approfondendo i meccanismi cellulari coinvolti nel rinnovamento cutaneo e nella funzione di barriera della pelle.
-
-All'interno di Amarea è Founder & CEO e responsabile della formulazione cosmetica. Coordina il lavoro del team e segue lo sviluppo scientifico dei prodotti, con particolare attenzione a sicurezza, sostenibilità ed efficacia.`,
+    fullBio: `Il percorso di Anna nasce dall'incontro tra una rigorosa formazione in Biologia Molecolare e Applicata e una profonda passione per la cosmesi. Questa sinergia l'ha spinta a orientare la sua carriera accademica verso lo studio della pelle, utilizzando le sue competenze biologiche per comprendere a fondo i reali bisogni dei tessuti a livello cellulare. Attualmente Dottoranda in Scienze Biomolecolari all'Università Politecnica delle Marche, si è occupata dello studio della rigenerazione tissutale e dei meccanismi della barriera cutanea, forte di esperienze maturate tra accademia e industria, anche in contesti internazionali. Amarea nasce proprio dalla volontà di superare i confini della ricerca puramente teorica, per dare un'applicazione concreta a questi studi. In qualità di Founder, CEO e responsabile della formulazione, Anna fa da ponte tra il laboratorio e le persone per trasformare i dati e l'innovazione scientifica in prodotti tangibili, assicurando efficacia e sostenibilità.
     image: annaManzella,
   },
   {
