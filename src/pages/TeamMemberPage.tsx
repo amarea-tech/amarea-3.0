@@ -87,6 +87,14 @@ const TeamMemberPage = () => {
               <p className="font-body text-foreground/80 text-base md:text-lg leading-relaxed mt-6 mb-2">
                 {member.desc}
               </p>
+              {member.email && (
+                <a
+                  href={`mailto:${member.email}`}
+                  className="inline-block mt-4 font-body text-primary hover:underline text-sm md:text-base font-semibold"
+                >
+                  {member.email}
+                </a>
+              )}
             </motion.div>
           </div>
 
