@@ -85,6 +85,7 @@ Accanto alla ricerca, ha sviluppato competenze nel mondo della cosmesi applicata
 
 All'interno di Amarea ricopre il ruolo di Digital & Social Media Manager, dove unisce competenze scientifiche e comunicative per tradurre la ricerca cosmetica in contenuti chiari, affidabili e comprensibili. Il suo lavoro è volto a rendere accessibili i meccanismi biologici alla base delle formulazioni, promuovendo una comunicazione trasparente, consapevole e coerente con i valori di efficacia e sostenibilità del brand.`,
     image: alidaLikey,
+    email: "alida.likey@amareacosmetics.it",
   },
   {
     name: "Avv. Alessandra Marmorè",
@@ -97,6 +98,7 @@ All'interno di Amarea ricopre il ruolo di Digital & Social Media Manager, dove u
 
 All'interno di Amarea ricopre il ruolo di Legal Consultant, affiancando il team nella gestione degli aspetti giuridici e regolatori legati allo sviluppo del brand. Il suo contributo è fondamentale per garantire solidità, correttezza e trasparenza nelle scelte aziendali, supportando una crescita strutturata e conforme ai requisiti normativi.`,
     image: alessandraMarmore,
+    email: "alessandramarmore@outlook.it",
   },
   {
     name: "Prof.ssa Camilla Morresi",
