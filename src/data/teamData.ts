@@ -34,8 +34,8 @@ export const teamMembers: TeamMember[] = [
     name: "Dott.ssa Alessia Luccarini",
     slug: "alessia-luccarini",
     role: "Laboratory Research & Development",
-    title: "PhD in Biomolecular Sciences",
-    desc: "Specializzata nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini con applicazioni cosmetiche.",
+    title: "PhD in Scienze Biomolecolari",
+    desc: "Responsabile del coordinamento progetti nel team R&D, contribuisce allo sviluppo di prodotti sostenibili, validando attivi naturali. Il suo lavoro si focalizza sullo studio di agenti fotoprotettivi naturali ed è fondamentale per assicurare che le formule cosmetiche rispondano alle reali esigenze di protezione della pelle, supportate da evidenze scientifiche inconfutabili.",
     shortBio: "Studio di agenti fotoprotettivi naturali.",
     fullBio: `PhD in Biomolecular Sciences presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata e una specializzazione nello studio di agenti fotoprotettivi naturali derivati da piante e organismi marini, con applicazioni in ambito cosmetico. Il suo percorso di ricerca si concentra sulla caratterizzazione del potenziale fotoprotettivo di nuovi composti naturali come filtri UV eco-friendly, attraverso l'utilizzo di colture cellulari cutanee, analisi molecolari, saggi di fotobiologia e tecniche di microscopia.
 
