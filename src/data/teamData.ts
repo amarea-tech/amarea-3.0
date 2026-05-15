@@ -60,7 +60,7 @@ All'interno di Amarea fa parte del team di Laboratory Research & Development, co
     name: "Dott.ssa Loredana Rao",
     slug: "loredana-rao",
     role: "Packaging & Production Development",
-    title: "PhD in Biomolecular Sciences",
+    title: "PhD in Scienze Biomolecolari",
     desc: "Specializzata in analisi di dinamica, funzionalità e metabolismo mitocondriale su modelli cellulari tumorali.",
     shortBio: "Specializzata in analisi di dinamica e funzionalità mitocondriale.",
     fullBio: `PhD in Biomolecular Sciences presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata e un solido background di ricerca nel campo della biologia cellulare, della morfologia funzionale e dei processi mitocondriali. La sua attività scientifica si è sviluppata in ambito accademico attraverso l'utilizzo di modelli cellulari, tecniche avanzate di microscopia, analisi strutturali e metodologie sperimentali applicate allo studio dello stress ossidativo e della funzionalità cellulare.
@@ -72,7 +72,7 @@ In Amarea ricopre il ruolo di Packaging & Production Development, dove mette le 
     name: "Dott.ssa Alida Likey",
     slug: "alida-likey",
     role: "Digital & Social Media",
-    title: "Dottoranda in Biomolecular Sciences",
+    title: "Dottoranda in Scienze Biomediche",
     desc: "Cura la comunicazione digitale di Amarea, trasformando la ricerca scientifica e i valori del brand in contenuti chiari, coerenti e informativi.",
     shortBio: "Specializzata in biologia della pelle e cosmetologia anti-aging.",
     fullBio: `Possiede una formazione scientifica avanzata in Biologia Molecolare ed è attualmente dottoranda presso l'Università Politecnica delle Marche. Il suo percorso di ricerca si è concentrato su stress ossidativo, tossicologia cellulare, rigenerazione dei tessuti e biologia della pelle, con esperienza maturata sia in ambito accademico che industriale, anche a livello internazionale.
