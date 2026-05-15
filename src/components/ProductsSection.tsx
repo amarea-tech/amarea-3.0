@@ -87,9 +87,9 @@ const ProductsSection = () => {
           <span className="inline-block text-primary-foreground/40 font-body text-xs tracking-[0.3em] uppercase mb-6">
             Amarea Cosmetics
           </span>
-          <p className="font-body text-xs md:text-sm tracking-[0.3em] uppercase text-violet mb-3">
-            Prossimamente
-          </p>
+          <span className="inline-block bg-primary text-primary-foreground text-xs tracking-wide uppercase font-body font-bold px-5 py-2 rounded-full mb-6">
+            Prossimamente ✨
+          </span>
           <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground tracking-tight">
             Terre di{" "}
             <span className="italic text-violet">Amarea</span>
