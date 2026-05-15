@@ -110,8 +110,12 @@ Deno.serve(async (req) => {
   } catch (err) {
     const message = err instanceof Error ? err.message : "Errore sconosciuto";
     console.error("newsletter-subscribe error:", message);
+    const clientMessage =
+      message === "Email non valida" || message === "Devi accettare il trattamento dei dati"
+        ? message
+        : "Si è verificato un errore, riprova più tardi.";
     return new Response(
-      JSON.stringify({ error: message }),
+      JSON.stringify({ error: clientMessage }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
