@@ -58,6 +58,7 @@ La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazion
 
 All'interno di Amarea fa parte del team di Laboratory Research & Development, contribuendo allo studio sperimentale degli attivi e alla validazione scientifica delle formulazioni. Il suo lavoro è essenziale per garantire che i prodotti siano supportati da dati affidabili e sviluppati secondo un approccio scientifico solido, con particolare attenzione alla sicurezza e all'efficacia.`,
     image: francescoMengarelli,
+    email: "Francesco.mengarelli@amareacosmetics.it",
   },
   {
     name: "Dott.ssa Loredana Rao",
