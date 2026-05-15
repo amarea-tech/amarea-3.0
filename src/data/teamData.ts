@@ -39,7 +39,7 @@ export const teamMembers: TeamMember[] = [
     shortBio: "Studio di agenti fotoprotettivi naturali.",
     fullBio: `Il percorso di Alessia si fonda su una rigorosa formazione in Biologia Molecolare e Applicata, unita alla forte spinta di esplorare le potenzialità della natura applicate alla cosmesi. Questa sinergia l'ha portata a orientare la sua carriera scientifica verso lo studio di agenti fotoprotettivi naturali derivati da piante e organismi marini, ponendo le basi per soluzioni cosmetiche sempre più all'avanguardia.
 PhD in Scienze Biomolecolari presso l'Università Politecnica delle Marche, dedica la sua ricerca alla caratterizzazione di nuovi composti naturali come filtri UV eco-friendly. Attraverso l'utilizzo di colture cellulari cutanee, analisi molecolari, saggi di fotobiologia e microscopia, indaga il potenziale protettivo di questi attivi, forte di un'importante esperienza internazionale presso il Dipartimento di Dermatologia della Medical University of Vienna e della co-autorialità di numerose pubblicazioni scientifiche su riviste peer-reviewed.
-La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazione concreta a questi complessi studi, portando l'innovazione direttamente sulla pelle delle persone.
+La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazione concreta a questi complessi studi, portando l'innovazione direttamente sulla pelle delle persone.`,
     image: alessiaLuccarini,
   },
   {
