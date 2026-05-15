@@ -46,7 +46,7 @@ La collaborazione con Amarea nasce proprio dalla volontà di dare un'applicazion
     name: "Dott. Francesco Mengarelli",
     slug: "francesco-mengarelli",
     role: "Laboratory Research & Development",
-    title: "Dottorando in Scienze della Vita e dell'Ambiente",
+    title: "Dottorando in Scienze Biomolecolare",
     desc: "Esperienza nello studio del ruolo dello stress ossidativo in condizioni fisiopatologiche.",
     shortBio: "Biologo molecolare esperto in tecniche analitiche avanzate.",
     fullBio: `Dottorando in Scienze della Vita e dell'Ambiente presso l'Università Politecnica delle Marche, con una formazione in Biologia Molecolare e Applicata. Il suo percorso di ricerca è focalizzato sullo studio del ruolo dello stress ossidativo in condizioni fisiopatologiche. Ha maturato esperienza nel lavoro con colture cellulari primarie, utilizzando tecniche avanzate di citofluorimetria, spettrofotometria e spettrofluorimetria, oltre a saggi di biologia molecolare e analisi HPLC.
