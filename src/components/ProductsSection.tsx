@@ -93,17 +93,17 @@ const ProductsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="inline-flex items-center gap-3 mb-6 px-6 py-2.5 rounded-full border border-[#2A312A] bg-gradient-to-r from-[#1F2520] via-[#2A312A] to-[#1F2520] backdrop-blur-sm relative overflow-hidden"
+              className="inline-flex items-center gap-3 mb-6 px-6 py-2.5 rounded-full border border-primary/50 bg-gradient-to-r from-primary/80 via-primary to-primary/80 backdrop-blur-sm relative overflow-hidden"
             >
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F4EFE6] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F4EFE6]"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-foreground opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-foreground"></span>
               </span>
-              <span className="font-body text-[0.7rem] md:text-xs tracking-[0.35em] uppercase text-[#F4EFE6] font-semibold">
+              <span className="font-body text-[0.7rem] md:text-xs tracking-[0.35em] uppercase text-primary-foreground font-semibold">
                 Stay Tuned
               </span>
-              <span className="h-3 w-px bg-[#F4EFE6]/30"></span>
-              <span className="font-display italic text-xs md:text-sm text-[#F4EFE6] font-medium tracking-wide">
+              <span className="h-3 w-px bg-primary-foreground/30"></span>
+              <span className="font-display italic text-xs md:text-sm text-primary-foreground font-medium tracking-wide">
                 September 2026
               </span>
             </motion.div>
