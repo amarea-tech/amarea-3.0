@@ -54,6 +54,15 @@ const TeamSection = () => {
                   <div>
                     <h3 className="font-display text-lg font-bold text-foreground">{member.name}</h3>
                     <p className="font-body text-xs text-violet font-semibold tracking-wide">{member.role}</p>
+                    {member.email && (
+                      <a
+                        href={`mailto:${member.email}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="font-body text-xs text-muted-foreground hover:text-primary transition-colors break-all"
+                      >
+                        {member.email}
+                      </a>
+                    )}
                   </div>
                 </div>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed flex-1">{member.shortBio}</p>
