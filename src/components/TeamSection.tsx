@@ -58,7 +58,7 @@ const TeamSection = () => {
                       <a
                         href={`mailto:${member.email}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="font-body text-xs text-muted-foreground hover:text-primary transition-colors break-all"
+                        className="font-body text-xs text-primary hover:underline font-semibold break-all"
                       >
                         {member.email}
                       </a>
