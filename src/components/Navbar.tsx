@@ -35,9 +35,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50"
+      style={{
+        transform: "translateZ(0)",
+        WebkitTransform: "translate3d(0,0,0)",
+        willChange: "transform",
+        WebkitBackfaceVisibility: "hidden",
+      }}
+    >
       <div className="mx-4 mt-4">
-        <div className="bg-[#171717] backdrop-blur-xl rounded-full px-6 py-3 flex items-center justify-between">
+        <div className="bg-[#171717] rounded-full px-6 py-3 flex items-center justify-between shadow-lg">
           <Link to="/" className="flex items-center">
             <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
           </Link>
