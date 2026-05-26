@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import petalSaffron from "@/assets/petal-saffron.png";
 import petalLavender from "@/assets/petal-lavender.png";
@@ -26,14 +26,25 @@ const petals: Petal[] = [
 
 const FloatingPetals = () => {
   const [spins, setSpins] = useState<Record<number, number>>({});
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const handleClick = (id: number) => {
     setSpins((prev) => ({ ...prev, [id]: (prev[id] || 0) + 720 }));
   };
 
+  const visiblePetals = isMobile ? petals.slice(0, 4) : petals;
+
   return (
     <div className="absolute inset-0 pointer-events-none z-[5] overflow-hidden">
-      {petals.map((petal) => (
+      {visiblePetals.map((petal) => (
         <motion.div
           key={petal.id}
           className="absolute pointer-events-auto cursor-pointer"
@@ -60,6 +71,8 @@ const FloatingPetals = () => {
             animate={{ rotate: (spins[petal.id] || 0) + petal.rotation }}
             transition={{ type: "spring", stiffness: 60, damping: 12 }}
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
         </motion.div>
       ))}
