@@ -83,7 +83,7 @@ const NewsletterBlock = () => {
               <Sparkles size={13} /> Lista prioritaria di lancio
             </span>
             <h3 className="font-display md:text-5xl lg:text-6xl mt-5 leading-[1.05] text-fuchsia-500 text-6xl text-left">
-              Sibilla arriva a<br />settembre 2026
+              Sibilla<br />Disponibile da settembre 2026
             </h3>
             <p className="font-body text-base text-[#5A6157] mt-6 leading-relaxed max-w-xl">
               La prima crema viso anti-age Amarea, formulata con attivi botanici ottenuti da zafferano e
