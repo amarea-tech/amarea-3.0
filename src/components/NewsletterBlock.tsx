@@ -40,8 +40,8 @@ const NewsletterBlock = () => {
 
   const benefits = [
     { icon: Clock, text: "Accesso anticipato alla prevendita" },
-    { icon: Gem, text: "Produzione iniziale limitata" },
-    { icon: Lock, text: "Vantaggi esclusivi riservati agli iscritti" },
+    { icon: Gem, text: "10% di sconto sul primo ordine" },
+    { icon: Lock, text: "Un omaggio esclusivo Amarea riservato ai primi 100 clienti" },
   ];
 
   return (
@@ -91,7 +91,7 @@ const NewsletterBlock = () => {
               Le prime quantità saranno limitate.
             </p>
 
-            <ul className="mt-8 flex flex-col gap-3">
+            <ul className="mt-8 flex flex-col gap-3 font-bold">
               {benefits.map(({ icon: Icon, text }) => (
                 <li key={text} className="flex items-center gap-3">
                   <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#1F2520] text-[#F4EFE6] flex items-center justify-center">
@@ -127,8 +127,8 @@ const NewsletterBlock = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <h4 className="font-display md:text-3xl text-[#1F2520] leading-tight text-2xl">
-                  Unisciti alla lista prioritaria per ricevere il 10% di sconto con il primo ordine e un omaggio speciale limited edition ✨
+                <h4 className="font-display md:text-3xl text-[#1F2520] leading-tight text-2xl text-center">
+                  ✨ Lista prioritaria di lancio ✨
                 </h4>
 
                 <form onSubmit={submit} className="mt-5 flex flex-col gap-3 max-w-md">
