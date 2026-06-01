@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Check, Loader2, Sparkles, Clock, Gem, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import sibillaProduct from "@/assets/sibilla-product.jpg.asset.json";
 
 const NewsletterBlock = () => {
   const [email, setEmail] = useState("");
@@ -37,46 +38,72 @@ const NewsletterBlock = () => {
   };
 
   const benefits = [
-    { icon: Clock, text: "Accesso anticipato prima del lancio ufficiale" },
-    { icon: Gem, text: "Quantità limitate del primo lotto" },
-    { icon: Lock, text: "Offerta riservata agli iscritti" },
+    { icon: Clock, text: "Accesso anticipato alla prevendita" },
+    { icon: Gem, text: "Produzione iniziale limitata" },
+    { icon: Lock, text: "Vantaggi esclusivi riservati agli iscritti" },
   ];
 
   return (
     <section id="contatti" className="border-t border-[#E0DACE] bg-[#F4EFE6]">
-      <div className="max-w-2xl mx-auto px-6 md:px-10 py-20 md:py-28 text-center">
-        <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-          <Sparkles size={13} /> Lista prioritaria di lancio
-        </span>
-        <h3 className="font-display text-3xl md:text-5xl text-[#1F2520] mt-4 leading-tight">
-          Sibilla arriva a settembre 2026
-        </h3>
-        <p className="font-body text-sm md:text-base text-[#5A6157] mt-4 max-w-md mx-auto leading-relaxed">
-          Scopri il prodotto in anteprima e accedi alla lista prioritaria di lancio.
-        </p>
-
-        <ul className="mt-10 flex flex-col gap-3 max-w-sm mx-auto text-left">
-          {benefits.map(({ icon: Icon, text }) => (
-            <li
-              key={text}
-              className="flex items-center gap-3 bg-white/60 border border-[#E0DACE] rounded-full px-5 py-3"
-            >
-              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#1F2520] text-[#F4EFE6] flex items-center justify-center">
-                <Icon size={13} strokeWidth={1.8} />
+      <div className="max-w-7xl mx-auto px-6 md:px-10 py-20 md:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Product image */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative order-1"
+          >
+            <div className="relative overflow-hidden rounded-[2px] aspect-square shadow-[0_30px_80px_-20px_rgba(31,37,32,0.25)]">
+              <img
+                src={sibillaProduct.url}
+                alt="Sibilla — Crema viso anti-age Amarea Cosmetics con zafferano e vinacce upcycled"
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div className="absolute -bottom-5 -right-5 hidden md:flex items-center gap-2 bg-[#F4EFE6] border border-[#E0DACE] px-5 py-3 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A8B89A]" />
+              <span className="font-body text-[11px] tracking-[0.2em] uppercase text-[#1F2520]">
+                Edizione limitata
               </span>
-              <span className="font-body text-sm text-[#1F2520]">{text}</span>
-            </li>
-          ))}
-        </ul>
+            </div>
+          </motion.div>
 
-        <div className="mt-14 pt-10 border-t border-[#E0DACE]">
+          {/* Content */}
+          <div className="order-2">
+            <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
+              <Sparkles size={13} /> Lista prioritaria di lancio
+            </span>
+            <h3 className="font-display text-4xl md:text-5xl lg:text-6xl text-[#1F2520] mt-5 leading-[1.05]">
+              Sibilla arriva a<br />settembre 2026
+            </h3>
+            <p className="font-body text-base text-[#5A6157] mt-6 leading-relaxed max-w-xl">
+              La prima crema viso anti-age Amarea, formulata con attivi botanici ottenuti da zafferano e
+              vinacce recuperate tramite upcycling. Le prime quantità saranno limitate.
+            </p>
+
+            <ul className="mt-8 flex flex-col gap-3">
+              {benefits.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-3">
+                  <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#1F2520] text-[#F4EFE6] flex items-center justify-center">
+                    <Icon size={13} strokeWidth={1.8} />
+                  </span>
+                  <span className="font-body text-sm text-[#1F2520]">{text}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 pt-8 border-t border-[#E0DACE]">
           <AnimatePresence mode="wait">
             {subscribed ? (
               <motion.div
                 key="ok"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-md mx-auto"
+                className="max-w-md"
               >
                 <span className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1F2520] text-[#F4EFE6] mb-5">
                   <Check size={18} strokeWidth={2} />
@@ -95,10 +122,10 @@ const NewsletterBlock = () => {
                 animate={{ opacity: 1 }}
               >
                 <h4 className="font-display text-2xl md:text-3xl text-[#1F2520] leading-tight">
-                  Iscriviti alla prevendita
+                  Unisciti alla lista prioritaria
                 </h4>
 
-                <form onSubmit={submit} className="mt-6 flex flex-col gap-3 max-w-md mx-auto">
+                <form onSubmit={submit} className="mt-5 flex flex-col gap-3 max-w-md">
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="email"
@@ -118,6 +145,10 @@ const NewsletterBlock = () => {
                       Voglio essere tra i primi
                     </button>
                   </div>
+
+                  <p className="font-body text-xs text-[#6B7864] leading-relaxed">
+                    Riceverai l'accesso anticipato prima dell'apertura ufficiale delle vendite.
+                  </p>
 
                   <label className="flex items-start gap-2.5 cursor-pointer group select-none text-left">
                     <span
@@ -156,6 +187,8 @@ const NewsletterBlock = () => {
               </motion.div>
             )}
           </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </section>
