@@ -127,8 +127,8 @@ const NewsletterBlock = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <h4 className="font-display text-2xl md:text-3xl text-[#1F2520] leading-tight">
-                  Unisciti alla lista prioritaria
+                <h4 className="font-display md:text-3xl text-[#1F2520] leading-tight text-2xl">
+                  Unisciti alla lista prioritaria per ricevere il 10% di sconto con il primo ordine e un omaggio speciale limited edition ✨
                 </h4>
 
                 <form onSubmit={submit} className="mt-5 flex flex-col gap-3 max-w-md">
