@@ -118,7 +118,7 @@ const NewsletterBlock = () => {
                   Grazie per esserti iscritta alla lista prioritaria di Sibilla.
                 </p>
                 <p className="font-body text-sm text-[#5A6157] mt-3 leading-relaxed">
-                  Ti contatteremo per prima quando la prevendita sarà disponibile.
+                  Ti contatteremo quando la prevendita sarà disponibile.
                 </p>
               </motion.div>
             ) : (
