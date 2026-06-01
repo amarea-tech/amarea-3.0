@@ -82,12 +82,13 @@ const NewsletterBlock = () => {
             <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
               <Sparkles size={13} /> Lista prioritaria di lancio
             </span>
-            <h3 className="font-display md:text-5xl lg:text-6xl mt-5 leading-[1.05] text-fuchsia-500 text-6xl text-left">
+            <h3 className="font-display md:text-5xl lg:text-6xl mt-5 leading-[1.05] text-fuchsia-500 text-left text-5xl">
               Sibilla<br />Disponibile da settembre 2026
             </h3>
             <p className="font-body text-base text-[#5A6157] mt-6 leading-relaxed max-w-xl">
               La prima crema viso anti-age Amarea, formulata con attivi botanici ottenuti da zafferano e
-              vinacce recuperate tramite upcycling. Le prime quantità saranno limitate.
+              vinacce marchigiane recuperate tramite upcycling. <br />
+              Le prime quantità saranno limitate.
             </p>
 
             <ul className="mt-8 flex flex-col gap-3">
@@ -126,8 +127,8 @@ const NewsletterBlock = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <h4 className="font-display text-2xl md:text-3xl text-[#1F2520] leading-tight">
-                  Unisciti alla lista prioritaria
+                <h4 className="font-display md:text-3xl text-[#1F2520] leading-tight text-2xl">
+                  Unisciti alla lista prioritaria per ricevere il 10% di sconto con il primo ordine e un omaggio speciale limited edition ✨
                 </h4>
 
                 <form onSubmit={submit} className="mt-5 flex flex-col gap-3 max-w-md">
