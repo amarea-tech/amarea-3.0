@@ -82,7 +82,7 @@ const NewsletterBlock = () => {
             <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
               <Sparkles size={13} /> Lista prioritaria di lancio
             </span>
-            <h3 className="font-display text-4xl md:text-5xl lg:text-6xl text-[#1F2520] mt-5 leading-[1.05]">
+            <h3 className="font-display md:text-5xl lg:text-6xl mt-5 leading-[1.05] text-fuchsia-500 text-6xl text-left">
               Sibilla arriva a<br />settembre 2026
             </h3>
             <p className="font-body text-base text-[#5A6157] mt-6 leading-relaxed max-w-xl">
