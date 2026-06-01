@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Check, Loader2, Sparkles, Clock, Gem, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import sibillaProduct from "@/assets/sibilla-product.jpg.asset.json";
+import sibillaVideo from "@/assets/sibilla-video.mp4.asset.json";
 
 const NewsletterBlock = () => {
   const [email, setEmail] = useState("");
@@ -55,13 +56,17 @@ const NewsletterBlock = () => {
             transition={{ duration: 0.8 }}
             className="relative order-1"
           >
-            <div className="relative overflow-hidden rounded-[2px] aspect-square shadow-[0_30px_80px_-20px_rgba(31,37,32,0.25)]">
-              <img
-                src={sibillaProduct.url}
-                alt="Sibilla — Crema viso anti-age Amarea Cosmetics con zafferano e vinacce upcycled"
+            <div className="relative overflow-hidden rounded-[2px] aspect-square shadow-[0_30px_80px_-20px_rgba(31,37,32,0.25)] bg-[#E8DFD0]">
+              <video
+                src={sibillaVideo.url}
+                poster={sibillaProduct.url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Sibilla — Crema viso anti-age Amarea Cosmetics con zafferano e vinacce upcycled"
                 className="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
               />
             </div>
             <div className="absolute -bottom-5 -right-5 hidden md:flex items-center gap-2 bg-[#F4EFE6] border border-[#E0DACE] px-5 py-3 rounded-full">
