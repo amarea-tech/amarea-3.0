@@ -18,7 +18,7 @@ const FooterSection = () => {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
             <div className="flex flex-col gap-4">
-              <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
+              <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto object-contain" />
               <p className="font-body text-sm text-primary-foreground/80 leading-relaxed">
                 Spin-off accademico dell'Università Politecnica delle Marche
               </p>
