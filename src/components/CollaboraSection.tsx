@@ -1,6 +1,8 @@
 import { Leaf, Microscope, Handshake, Mail } from "lucide-react";
 import { motion } from "framer-motion";
-import petalLavender from "@/assets/petal-lavender.png";
+import petalSaffronLilac from "@/assets/petal-saffron-lilac.png";
+import flowerSaffronLilac from "@/assets/flower-saffron-lilac.png";
+import leafSage from "@/assets/leaf-sage.png";
 
 const cards = [
   {
@@ -20,23 +22,28 @@ const cards = [
   },
 ];
 
-const edgePetals = [
-  { side: "left", top: "12%", size: 54, rotation: -20, delay: 0, duration: 11 },
-  { side: "left", top: "48%", size: 44, rotation: 25, delay: 1.2, duration: 13 },
-  { side: "left", top: "82%", size: 50, rotation: -10, delay: 0.6, duration: 12 },
-  { side: "right", top: "18%", size: 48, rotation: 30, delay: 0.4, duration: 12 },
-  { side: "right", top: "55%", size: 56, rotation: -25, delay: 1.5, duration: 14 },
-  { side: "right", top: "88%", size: 42, rotation: 15, delay: 0.9, duration: 11 },
+const botanicals = [
+  // Lilac flower petals (saffron-inspired)
+  { src: petalSaffronLilac, side: "left", top: "10%", size: 70, rotation: -18, delay: 0, duration: 22, opacity: 0.35 },
+  { src: petalSaffronLilac, side: "left", top: "70%", size: 58, rotation: 22, delay: 1.4, duration: 26, opacity: 0.3 },
+  { src: petalSaffronLilac, side: "right", top: "40%", size: 64, rotation: -28, delay: 0.8, duration: 24, opacity: 0.32 },
+  // Complete stylized flowers
+  { src: flowerSaffronLilac, side: "left", top: "42%", size: 88, rotation: 12, delay: 0.5, duration: 28, opacity: 0.28 },
+  { src: flowerSaffronLilac, side: "right", top: "82%", size: 76, rotation: -8, delay: 1.8, duration: 30, opacity: 0.3 },
+  // Sage green leaf accents
+  { src: leafSage, side: "left", top: "22%", size: 64, rotation: -12, delay: 1.1, duration: 26, opacity: 0.45 },
+  { src: leafSage, side: "right", top: "12%", size: 58, rotation: 18, delay: 0.3, duration: 24, opacity: 0.4 },
+  { src: leafSage, side: "right", top: "62%", size: 52, rotation: -22, delay: 2.0, duration: 28, opacity: 0.4 },
 ];
 
 const CollaboraSection = () => {
   return (
     <section id="collabora" className="relative overflow-hidden border-t border-[#E0DACE] bg-[#F4EFE6]">
       <div className="absolute inset-0 pointer-events-none z-0">
-        {edgePetals.map((p, i) => (
+        {botanicals.map((p, i) => (
           <motion.img
             key={i}
-            src={petalLavender}
+            src={p.src}
             alt=""
             aria-hidden="true"
             draggable={false}
@@ -48,10 +55,10 @@ const CollaboraSection = () => {
               top: p.top,
               width: p.size,
               height: p.size,
-              opacity: 0.35,
+              opacity: p.opacity,
             }}
             initial={{ y: 0, rotate: p.rotation }}
-            animate={{ y: [0, -14, 0, 10, 0], rotate: [p.rotation, p.rotation + 6, p.rotation] }}
+            animate={{ y: [0, -10, 0, 8, 0], rotate: [p.rotation, p.rotation + 4, p.rotation - 2, p.rotation] }}
             transition={{
               duration: p.duration,
               delay: p.delay,
@@ -78,10 +85,10 @@ const CollaboraSection = () => {
           {cards.map(({ icon: Icon, title, text }) => (
             <div
               key={title}
-              className="bg-white border border-[#E0DACE] rounded-2xl p-8 flex flex-col items-start hover:border-[#A8B89A] transition-colors"
+              className="bg-white border border-[#D9CFBE] rounded-2xl p-8 flex flex-col items-center text-center shadow-[0_8px_24px_-12px_rgba(120,90,50,0.18)] hover:border-[#A8B89A] hover:shadow-[0_12px_28px_-12px_rgba(120,90,50,0.22)] transition-all"
             >
-              <span className="flex-shrink-0 w-14 h-14 rounded-full border border-[#1F2520]/30 text-[#1F2520] flex items-center justify-center mb-6">
-                <Icon size={22} strokeWidth={1.2} />
+              <span className="flex-shrink-0 w-[68px] h-[68px] rounded-full border border-[#1F2520]/50 text-[#1F2520] flex items-center justify-center mb-6 mx-auto">
+                <Icon size={28} strokeWidth={1.2} />
               </span>
               <h3 className="font-display text-2xl text-[#1F2520] leading-tight">
                 {title}
