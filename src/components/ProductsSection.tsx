@@ -100,11 +100,11 @@ const ProductsSection = () => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary-foreground"></span>
               </span>
               <span className="font-body text-[0.7rem] md:text-xs tracking-[0.35em] uppercase text-primary-foreground font-semibold">
-                Stay Tuned
+                Prossimamente
               </span>
               <span className="h-3 w-px bg-primary-foreground/30"></span>
               <span className="font-display italic text-xs md:text-sm text-primary-foreground font-medium tracking-wide">
-                September 2026
+                Settembre 2026
               </span>
             </motion.div>
           </div>
