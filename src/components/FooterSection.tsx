@@ -16,19 +16,36 @@ const FooterSection = () => {
 
       <footer className="py-16 bg-foreground">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+            <div className="flex flex-col gap-4">
               <img src={logoImg} alt="Amarea Cosmetics" className="h-8 w-auto" />
+              <p className="font-body text-sm text-primary-foreground/80 leading-relaxed">
+                Spin-off accademico dell'Università Politecnica delle Marche
+              </p>
             </div>
-            <p className="font-body text-sm text-primary-foreground">
-              © {new Date().getFullYear()} Amarea Cosmetics — Spin-off Università Politecnica delle Marche
-            </p>
-            <div className="flex items-center gap-4">
+
+            <div className="font-body text-sm text-primary-foreground/80 leading-relaxed">
+              <p className="font-semibold text-primary-foreground">Amarea Cosmetics S.r.l.</p>
+              <p className="mt-2">
+                Università Politecnica delle Marche,<br />
+                Via Brecce Bianche, Ancona, Italia
+              </p>
+              <p className="mt-2">
+                <a
+                  href="mailto:info@amareacosmetics.com"
+                  className="hover:text-primary transition-colors"
+                >
+                  info@amareacosmetics.com
+                </a>
+              </p>
+            </div>
+
+            <div className="flex md:justify-end items-center gap-4">
               <a
-                href="mailto:info@amareacosmetics.it"
+                href="mailto:info@amareacosmetics.com"
                 className="font-body text-sm text-primary-foreground hover:text-primary transition-colors px-4 py-2 rounded-full border border-primary-foreground/10 hover:border-primary/30"
               >
-                info@amareacosmetics.it
+                Scrivici
               </a>
               <a
                 href="https://www.instagram.com/amareacosmetics?igsh=ZWI1b3hiamNxczAx"
@@ -49,6 +66,12 @@ const FooterSection = () => {
                 <Linkedin size={18} />
               </a>
             </div>
+          </div>
+
+          <div className="mt-12 pt-6 border-t border-primary-foreground/10 text-center">
+            <p className="font-body text-xs text-primary-foreground/60">
+              © {new Date().getFullYear()} Amarea Cosmetics S.r.l. — Tutti i diritti riservati
+            </p>
           </div>
         </div>
       </footer>
