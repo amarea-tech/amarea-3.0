@@ -87,12 +87,13 @@ const NewsletterBlock = () => {
                 key="form"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                className="flex flex-col items-center text-center"
               >
                 <h4 className="font-display md:text-3xl text-[#1F2520] leading-tight text-2xl text-center">
                   ✨ Lista prioritaria di lancio ✨
                 </h4>
 
-                <form onSubmit={submit} className="mt-5 flex flex-col gap-3 max-w-md">
+                <form onSubmit={submit} className="mt-5 flex flex-col gap-3 max-w-md w-full mx-auto items-center text-center">
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="email"
