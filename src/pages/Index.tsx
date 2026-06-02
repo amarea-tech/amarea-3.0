@@ -33,9 +33,9 @@ const Index = () => {
       <Suspense fallback={<div className="min-h-[60vh]" />}>
         <PhilosophySection />
         <ProductsSection />
+        <NewsletterBlock />
         <AboutSection />
         <TeamSection />
-        <NewsletterBlock />
         <FooterSection />
       </Suspense>
     </div>
