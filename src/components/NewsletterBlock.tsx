@@ -117,6 +117,10 @@ const NewsletterBlock = () => {
                     Riceverai l'accesso anticipato prima dell'apertura ufficiale delle vendite.
                   </p>
 
+                  <p className="font-body text-xs text-[#6B7864] leading-relaxed">
+                    Ti contatteremo esclusivamente per aggiornamenti sul lancio di Sibilla e sulle iniziative Amarea.
+                  </p>
+
                   <label className="flex items-start gap-2.5 cursor-pointer group select-none text-left">
                     <span
                       className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-[4px] border transition-all flex items-center justify-center ${
