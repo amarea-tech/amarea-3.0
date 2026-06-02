@@ -48,10 +48,7 @@ const NewsletterBlock = () => {
         <div className="max-w-2xl mx-auto">
           {/* Content */}
           <div>
-            <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
-              <Sparkles size={13} /> Lista prioritaria di lancio
-            </span>
-            <h3 className="font-display md:text-5xl lg:text-6xl mt-5 leading-[1.05] text-left text-5xl text-[#2a2927] rounded-md shadow">
+            <h3 className="font-display md:text-5xl lg:text-6xl leading-[1.05] text-left text-5xl text-[#2a2927] rounded-md shadow">
               Sibilla<br />Disponibile da settembre 2026
             </h3>
 
