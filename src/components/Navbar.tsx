@@ -6,8 +6,8 @@ import logoImg from "@/assets/amarea-navbar-logo.png";
 
 const navLinks = [
   { label: "Home", href: "/#hero" },
-  { label: "Prodotti", href: "/#prodotti" },
   { label: "Chi Siamo", href: "/#chi-siamo" },
+  { label: "Prodotti", href: "/#prodotti" },
   { label: "Team", href: "/#team" },
   { label: "Grow With Amarea", href: "/grow" },
 ];
@@ -63,12 +63,12 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <button
-            onClick={() => handleNav("/#contatti")}
+          <a
+            href="mailto:info@amareacosmetics.com?subject=Richiesta%20informazioni%20%E2%80%93%20Amarea%20Cosmetics"
             className="hidden md:block bg-primary text-primary-foreground font-body font-semibold text-sm px-6 py-2 rounded-full hover:scale-105 transition-transform duration-300"
           >
             Contattaci 🌸
-          </button>
+          </a>
 
           <button
             className="md:hidden text-primary-foreground"
