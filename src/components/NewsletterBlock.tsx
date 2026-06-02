@@ -2,8 +2,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Check, Loader2, Sparkles, Clock, Gem, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import sibillaProduct from "@/assets/sibilla-product.jpg.asset.json";
-import sibillaVideo from "@/assets/sibilla-video.mp4.asset.json";
 
 const NewsletterBlock = () => {
   const [email, setEmail] = useState("");
@@ -47,49 +45,15 @@ const NewsletterBlock = () => {
   return (
     <section id="contatti" className="border-t border-[#E0DACE] bg-[#F4EFE6]">
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-20 md:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Product image */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative order-1"
-          >
-            <div className="relative overflow-hidden rounded-[2px] aspect-square shadow-[0_30px_80px_-20px_rgba(31,37,32,0.25)] bg-[#E8DFD0]">
-              <video
-                src={sibillaVideo.url}
-                poster={sibillaProduct.url}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="Sibilla — Crema viso anti-age Amarea Cosmetics con zafferano e vinacce upcycled"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-5 -right-5 hidden md:flex items-center gap-2 bg-[#F4EFE6] border border-[#E0DACE] px-5 py-3 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#A8B89A]" />
-              <span className="font-body text-[11px] tracking-[0.2em] uppercase text-[#1F2520]">
-                Edizione limitata
-              </span>
-            </div>
-          </motion.div>
-
+        <div className="max-w-2xl mx-auto">
           {/* Content */}
-          <div className="order-2">
+          <div>
             <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.25em] uppercase text-[#6B7864] font-body">
               <Sparkles size={13} /> Lista prioritaria di lancio
             </span>
             <h3 className="font-display md:text-5xl lg:text-6xl mt-5 leading-[1.05] text-left text-5xl text-[#2a2927] rounded-md shadow">
               Sibilla<br />Disponibile da settembre 2026
             </h3>
-            <p className="font-body text-base text-[#5A6157] mt-6 leading-relaxed max-w-xl">
-              La prima crema viso anti-age Amarea, formulata con attivi botanici ottenuti da zafferano e
-              vinacce marchigiane recuperate tramite upcycling. <br />
-              Le prime quantità saranno limitate.
-            </p>
 
             <ul className="mt-8 flex flex-col gap-3 font-bold">
               {benefits.map(({ icon: Icon, text }) => (
