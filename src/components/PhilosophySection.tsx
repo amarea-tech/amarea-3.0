@@ -30,8 +30,8 @@ const values = [
   {
     icon: Heart,
     title: "Cruelty Free",
-    shortDesc: "Bellezza senza compromessi etici. Certificati cruelty-free.",
-    fullDesc: "Tutti i nostri prodotti sono certificati cruelty-free. Bellezza, senza compromessi etici.",
+    shortDesc: "Bellezza senza compromessi etici.",
+    fullDesc: "​",
     color: "bg-accent",
     lightBg: "bg-accent/10",
   },
