@@ -557,7 +557,7 @@ const GrowSection = () => {
   const fetchAll = async (lat: number, lon: number, fallback = false) => {
     setLoading(true);
     try {
-      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,wind_speed_10m,is_day&hourly=uv_index,relative_humidity_2m,temperature_2m,wind_speed_10m&timezone=auto&forecast_days=1`;
+      const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,apparent_temperature,wind_speed_10m,is_day,uv_index,precipitation,weather_code&hourly=uv_index,relative_humidity_2m,temperature_2m,wind_speed_10m,precipitation&timezone=auto&forecast_days=1&cell_selection=nearest`;
       const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&hourly=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto&forecast_days=1`;
       const geo = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=it&count=1`;
 
@@ -577,8 +577,19 @@ const GrowSection = () => {
       const pm10 = c.pm10 ?? 0;
       const pm25 = c.pm2_5 ?? 0;
 
+      // Prefer current UV index (real-time) over daily max for precision
+      const currentUv =
+        typeof m?.current?.uv_index === "number"
+          ? m.current.uv_index
+          : m?.daily?.uv_index_max?.[0] ?? 0;
+      // Prefer current precipitation (mm in last hour) over daily total
+      const currentRain =
+        typeof m?.current?.precipitation === "number"
+          ? m.current.precipitation
+          : m?.daily?.precipitation_sum?.[0] ?? 0;
+
       const next: Env = {
-        uv: m?.daily?.uv_index_max?.[0] ?? 0,
+        uv: Math.max(0, currentUv),
         pm10,
         pm25,
         aqi: aqiFromPm(pm25, pm10),
@@ -586,7 +597,7 @@ const GrowSection = () => {
         pollen,
         wind: m?.current?.wind_speed_10m ?? 0,
         temp: m?.current?.temperature_2m ?? 18,
-        rain: m?.daily?.precipitation_sum?.[0] ?? 0,
+        rain: currentRain,
         isDay: !!m?.current?.is_day,
         sunrise: m?.daily?.sunrise?.[0] ?? new Date().toISOString(),
         sunset: m?.daily?.sunset?.[0] ?? new Date().toISOString(),
