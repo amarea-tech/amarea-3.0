@@ -651,48 +651,28 @@ const GrowSection = () => {
   };
 
   const requestLoc = () => {
-    let resolved = false;
-    let ipCity = "";
-    const resolve = (lat: number, lon: number, fallback = false) => {
-      if (resolved) return;
-      resolved = true;
-      fetchAll(lat, lon, fallback, ipCity);
-    };
+    // 1) Render immediately with the fallback location so the UI is never blank.
+    fetchAll(FALLBACK.lat, FALLBACK.lon, true);
 
-    // 1) Try fast IP-based geolocation in parallel (no permission prompt)
-    const ipPromise = fetch("https://ipapi.co/json/")
+    // 2) In parallel, try IP-based geolocation (no permission prompt) and
+    //    refresh data if it returns a different coarse location.
+    fetch("https://ipapi.co/json/")
       .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null);
+      .catch(() => null)
+      .then((d) => {
+        if (!d?.latitude || !d?.longitude) return;
+        const ipCity = d.city ? `${d.city}${d.region ? ", " + d.region : ""}` : "";
+        fetchAll(d.latitude, d.longitude, false, ipCity);
+      });
 
-    ipPromise.then((d) => {
-      if (d?.city) ipCity = `${d.city}${d.region ? ", " + d.region : ""}`;
-    });
-
-    // 2) Try precise browser geolocation with a short timeout
+    // 3) Try precise browser geolocation; upgrade silently if granted.
     if (typeof navigator !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (p) => resolve(p.coords.latitude, p.coords.longitude),
-        () => {
-          ipPromise.then((d) => {
-            if (d?.latitude && d?.longitude) resolve(d.latitude, d.longitude);
-            else resolve(FALLBACK.lat, FALLBACK.lon, true);
-          });
-        },
-        { timeout: 3500, maximumAge: 600_000, enableHighAccuracy: false },
+        (p) => fetchAll(p.coords.latitude, p.coords.longitude),
+        () => {},
+        { timeout: 4000, maximumAge: 600_000, enableHighAccuracy: false },
       );
     }
-
-    // 3) Whichever IP lookup returns first within ~2s wins if precise geo is slow
-    setTimeout(() => {
-      if (resolved) return;
-      ipPromise.then((d) => {
-        if (resolved) return;
-        if (d?.latitude && d?.longitude) resolve(d.latitude, d.longitude);
-      });
-    }, 1800);
-
-    // 4) Hard safety net: fallback after 5s
-    setTimeout(() => resolve(FALLBACK.lat, FALLBACK.lon, true), 5000);
   };
 
   useEffect(() => {
