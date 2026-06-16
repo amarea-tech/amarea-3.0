@@ -554,7 +554,7 @@ const GrowSection = () => {
   const [loading, setLoading] = useState(false);
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
 
-  const fetchAll = async (lat: number, lon: number, fallback = false, ipCity = "") => {
+  const fetchAll = async (lat: number, lon: number, fallback = false) => {
     setLoading(true);
     try {
       const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,apparent_temperature,wind_speed_10m,is_day,uv_index,precipitation,weather_code&hourly=uv_index,relative_humidity_2m,temperature_2m,wind_speed_10m,precipitation&timezone=auto&forecast_days=1&cell_selection=nearest`;
@@ -634,15 +634,18 @@ const GrowSection = () => {
       });
 
       setCoords({ lat, lon });
-      const city = g?.city || g?.locality;
+      const administrativeLocality = Array.isArray(g?.localityInfo?.administrative)
+        ? g.localityInfo.administrative
+            .filter((item: { adminLevel?: number; name?: string }) => item?.adminLevel === 8 && item?.name)
+            .at(-1)?.name
+        : "";
+      const city = g?.locality || administrativeLocality || g?.city;
       setPlace(
         city
           ? [city, g?.principalSubdivision].filter(Boolean).join(", ")
-          : ipCity
-            ? ipCity
-            : fallback
-              ? FALLBACK.label
-              : "La tua posizione",
+          : fallback
+            ? FALLBACK.label
+            : "La tua posizione",
       );
       setUpdatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
     } finally {
@@ -654,23 +657,13 @@ const GrowSection = () => {
     // 1) Render immediately with the fallback location so the UI is never blank.
     fetchAll(FALLBACK.lat, FALLBACK.lon, true);
 
-    // 2) In parallel, try IP-based geolocation (no permission prompt) and
-    //    refresh data if it returns a different coarse location.
-    fetch("https://ipapi.co/json/")
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null)
-      .then((d) => {
-        if (!d?.latitude || !d?.longitude) return;
-        const ipCity = d.city ? `${d.city}${d.region ? ", " + d.region : ""}` : "";
-        fetchAll(d.latitude, d.longitude, false, ipCity);
-      });
-
-    // 3) Try precise browser geolocation; upgrade silently if granted.
+    // 2) Try precise browser geolocation; do not use IP-based estimates because
+    //    they can be tens of kilometres away and overwrite the real city.
     if (typeof navigator !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (p) => fetchAll(p.coords.latitude, p.coords.longitude),
         () => {},
-        { timeout: 4000, maximumAge: 600_000, enableHighAccuracy: false },
+        { timeout: 7000, maximumAge: 120_000, enableHighAccuracy: true },
       );
     }
   };
