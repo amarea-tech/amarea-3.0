@@ -554,12 +554,12 @@ const GrowSection = () => {
   const [loading, setLoading] = useState(false);
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
 
-  const fetchAll = async (lat: number, lon: number, fallback = false) => {
+  const fetchAll = async (lat: number, lon: number, fallback = false, ipCity = "") => {
     setLoading(true);
     try {
       const meteo = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=precipitation_sum,uv_index_max,sunrise,sunset&current=relative_humidity_2m,temperature_2m,apparent_temperature,wind_speed_10m,is_day,uv_index,precipitation,weather_code&hourly=uv_index,relative_humidity_2m,temperature_2m,wind_speed_10m,precipitation&timezone=auto&forecast_days=1&cell_selection=nearest`;
       const air = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&hourly=pm10,pm2_5,grass_pollen,birch_pollen,olive_pollen,alder_pollen,ragweed_pollen&timezone=auto&forecast_days=1`;
-      const geo = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=it&count=1`;
+      const geo = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=it`;
 
       const [m, a, g] = await Promise.all([
         fetch(meteo).then((r) => r.json()),
@@ -634,13 +634,15 @@ const GrowSection = () => {
       });
 
       setCoords({ lat, lon });
-      const first = g?.results?.[0];
+      const city = g?.city || g?.locality;
       setPlace(
-        first
-          ? [first.name, first.admin1 ?? first.country].filter(Boolean).join(", ")
-          : fallback
-            ? FALLBACK.label
-            : "",
+        city
+          ? [city, g?.principalSubdivision].filter(Boolean).join(", ")
+          : ipCity
+            ? ipCity
+            : fallback
+              ? FALLBACK.label
+              : "La tua posizione",
       );
       setUpdatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
     } finally {
@@ -650,16 +652,21 @@ const GrowSection = () => {
 
   const requestLoc = () => {
     let resolved = false;
+    let ipCity = "";
     const resolve = (lat: number, lon: number, fallback = false) => {
       if (resolved) return;
       resolved = true;
-      fetchAll(lat, lon, fallback);
+      fetchAll(lat, lon, fallback, ipCity);
     };
 
     // 1) Try fast IP-based geolocation in parallel (no permission prompt)
     const ipPromise = fetch("https://ipapi.co/json/")
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null);
+
+    ipPromise.then((d) => {
+      if (d?.city) ipCity = `${d.city}${d.region ? ", " + d.region : ""}`;
+    });
 
     // 2) Try precise browser geolocation with a short timeout
     if (typeof navigator !== "undefined" && navigator.geolocation) {
@@ -779,12 +786,7 @@ const GrowSection = () => {
               </div>
               <div className="flex items-center gap-3 mt-4 font-body text-sm flex-wrap" style={{ color: theme.textMuted }}>
                 <MapPin size={14} />
-                <span>
-                  {place || (coords ? `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}` : "Localizzazione in corso…")}
-                </span>
-                {coords && place && (
-                  <span className="opacity-70">· {coords.lat.toFixed(4)}, {coords.lon.toFixed(4)}</span>
-                )}
+                <span>{place || "Localizzazione in corso…"}</span>
                 {updatedAt && <span className="opacity-70">· aggiornato {updatedAt}</span>}
                 <button
                   onClick={() => (coords ? fetchAll(coords.lat, coords.lon) : requestLoc())}
