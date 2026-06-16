@@ -637,10 +637,10 @@ const GrowSection = () => {
       const first = g?.results?.[0];
       setPlace(
         first
-          ? `${first.name}, ${first.admin1 ?? first.country ?? ""}`
+          ? [first.name, first.admin1 ?? first.country].filter(Boolean).join(", ")
           : fallback
             ? FALLBACK.label
-            : `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
+            : "",
       );
       setUpdatedAt(new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }));
     } finally {
@@ -777,9 +777,14 @@ const GrowSection = () => {
                   </a>
                 </div>
               </div>
-              <div className="flex items-center gap-3 mt-4 font-body text-sm" style={{ color: theme.textMuted }}>
+              <div className="flex items-center gap-3 mt-4 font-body text-sm flex-wrap" style={{ color: theme.textMuted }}>
                 <MapPin size={14} />
-                <span>{place || "Localizzazione in corso…"}</span>
+                <span>
+                  {place || (coords ? `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}` : "Localizzazione in corso…")}
+                </span>
+                {coords && place && (
+                  <span className="opacity-70">· {coords.lat.toFixed(4)}, {coords.lon.toFixed(4)}</span>
+                )}
                 {updatedAt && <span className="opacity-70">· aggiornato {updatedAt}</span>}
                 <button
                   onClick={() => (coords ? fetchAll(coords.lat, coords.lon) : requestLoc())}
