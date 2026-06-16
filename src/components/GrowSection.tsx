@@ -652,16 +652,21 @@ const GrowSection = () => {
 
   const requestLoc = () => {
     let resolved = false;
+    let ipCity = "";
     const resolve = (lat: number, lon: number, fallback = false) => {
       if (resolved) return;
       resolved = true;
-      fetchAll(lat, lon, fallback);
+      fetchAll(lat, lon, fallback, ipCity);
     };
 
     // 1) Try fast IP-based geolocation in parallel (no permission prompt)
     const ipPromise = fetch("https://ipapi.co/json/")
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null);
+
+    ipPromise.then((d) => {
+      if (d?.city) ipCity = `${d.city}${d.region ? ", " + d.region : ""}`;
+    });
 
     // 2) Try precise browser geolocation with a short timeout
     if (typeof navigator !== "undefined" && navigator.geolocation) {
