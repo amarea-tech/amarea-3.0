@@ -786,12 +786,7 @@ const GrowSection = () => {
               </div>
               <div className="flex items-center gap-3 mt-4 font-body text-sm flex-wrap" style={{ color: theme.textMuted }}>
                 <MapPin size={14} />
-                <span>
-                  {place || (coords ? `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}` : "Localizzazione in corso…")}
-                </span>
-                {coords && place && (
-                  <span className="opacity-70">· {coords.lat.toFixed(4)}, {coords.lon.toFixed(4)}</span>
-                )}
+                <span>{place || "Localizzazione in corso…"}</span>
                 {updatedAt && <span className="opacity-70">· aggiornato {updatedAt}</span>}
                 <button
                   onClick={() => (coords ? fetchAll(coords.lat, coords.lon) : requestLoc())}
