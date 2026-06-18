@@ -76,7 +76,7 @@ const NewsletterBlock = () => {
                   <Check size={18} strokeWidth={2} />
                 </span>
                 <p className="font-display text-xl md:text-2xl text-[#1F2520] leading-snug">
-                  Grazie per esserti iscritta alla lista prioritaria di Sibilla.
+                  Grazie per la tua iscrizione alla lista prioritaria di Sibilla.
                 </p>
                 <p className="font-body text-sm text-[#5A6157] mt-3 leading-relaxed">
                   Ti contatteremo quando la prevendita sarà disponibile.
