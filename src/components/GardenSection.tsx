@@ -1,5 +1,6 @@
 import { Sprout, Leaf, Flower2, Heart } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import petalSaffronLilac from "@/assets/petal-saffron-lilac.png";
 import leafSage from "@/assets/leaf-sage.png";
 
@@ -46,6 +47,19 @@ const botanicals = [
 ];
 
 const GardenSection = () => {
+  const [thanks, setThanks] = useState(false);
+  const timerRef = useRef<number | null>(null);
+
+  const handleSupport = () => {
+    setThanks(true);
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => setThanks(false), 12000);
+  };
+
+  useEffect(() => () => {
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+  }, []);
+
   return (
     <section id="giardino" className="relative overflow-hidden border-t border-[#E0DACE] bg-[#FAF6EE]">
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -89,6 +103,7 @@ const GardenSection = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleSupport}
               className="group bg-white border border-[#D9CFBE] rounded-2xl p-7 flex flex-col items-center text-center shadow-[0_8px_24px_-12px_rgba(120,90,50,0.18)] hover:border-[#A8B89A] hover:shadow-[0_12px_28px_-12px_rgba(120,90,50,0.25)] hover:-translate-y-1 transition-all duration-300"
             >
               <span className="flex-shrink-0 w-[64px] h-[64px] rounded-full border border-[#1F2520]/40 text-[#1F2520] flex items-center justify-center mb-5 group-hover:bg-[#A8B89A]/15 transition-colors">
@@ -112,6 +127,7 @@ const GardenSection = () => {
             href="https://www.paypal.com/ncp/payment/CNZ58ZKNTM9WQ"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={handleSupport}
             className="inline-flex items-center justify-center gap-2 bg-[#1F2520] text-[#F4EFE6] font-body font-medium text-sm px-8 py-3.5 rounded-full hover:bg-[#2A312A] transition-colors"
           >
             <Heart size={15} strokeWidth={1.8} />
@@ -121,6 +137,32 @@ const GardenSection = () => {
             Pagamento sicuro tramite PayPal
           </span>
         </div>
+
+        <AnimatePresence>
+          {thanks && (
+            <motion.div
+              role="status"
+              aria-live="polite"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="mt-10 mx-auto max-w-2xl text-center bg-white/80 backdrop-blur-sm border border-[#D9CFBE] rounded-2xl px-8 py-7 shadow-[0_8px_24px_-12px_rgba(120,90,50,0.18)]"
+            >
+              <div className="flex justify-center mb-3">
+                <span className="w-11 h-11 rounded-full bg-[#A8B89A]/20 text-[#1F2520] flex items-center justify-center">
+                  <Heart size={20} strokeWidth={1.4} />
+                </span>
+              </div>
+              <h3 className="font-display text-2xl text-[#1F2520] leading-tight">
+                Grazie di cuore 🌿
+              </h3>
+              <p className="mt-2 font-body text-sm md:text-base text-[#5A6157] leading-relaxed">
+                Il tuo contributo fa la differenza. Completa la donazione nella scheda PayPal appena aperta: ogni gesto aiuta Amarea a crescere.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
