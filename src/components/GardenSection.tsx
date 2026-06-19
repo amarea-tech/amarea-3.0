@@ -10,7 +10,7 @@ const tiers = [
     title: "Pianta un seme",
     amount: "3 €",
     text: "Un piccolo gesto per sostenere le prime fasi di ricerca e sviluppo.",
-    href: "https://www.paypal.com/donate/?business=info@amareacosmetics.com&amount=3&currency_code=EUR&item_name=Pianta+un+seme",
+    href: "https://www.paypal.com/ncp/payment/AJXHRHUVDRTVS",
   },
   {
     icon: Leaf,
@@ -18,7 +18,7 @@ const tiers = [
     title: "Coltiva una pianta",
     amount: "10 €",
     text: "Aiutaci a sviluppare nuove formulazioni e a testare nuovi ingredienti botanici.",
-    href: "https://www.paypal.com/donate/?business=info@amareacosmetics.com&amount=10&currency_code=EUR&item_name=Coltiva+una+pianta",
+    href: "https://www.paypal.com/ncp/payment/ARD6EN7BDXGEU",
   },
   {
     icon: Flower2,
@@ -26,7 +26,7 @@ const tiers = [
     title: "Fai fiorire un progetto",
     amount: "25 €",
     text: "Contribuisci alla crescita di Amarea e alla realizzazione dei nostri prossimi prodotti.",
-    href: "https://www.paypal.com/donate/?business=info@amareacosmetics.com&amount=25&currency_code=EUR&item_name=Fai+fiorire+un+progetto",
+    href: "https://www.paypal.com/ncp/payment/H45RBQT2PVQB4",
   },
   {
     icon: Heart,
@@ -34,7 +34,7 @@ const tiers = [
     title: "Contributo libero",
     amount: "Tu scegli",
     text: "Scegli tu quanto sostenere il nostro percorso.",
-    href: "https://www.paypal.com/donate/?business=info@amareacosmetics.com&currency_code=EUR&item_name=Contributo+libero",
+    href: "https://www.paypal.com/ncp/payment/CNZ58ZKNTM9WQ",
   },
 ];
 
@@ -109,7 +109,7 @@ const GardenSection = () => {
 
         <div className="mt-12 flex flex-col items-center gap-3">
           <a
-            href="https://www.paypal.com/donate/?business=info@amareacosmetics.com&currency_code=EUR&item_name=Sostieni+Amarea"
+            href="https://www.paypal.com/ncp/payment/CNZ58ZKNTM9WQ"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-[#1F2520] text-[#F4EFE6] font-body font-medium text-sm px-8 py-3.5 rounded-full hover:bg-[#2A312A] transition-colors"
