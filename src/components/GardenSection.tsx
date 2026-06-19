@@ -33,7 +33,7 @@ const tiers = [
     icon: Heart,
     emoji: "💜",
     title: "Contributo libero",
-    amount: "Tu scegli",
+    amount: "",
     text: "Scegli tu quanto sostenere il nostro percorso.",
     href: "https://www.paypal.com/ncp/payment/CNZ58ZKNTM9WQ",
   },
@@ -112,9 +112,11 @@ const GardenSection = () => {
               <div className="font-display text-xl text-[#1F2520] leading-tight">
                 <span className="mr-1.5">{emoji}</span>{title}
               </div>
-              <div className="mt-2 font-display text-2xl text-[#1F2520]">
-                {amount}
-              </div>
+              {amount && (
+                <div className="mt-2 font-display text-2xl text-[#1F2520]">
+                  {amount}
+                </div>
+              )}
               <p className="mt-3 font-body text-sm text-[#5A6157] leading-relaxed">
                 {text}
               </p>
