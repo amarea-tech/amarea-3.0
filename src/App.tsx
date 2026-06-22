@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 const ProductPage = lazy(() => import("./pages/ProductPage"));
 const TeamMemberPage = lazy(() => import("./pages/TeamMemberPage"));
 const GrowPage = lazy(() => import("./pages/GrowPage"));
+const SupportPage = lazy(() => import("./pages/SupportPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/grow" element={<GrowPage />} />
+            <Route path="/sostieni-amarea" element={<SupportPage />} />
             <Route path="/prodotti/:slug" element={<ProductPage />} />
             <Route path="/team/:slug" element={<TeamMemberPage />} />
             <Route path="*" element={<NotFound />} />
