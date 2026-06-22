@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 const ProductPage = lazy(() => import("./pages/ProductPage"));
 const TeamMemberPage = lazy(() => import("./pages/TeamMemberPage"));
 const GrowPage = lazy(() => import("./pages/GrowPage"));
+const SupportPage = lazy(() => import("./pages/SupportPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
