@@ -47,6 +47,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/grow" element={<GrowPage />} />
+            <Route path="/sostieni-amarea" element={<SupportPage />} />
             <Route path="/prodotti/:slug" element={<ProductPage />} />
             <Route path="/team/:slug" element={<TeamMemberPage />} />
             <Route path="*" element={<NotFound />} />
