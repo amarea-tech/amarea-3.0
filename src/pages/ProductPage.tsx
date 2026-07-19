@@ -10,12 +10,13 @@ import productCatria from "@/assets/product-catria.jpg";
 
 const productData: Record<
   string,
-  { name: string; desc: string; details?: string; gradient: string; subtitle: string; image: string }
+  { name: string; desc: string; details?: string; gradient: string; subtitle: string; image: string; seoDescription: string }
 > = {
   conero: {
     name: "Conero",
     subtitle: "Purifying Face Cream",
     desc: "Con foglie di ulivo e attivi riequilibranti, aiuta a purificare la pelle e regolare l'eccesso di sebo.",
+    seoDescription: "Conero è la crema viso purificante di Amarea Cosmetics, formulata con foglie di ulivo e attivi botanici riequilibranti per aiutare a purificare la pelle e regolare l'eccesso di sebo. Parte della collezione Monti Italiani, ispirata al territorio marchigiano.",
     gradient: "from-primary/20 to-lime/20",
     image: productConero,
   },
@@ -23,6 +24,7 @@ const productData: Record<
     name: "Sibilla",
     subtitle: "Anti-Age Cream",
     desc: "Formulata con attivi rigeneranti derivati da fiori di zafferano e vinacce selezionate. Aiuta a contrastare i segni del tempo.",
+    seoDescription: "Sibilla è la crema viso anti-età di Amarea Cosmetics, formulata con attivi rigeneranti derivati da fiori di zafferano e vinacce marchigiane selezionate tramite upcycling. Parte della collezione Monti Italiani, sviluppata dal team di ricerca dell'Università Politecnica delle Marche.",
     gradient: "from-violet/20 to-primary/20",
     image: productSibilla,
   },
@@ -30,6 +32,7 @@ const productData: Record<
     name: "Catria",
     subtitle: "Nourishing Face Cream",
     desc: "Nutre e idrata grazie a una formulazione leggera arricchita con bioresidui del caffè.",
+    seoDescription: "Catria è la crema viso nutriente di Amarea Cosmetics, formulata con bioresidui del caffè per un'idratazione ricca ma leggera. Parte della collezione Monti Italiani, ispirata alle vette dell'Appennino marchigiano.",
     gradient: "from-secondary/20 to-coral/20",
     image: productCatria,
   },
@@ -60,21 +63,34 @@ const ProductPage = () => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>{`${product.name} — ${product.subtitle} | Amarea Cosmetics`}</title>
-        <meta name="description" content={product.desc.slice(0, 160)} />
+        <meta name="description" content={product.seoDescription} />
         <link rel="canonical" href={`https://amareacosmetics.com/prodotti/${slug}`} />
         <meta property="og:type" content="product" />
         <meta property="og:url" content={`https://amareacosmetics.com/prodotti/${slug}`} />
         <meta property="og:title" content={`${product.name} — ${product.subtitle} | Amarea Cosmetics`} />
-        <meta property="og:description" content={product.desc.slice(0, 160)} />
+        <meta property="og:description" content={product.seoDescription} />
         <meta property="og:image" content={`https://amareacosmetics.com${product.image}`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Product",
             name: `${product.name} — ${product.subtitle}`,
-            description: product.desc,
+            description: product.seoDescription,
             image: `https://amareacosmetics.com${product.image}`,
+            category: "Skincare",
             brand: { "@type": "Brand", name: "Amarea Cosmetics" },
+            manufacturer: { "@type": "Organization", name: "Amarea Cosmetics S.r.l." },
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://amareacosmetics.com/" },
+              { "@type": "ListItem", position: 2, name: "Prodotti", item: "https://amareacosmetics.com/#prodotti" },
+              { "@type": "ListItem", position: 3, name: product.name, item: `https://amareacosmetics.com/prodotti/${slug}` },
+            ],
           })}
         </script>
       </Helmet>
