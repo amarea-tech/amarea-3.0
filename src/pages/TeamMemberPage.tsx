@@ -25,17 +25,41 @@ const TeamMemberPage = () => {
   }
 
   const bioparagraphs = member.fullBio.split("\n\n");
+  const seoDesc = `${member.name}, ${member.role} in Amarea Cosmetics — ${member.title}. ${member.shortBio}`.slice(0, 300);
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>{`${member.name} — ${member.role} | Team Amarea Cosmetics`}</title>
-        <meta name="description" content={member.desc.slice(0, 160)} />
+        <meta name="description" content={seoDesc} />
         <link rel="canonical" href={`https://amareacosmetics.com/team/${slug}`} />
         <meta property="og:type" content="profile" />
         <meta property="og:url" content={`https://amareacosmetics.com/team/${slug}`} />
         <meta property="og:title" content={`${member.name} — ${member.role} | Amarea Cosmetics`} />
-        <meta property="og:description" content={member.desc.slice(0, 160)} />
+        <meta property="og:description" content={seoDesc} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: member.name,
+            jobTitle: member.role,
+            description: member.title,
+            worksFor: { "@type": "Organization", name: "Amarea Cosmetics", url: "https://amareacosmetics.com/" },
+            url: `https://amareacosmetics.com/team/${slug}`,
+            ...(member.email ? { email: member.email } : {}),
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://amareacosmetics.com/" },
+              { "@type": "ListItem", position: 2, name: "Team", item: "https://amareacosmetics.com/#team" },
+              { "@type": "ListItem", position: 3, name: member.name, item: `https://amareacosmetics.com/team/${slug}` },
+            ],
+          })}
+        </script>
       </Helmet>
       <Navbar />
 
@@ -64,7 +88,7 @@ const TeamMemberPage = () => {
             >
               <img
                 src={member.image}
-                alt={member.name}
+                alt={`${member.name} — ${member.role}, Amarea Cosmetics`}
                 className="w-48 h-48 md:w-56 md:h-56 rounded-3xl object-cover shadow-lg border-2 border-primary/20"
               />
             </motion.div>

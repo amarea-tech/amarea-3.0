@@ -44,7 +44,7 @@ const TeamSection = () => {
                   <div className="relative shrink-0">
                     <img
                       src={member.image}
-                      alt={member.name}
+                      alt={`${member.name} — ${member.role}, Amarea Cosmetics`}
                       className="w-16 h-16 rounded-2xl object-cover group-hover:rounded-full transition-all duration-500"
                     />
                     <div className="absolute -bottom-1 -right-1 w-5 h-5 flex items-center justify-center text-[14px] leading-none opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">

@@ -6,12 +6,19 @@ import { Helmet } from "react-helmet-async";
 const GrowPage = () => (
   <div className="min-h-screen bg-background">
     <Helmet>
-      <title>Grow With Amarea — Skin Weather Dashboard</title>
+      <title>Grow With Amarea — Il meteo della tua pelle</title>
       <meta
         name="description"
-        content="Insight ambientali scientifici per la tua pelle: UV, umidità, particolato e pollini tradotti in protocolli cosmetici eleganti."
+        content="Il meteo cosmetico di Amarea: UV, umidità, particolato e pollini in tempo reale, tradotti in consigli scientifici per la cura quotidiana della pelle."
       />
-      <link rel="canonical" href="https://amareacosmetics.it/grow" />
+      <link rel="canonical" href="https://amareacosmetics.com/grow" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://amareacosmetics.com/grow" />
+      <meta property="og:title" content="Grow With Amarea — Il meteo della tua pelle" />
+      <meta
+        property="og:description"
+        content="Il meteo cosmetico di Amarea: UV, umidità, particolato e pollini in tempo reale, tradotti in consigli scientifici per la cura quotidiana della pelle."
+      />
     </Helmet>
     <Navbar />
     <GrowSection />
