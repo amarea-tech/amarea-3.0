@@ -1,5 +1,4 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { z } from "zod";
 import { teamMembers } from "../data/team";
 
 export default defineTool({
@@ -14,5 +13,3 @@ export default defineTool({
     structuredContent: { members: teamMembers },
   }),
 });
-
-export const _z = z;
