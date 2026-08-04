@@ -39,7 +39,7 @@ const NewsletterBlock = () => {
   const benefits = [
     { icon: Clock, text: "Accesso anticipato alla prevendita" },
     { icon: Gem, text: "10% di sconto sul primo ordine" },
-    { icon: Lock, text: "Un omaggio esclusivo Amarea riservato ai primi 100 clienti" },
+    { icon: Lock, text: "" },
   ];
 
   return (
@@ -49,12 +49,12 @@ const NewsletterBlock = () => {
           {/* Content */}
           <div>
             <h3 className="font-display md:text-5xl lg:text-6xl leading-[1.05] text-left text-5xl text-[#2a2927] rounded-md shadow">
-              Sibilla<br />Disponibile da settembre 2026
+              Sibilla<br />Presto disponibile
             </h3>
 
             <ul className="mt-8 flex flex-col gap-3 font-bold">
               {benefits.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-center gap-3">
+                <li key={text} className={`flex items-center gap-3 ${!text ? 'hidden' : ''}`}>
                   <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#1F2520] text-[#F4EFE6] flex items-center justify-center">
                     <Icon size={13} strokeWidth={1.8} />
                   </span>
