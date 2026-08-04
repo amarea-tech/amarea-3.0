@@ -49,7 +49,7 @@ const NewsletterBlock = () => {
           {/* Content */}
           <div>
             <h3 className="font-display md:text-5xl lg:text-6xl leading-[1.05] text-left text-5xl text-[#2a2927] rounded-md shadow">
-              Sibilla<br />Disponibile da settembre 2026
+              Sibilla<br />Presto disponibile
             </h3>
 
             <ul className="mt-8 flex flex-col gap-3 font-bold">
