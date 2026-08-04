@@ -39,7 +39,7 @@ const NewsletterBlock = () => {
   const benefits = [
     { icon: Clock, text: "Accesso anticipato alla prevendita" },
     { icon: Gem, text: "10% di sconto sul primo ordine" },
-    { icon: Lock, text: "Un omaggio esclusivo Amarea riservato ai primi 100 clienti" },
+    { icon: Lock, text: "" },
   ];
 
   return (
