@@ -36,11 +36,9 @@ const Index = () => {
         <link rel="canonical" href="https://amareacosmetics.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://amareacosmetics.com/" />
-        <meta property="og:title" content="Amarea Cosmetics — Skincare scientifica e sostenibile dalle Marche" />
-        <meta
-          property="og:description"
-          content="Skincare scientifica con attivi botanici da upcycling, dal cuore delle Marche. Scopri la filosofia, il team di ricerca e la collezione Monti Italiani."
-        />
+        <meta property="og:title" content="Amarea Cosmetics" />
+        <meta property="og:description" content="Ispirata dalla natura, arricchita dalla scienza" />
+        <meta property="og:image" content="https://amareacosmetics.com/__l5e/assets-v1/5e7005f6-b131-4cc0-a298-887b7253ff03/amarea-og-home-1200x630.png" />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
