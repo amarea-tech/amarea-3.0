@@ -5,6 +5,7 @@ const GATEWAY_URL = "https://connector-gateway.lovable.dev/brevo";
 // Configurable defaults — change these to match your Brevo setup
 const SENDER_NAME = "Amarea Cosmetics";
 const SENDER_EMAIL = "newsletter@amareacosmetics.com"; // must be a verified sender in Brevo
+const NOTIFY_EMAIL = "sales@amareacosmetics.com";
 const LIST_ID = 2; // default Brevo list id for newsletter subscribers
 
 function isValidEmail(email: string): boolean {
@@ -101,6 +102,31 @@ Deno.serve(async (req) => {
       const errText = await emailRes.text();
       console.error("Brevo email error", emailRes.status, errText);
       // Non blocchiamo l'iscrizione se l'email di conferma fallisce
+    }
+
+    // 3. Notifica interna al team commerciale
+    const subscribedAt = new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" });
+    const notifyRes = await fetch(`${GATEWAY_URL}/smtp/email`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        sender: { name: SENDER_NAME, email: SENDER_EMAIL },
+        to: [{ email: NOTIFY_EMAIL }],
+        replyTo: { email },
+        subject: "Nuova iscrizione — Lista prioritaria Sibilla",
+        htmlContent: `
+          <div style="font-family: Arial, sans-serif; font-size: 15px; color: #171717;">
+            <h2 style="font-weight:400;">Nuova iscrizione alla lista prioritaria</h2>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Data e ora (Europe/Rome):</strong> ${subscribedAt}</p>
+            <p><strong>Consenso privacy:</strong> accettato</p>
+          </div>
+        `,
+      }),
+    });
+
+    if (!notifyRes.ok) {
+      console.error("Brevo notify error", notifyRes.status, await notifyRes.text());
     }
 
     return new Response(
