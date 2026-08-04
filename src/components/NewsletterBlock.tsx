@@ -54,7 +54,7 @@ const NewsletterBlock = () => {
 
             <ul className="mt-8 flex flex-col gap-3 font-bold">
               {benefits.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-center gap-3">
+                <li key={text} className={`flex items-center gap-3 ${!text ? 'hidden' : ''}`}>
                   <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#1F2520] text-[#F4EFE6] flex items-center justify-center">
                     <Icon size={13} strokeWidth={1.8} />
                   </span>
